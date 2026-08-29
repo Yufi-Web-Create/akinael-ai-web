@@ -53,6 +53,31 @@
 - 専門知識がない顧客を前提とする
 - 顧客作業を前提としたDIYサービスではない
 
+## Required pre-production research
+正式なDesign / Copy制作前に以下を必須とする。
+
+### Design Research
+- 同業・近接業種
+- 同客層・同価格感・ブランド温度が近い事例
+- 業種外のVisual reference
+- Hero / Navigation / CTA / Mobile等のUX reference
+- 合計最低8件、推奨12〜20件
+
+### Copy Research
+- アキナエルAIの既存事業資料・過去に確定した文言
+- 想定顧客が実際に使う困りごとの言葉
+- 競合3社以上
+- 検索意図・FAQ・契約前の不安
+- 競合が多用するgeneric表現
+
+### Research output
+- `docs/research/REFERENCE_ANALYSIS.md`
+- `docs/research/COPY_RESEARCH.md`
+- `docs/DESIGN_DIRECTION.md`
+- `docs/COPY_DIRECTION.md`
+
+上記がResearch QAをPASSするまで正式デザイン・正式コピーの本制作へ進まない。
+
 ## Prohibited claims
 - 架空実績
 - 架空顧客
@@ -62,6 +87,9 @@
 - 未確定情報の断定
 
 ## Acceptance criteria
+- Research QAをPASSしている
+- Design Direction / Copy DirectionにReferenceの採用理由が残っている
+- 1サイトの模倣ではなく複数Referenceの原則を統合している
 - 5秒で「誰向けの何のサービスか」が分かる
 - Primary CTAが迷わず見つかる
 - 主要情報がスマートフォンでも読みやすい
