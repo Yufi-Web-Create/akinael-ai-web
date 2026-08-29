@@ -4,6 +4,7 @@
 デザインとコピーの制作前に、案件条件に近い外部事例と実際の顧客言語を調査し、AIの手癖ではなく根拠のある方向性を決める。
 
 Researchは実装工程ではない。Research担当はコードや完成コピーを先に作らない。
+ただし、**Researchは人間承認のための停止地点でもない。Research QAをPASSしたら、そのままDirectionへ進む。**
 
 ## Required order
 1. `PROJECT_SPEC.md` を読む
@@ -15,8 +16,10 @@ Researchは実装工程ではない。Research担当はコードや完成コピ�
 7. `DESIGN_DIRECTION.md` と `COPY_DIRECTION.md` を確定する
 8. その後に `DESIGN_SYSTEM.md` / `COPY_GUIDE.md` を案件向けに更新する
 9. Builderへ渡す
+10. Builderは人間確認を待たず本実装へ進む
 
 Research完了前に本実装へ進まない。
+Research完了後に「この方向で進めますか？」とは確認しない。
 
 ## Design research sources
 最低8件、推奨12〜20件を調査する。1カテゴリへ偏らせない。
@@ -83,6 +86,9 @@ Referenceから「なぜ機能しているか」という判断理由を抽出�
 - [ ] 差別化のための言語機会を整理
 - [ ] 競合コピーを転用していない
 
+FAILの場合は、追加調査・分析修正をAI内部で行い、PASSするまで再評価する。
+通常の調査不足やReference選定について人間へ差し戻さない。
+
 ## Completion
 Researchの完了成果物は以下。
 - `docs/research/REFERENCE_ANALYSIS.md`
@@ -91,3 +97,8 @@ Researchの完了成果物は以下。
 - `docs/COPY_DIRECTION.md`
 
 4ファイルが揃い、Research QAをPASSして初めてBuilderが本実装へ進める。
+**この遷移は自動で行う。**
+
+## Human escalation
+Research中に人間確認が必要なのは、正式な事業事実が不足し、それを推測すると公開情報の虚偽につながる場合のみ。
+調査範囲、Reference選定、通常のDesign / Copy判断はAIが行う。
