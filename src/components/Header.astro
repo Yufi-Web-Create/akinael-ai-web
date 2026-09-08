@@ -1,0 +1,24 @@
+---
+import { siteConfig } from "../lib/site-config";
+
+const coreOrigin = (import.meta.env.PUBLIC_CORE_ORIGIN || "https://akinael-ai.com").replace(/\/+$/, "");
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="アキナエルAI トップ">
+      <img src="/assets/logos/logo-horizontal.svg" alt="アキナエルAI" width="180" height="44" />
+    </a>
+    <nav class="main-nav" aria-label="メインナビゲーション">
+      <ul>
+        {siteConfig.nav.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <a class="text-link" href={`${coreOrigin}/portal/`}>Customer Portalへログイン</a>
+      <a class="button button-primary" href={siteConfig.primaryCta.href}>{siteConfig.primaryCta.label}</a>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,28 @@
+---
+const coreOrigin = (import.meta.env.PUBLIC_CORE_ORIGIN || "https://akinael-ai.com").replace(/\/+$/, "");
+const year = new Date().getFullYear();
+const industries = [
+  { label: "美容室・サロン", href: "/industries/beauty/" },
+  { label: "カフェ・飲食店", href: "/industries/restaurant/" },
+  { label: "教室・スクール", href: "/industries/school/" },
+  { label: "住宅メンテナンス", href: "/industries/home-service/" },
+];
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div>
+      <a class="brand" href="/" aria-label="アキナエルAI トップ">
+        <img src="/assets/logos/logo-mark.svg" alt="" width="28" height="28" />
+      </a>
+      <p class="footer-meta" style="margin-top:0.6rem;">© {year} アキナエルAI</p>
+    </div>
+    <ul class="footer-nav">
+      <li><a href="/#service">できること</a></li>
+      <li><a href="/#pricing">料金</a></li>
+      <li><a href="/#faq">よくある質問</a></li>
+      {industries.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      <li><a href={`${coreOrigin}/portal/`}>Customer Portalへログイン</a></li>
+    </ul>
+  </div>
+</footer>
