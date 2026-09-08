@@ -1,12 +1,12 @@
 export const siteConfig = {
   name: "アキナエルAI",
   description:
-    "小さな相談から、Webや集客の改善を形にしていくAI制作・改善サービス。",
+    "商いの願いを叶えるAI。小さな店舗・地域事業者のためのWeb・SNS・文章・画像・調査の相談役。",
   nav: [
-    { label: "できること", href: "#service" },
-    { label: "進め方", href: "#flow" },
-    { label: "品質管理", href: "#quality" },
-    { label: "よくある質問", href: "#faq" },
+    { label: "できること", href: "/#service" },
+    { label: "業種別", href: "/#industries" },
+    { label: "料金", href: "/#pricing" },
+    { label: "よくある質問", href: "/#faq" },
   ],
-  primaryCta: { label: "無料で相談する", href: "#contact" },
+  primaryCta: { label: "無料でAIに相談する", href: "/#register" },
 } as const;

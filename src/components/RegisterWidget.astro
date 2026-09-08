@@ -1,0 +1,75 @@
+---
+interface Props {
+  id?: string;
+}
+const { id = "register" } = Astro.props;
+const coreOrigin = (import.meta.env.PUBLIC_CORE_ORIGIN || "https://akinael-ai.com").replace(/\/+$/, "");
+---
+
+<div class="register-widget" id={id} data-register-widget data-core-origin={coreOrigin}>
+  <form data-register-form>
+    <label class="sr-only" for={`${id}-email`}>メールアドレス</label>
+    <input id={`${id}-email`} name="email" type="email" inputmode="email" autocomplete="username" placeholder="メールアドレス" required />
+    <label class="sr-only" for={`${id}-password`}>パスワード（12文字以上）</label>
+    <input id={`${id}-password`} name="password" type="password" autocomplete="new-password" placeholder="パスワード（12文字以上）" required />
+    <button class="button button-primary" type="submit">無料でAIに相談する</button>
+    <p data-register-status role="status"></p>
+  </form>
+</div>
+
+<script>
+  const widgets = document.querySelectorAll<HTMLElement>("[data-register-widget]");
+  const tokenKey = "customer-token";
+
+  widgets.forEach((widget) => {
+    const coreOrigin = widget.dataset.coreOrigin || "https://akinael-ai.com";
+    const form = widget.querySelector<HTMLFormElement>("[data-register-form]");
+    const status = widget.querySelector<HTMLElement>("[data-register-status]");
+    if (!form || !status) return;
+
+    if (localStorage.getItem(tokenKey)) {
+      status.dataset.tone = "";
+      status.textContent = "既にログイン済みです。Customer Portalへ移動できます。";
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const submitButton = form.querySelector("button[type=submit]") as HTMLButtonElement | null;
+      const email = (form.elements.namedItem("email") as HTMLInputElement)?.value.trim();
+      const password = (form.elements.namedItem("password") as HTMLInputElement)?.value ?? "";
+      if (!email || password.length < 12) {
+        status.dataset.tone = "error";
+        status.textContent = "メールアドレスと12文字以上のパスワードを入力してください。";
+        return;
+      }
+      if (submitButton) submitButton.disabled = true;
+      status.dataset.tone = "";
+      status.textContent = "送信しています…";
+      try {
+        const response = await fetch(`${coreOrigin}/api/v2/auth/register`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const body = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(body?.error?.message || "登録に失敗しました。");
+        }
+        if (body.confirmationRequired) {
+          status.textContent = "確認メールを送信しました。メール内のリンクを開いてください。";
+          return;
+        }
+        if (body.token) localStorage.setItem(tokenKey, body.token);
+        status.textContent = "登録しました。Customer Portalへ移動します…";
+        window.setTimeout(() => {
+          window.location.href = `${coreOrigin}/portal/`;
+        }, 500);
+      } catch (error) {
+        status.dataset.tone = "error";
+        status.textContent = error instanceof Error ? error.message : "登録に失敗しました。";
+      } finally {
+        if (submitButton) submitButton.disabled = false;
+      }
+    });
+  });
+</script>

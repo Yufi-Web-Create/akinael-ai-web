@@ -1,0 +1,54 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  structuredData?: Record<string, unknown>[];
+}
+
+const { title, description, path = "/", structuredData = [] } = Astro.props;
+const siteUrl = "https://akinael-ai.com";
+const canonical = new URL(path, siteUrl).toString();
+const ogImage = new URL("/assets/logos/logo-mark.svg", siteUrl).toString();
+// Defensively escape "<" so a data value can never terminate the script tag early
+// (e.g. a value containing "</script>"), even though current sources are all
+// author-controlled content, not user input.
+const toSafeJsonLd = (value: Record<string, unknown>) => JSON.stringify(value).replace(/</g, "\\u003c");
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="アキナエルAI" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <link rel="icon" href="/assets/logos/favicon.svg" />
+    {structuredData.map((entry) => (
+      <script type="application/ld+json" is:inline set:html={toSafeJsonLd(entry)} />
+    ))}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">本文へ移動</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
