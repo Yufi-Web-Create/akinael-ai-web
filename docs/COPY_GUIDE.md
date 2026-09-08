@@ -56,3 +56,7 @@ Copy Reviewerは最終画面の文章を読み、以下をFAIL判定する。
 - 具体的な説明より抽象コピーが先行
 - CTAと遷移先の意味が一致しない
 - 未確認情報の断定
+
+
+## PHASE 7 facts
+Pricing source is Core public/index.html + live site on 2026-09-08: お試し0円 / 本契約ミニ3,980円月額 / しっかり運用7,980円月額 / 発展運用17,800円月額, all税込. Web正式制作19,800円〜. Do not extrapolate cancellation terms.

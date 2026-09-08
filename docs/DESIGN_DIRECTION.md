@@ -1,96 +1,19 @@
-# DESIGN_DIRECTION
-
-> Research結果から案件固有のVisual Directionを定義する。`REFERENCE_ANALYSIS.md` 完了前に確定しない。
+# DESIGN_DIRECTION — PHASE 7
+Decision date: 2026-09-08. Research: docs/research/REFERENCE_ANALYSIS.md.
 
 ## Concept
-案件の目的とブランドから、視覚的に何を感じさせるべきかを書く。
+小さな商いの相談を受ける、落ち着いた制作スタジオ。言葉と余白に信頼を持たせる。
+Character: 丁寧・明快・静か・人間的。
 
-## Visual character
-3〜5語程度で定義する。
-
-例:
-- Calm
-- Editorial
-- Human
-- Clear
-- Warm
-
-## What the design must communicate
-1. 
-2. 
-3. 
-
-## Layout direction
-- 情報密度:
-- 余白:
-- Section rhythm:
-- Grid:
-- Card usage:
-
-## Typography direction
-- 見出しの性格:
-- 本文の性格:
-- 文字サイズの強弱:
-- 英字使用ルール:
-
-## Imagery direction
-- 優先する写真・画像:
-- 避ける表現:
-- AI生成画像を使う場合の条件:
-
-## Color direction
-- Primary role:
-- Accent role:
-- Background role:
-- Avoid:
-
-## Motion direction
-- Use:
-- Avoid:
-
-## Mobile direction
-Desktopの縮小版にしない。Mobileで残す優先情報と省略・再配置するものを書く。
+## Layout
+広い見出しと細い罫線、本文幅を抑えた非対称グリッド。Heroは左にブランドの中心、右に日常の相談例。全セクションを箱にしない。深緑の帯で無料試作の体験を際立たせる。
+Typography: 日本語の明朝系displayとゴシック本文。OSの日本語フォントを使用し、初回読み込みで外部フォントを要求しない。英語は補助番号/短いラベルに限定。
+Palette: 既存深緑 #164e4a を継承。明るい紙色 #faf9f5、墨 #20332e、コーラルは既存ロゴだけ。Main text contrastを優先。
+Imagery: 正式logo markが取得できれば再利用。人物写真や架空作品は足さない。今回のowner briefに従いTypography主体。
+Motion: hover/focus 150ms程度。初期非表示やscroll revealなし。reduced-motionを尊重。
+Mobile: 20px gutter、単一列、Heroの補助欄は本文下、メニューとログインを明示。表は縦組みへ。
 
 ## Reference mapping
-### Hero
-Reference:
-Reason:
-Principle to adopt:
-
-### Navigation
-Reference:
-Reason:
-Principle to adopt:
-
-### CTA
-Reference:
-Reason:
-Principle to adopt:
-
-### Typography
-Reference:
-Reason:
-Principle to adopt:
-
-### Mobile
-Reference:
-Reason:
-Principle to adopt:
-
-## ADOPT
-
-## ADAPT
-
-## AVOID
-
-## Distinctive element
-参考サイトとの差別化として、この案件独自の視覚要素・構成原則を書く。
-
-## Approval condition
-- [ ] Reference Analysisを根拠にしている
-- [ ] 1サイトの模倣ではない
-- [ ] Project Specと矛盾しない
-- [ ] Mobile方向が明示されている
-- [ ] AVOIDが明示されている
-
-この条件を満たした後、`DESIGN_SYSTEM.md`へ数値・token・componentルールを落とす。
+Kinfolk: 階層ADOPT、巨大余白AVOID。Goodpatch: contact入口ADAPT、英語主導/初期非表示AVOID。Jimdo/Squarespace: 新規とログインの分離ADOPT。MUJI/freee: 用途の具体語ADAPT。Base: navの分類だけ参照。
+Distinctive: 店主の相談語と作るものを対応させ、試作を見るという行動を中心に据える。
+Decision: 1サイトを模倣しない。研究の視覚観測範囲は分析文書を参照。

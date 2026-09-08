@@ -1,74 +1,16 @@
-# COPY_DIRECTION
+# COPY_DIRECTION — PHASE 7
+Decision: 2026-09-08. Basis: COPY_RESEARCH + owner brief + current repository/live site.
 
-> `COPY_RESEARCH.md` と `PROJECT_SPEC.md` から案件固有の言葉の方向性を決める。完成コピーを書く前に確定する。
-
-## Core communication
-このサービス・店舗を、最も具体的に一文で説明する。
-
-## Audience mindset
-訪問時に考えていること、困っていること、警戒していることを書く。
-
-## Message priority
-1. 最初に理解してほしいこと:
-2. 次に納得してほしいこと:
-3. 不安を減らすために必要なこと:
-4. 行動前に必要なこと:
-
-## Voice
-- 距離感:
-- 文の長さ:
-- 敬語:
-- 温度:
-- 専門用語:
-- 強さ:
-
-## Customer language to preserve
-実際の顧客・ブランド資料から残す言葉を書く。
-
-## Words to avoid
-競合頻出語、AI臭い抽象語、ブランドに合わない表現を書く。
-
-## Proof before promise
-抽象的な価値訴求より、先に示せる具体的事実・仕組みを書く。
-
-## Hero direction
-### Required content
-- 誰向けか
-- 何をするか
-- 最初の行動
-
-### Tone
-
-### Avoid
-
-## Section copy direction
-### Problem section
-
-### Service / solution
-
-### Difference
-
-### Process
-
-### Pricing
-
-### FAQ
-
-### CTA
-
-## Generic-copy test
-会社名やサービス名を別企業名へ置き換えても成立する文章は、原則として書き直す。
-
-## Reference relationship
-他社コピーは文言を借りない。
-分かりやすさ、情報順序、具体性など「機能している理由」だけを取り入れる。
-
-## Approval condition
-- [ ] Copy Researchを根拠にしている
-- [ ] 顧客自身の言葉を含む
-- [ ] 競合との差別化がある
-- [ ] generic表現のAVOIDが明示されている
-- [ ] Heroの情報優先順位が明示されている
-- [ ] PROJECT_SPECの事実だけを使う
-
-この条件を満たした後、`COPY_GUIDE.md`と実際のページ原稿へ反映する。
+Core: 店舗や小さな事業のWeb・文章・画像・調査を、相談から制作へ進めるサービス。
+Mindset: 手が回らない、頼み方が分からない、契約前に仕上がりを見たい。
+Priority: 誰向け/何をする→何を頼める→見て決める→費用と承認→相談。
+Voice: 普段の日本語、短いですます、親しみはあるが馴れ馴れしくしない。専門用語は本文に押し込まない。
+Hero: 中心は「商いの願いを叶えるAI」。対象とWeb/文章等の定義、無料相談CTAを近接。
+Service: 日常の相談例と成果物で説明。実績ではなく相談例と明記。
+Difference: 利用者がすることと制作側がすること。競合の優劣を断定しない。
+Flow: 相談→無料試作→内容/費用確認→納得後契約→継続。
+Pricing: Core public/index.htmlと現行サイトの税込確定値のみ。契約/解約・返金は推測しない。
+FAQ: 結論→範囲/条件。納期、回数、成果、データ学習について無根拠な保証なし。
+CTA: 無料で相談する→/start/で登録後の操作を案内。ログイン→既存Core Portal。
+Proof: このサイトを自動制作実績として宣言しない。Runtime証跡は内部文書。
+AVOID: 未来を変革、想いを形に、何でも対応、無制限、架空顧客、他社コピーの転用。

@@ -65,3 +65,7 @@ UI変更後はスクリーンショットを生成し、Visual Reviewerが以下
 - visual consistency
 
 重大なFAILがあればBuilderへ差し戻す。
+
+
+## PHASE 7 tokens
+Palette: paper #faf9f5, ink #20332e, brand #164e4a. Heading uses local Japanese serif; body uses local Japanese sans. Max width 1200px. Gutter and section spacing inherit above. Controls min-height44px. Native details disclosure. No hidden initial content.
