@@ -1,134 +1,17 @@
-import { siteConfig } from "@/lib/site-config";
-
-const services = [
-  "Webサイトの制作・修正",
-  "SNSや文章の制作",
-  "画像・バナーの制作",
-  "集客や導線の調査・改善",
-] as const;
-
-const flow = [
-  ["01", "相談", "やりたいことを、そのままチャットで伝えます。"],
-  ["02", "整理・試作", "必要なことを整理し、まず確認できる形まで進めます。"],
-  ["03", "確認", "内容や費用を確認してから、次へ進むか決められます。"],
-  ["04", "制作・改善", "制作と検査を分け、確認しながら仕上げます。"],
-] as const;
-
+import Link from "next/link";
+import type { Metadata } from "next";
+import { ConsultationLink, Closing, FaqList, Flow } from "@/components/site";
+import { industries, plans, webProduction } from "@/lib/site-config";
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 export default function Home() {
-  return (
-    <>
-      <header className="site-header">
-        <div className="container header-inner">
-          <a className="brand" href="#top" aria-label={`${siteConfig.name} トップ`}>
-            {siteConfig.name}
-          </a>
-          <nav aria-label="メインナビゲーション">
-            <ul className="nav-list">
-              {siteConfig.nav.map((item) => (
-                <li key={item.href}>
-                  <a href={item.href}>{item.label}</a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-          <a className="button button-small" href={siteConfig.primaryCta.href}>
-            {siteConfig.primaryCta.label}
-          </a>
-        </div>
-      </header>
-
-      <main id="top">
-        <section className="hero section">
-          <div className="container hero-grid">
-            <div>
-              <p className="eyebrow">小さな店舗や事業の、Webまわりの相談役。</p>
-              <h1>「こんなことができたらいいな」を<br className="desktop-break" />小さな相談から、形にしていきます。</h1>
-              <p className="hero-lead">
-                Webサイトの修正、SNS投稿、画像制作、ちょっとした調査まで。
-                専門の担当者を探すほどではない仕事も、チャットから相談できます。
-              </p>
-              <div className="actions">
-                <a className="button" href="#contact">無料で相談する</a>
-                <a className="text-link" href="#service">できることを見る</a>
-              </div>
-            </div>
-            <aside className="hero-note" aria-label="アキナエルAIの進め方">
-              <p className="note-label">いきなり契約ではありません</p>
-              <p>相談内容を整理し、簡易試作や提案を確認してから、必要なら契約を検討できます。</p>
-            </aside>
-          </div>
-        </section>
-
-        <section className="section" id="service">
-          <div className="container split-heading">
-            <div>
-              <p className="eyebrow">できること</p>
-              <h2>頼む先を探すほどでもない仕事から、相談できます。</h2>
-            </div>
-            <div className="service-list">
-              {services.map((service) => <p key={service}>{service}</p>)}
-            </div>
-          </div>
-        </section>
-
-        <section className="section section-muted" id="flow">
-          <div className="container">
-            <p className="eyebrow">進め方</p>
-            <h2>相談して、見てから決める。</h2>
-            <div className="flow-grid">
-              {flow.map(([number, title, body]) => (
-                <article className="flow-item" key={number}>
-                  <span>{number}</span>
-                  <h3>{title}</h3>
-                  <p>{body}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="section" id="quality">
-          <div className="container quality-grid">
-            <div>
-              <p className="eyebrow">品質管理</p>
-              <h2>作るAIと、確かめるAIを分けています。</h2>
-            </div>
-            <div>
-              <p>
-                制作したものをそのまま出すのではなく、表示崩れ、文章、操作、技術面を別工程で確認します。
-                公開や課金など重要な操作は、人の確認を通してから進めます。
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="section section-muted" id="faq">
-          <div className="container faq-grid">
-            <div>
-              <p className="eyebrow">よくある質問</p>
-              <h2>相談だけでも大丈夫ですか？</h2>
-            </div>
-            <p>はい。まず相談内容を整理して、できることや進め方を確認するところから始められます。</p>
-          </div>
-        </section>
-
-        <section className="section contact" id="contact">
-          <div className="container contact-inner">
-            <div>
-              <p className="eyebrow">まずは相談から</p>
-              <h2>小さなことでも、そのまま書いてください。</h2>
-            </div>
-            <p className="contact-note">相談機能の本番接続は、バックエンド連携工程で実装します。</p>
-          </div>
-        </section>
-      </main>
-
-      <footer className="site-footer">
-        <div className="container footer-inner">
-          <p>{siteConfig.name}</p>
-          <p>AI Web Production Reference Project</p>
-        </div>
-      </footer>
-    </>
-  );
+  return <main id="main">
+    <section className="hero"><div className="container"><div className="hero-topline"><p>店舗と、小さな事業のための制作チーム</p><span aria-hidden="true">AKINAEL AI</span></div><div className="hero-grid"><div className="hero-copy"><h1><span>商いの願いを</span><span>叶える<span className="hero-ai">AI</span></span></h1><p className="hero-lead">お店のWebサイト、文章、画像、ちょっとした調査。<br className="desktop-break" />「こんなの作れたら」から、相談できます。</p><div className="actions"><ConsultationLink /><Link prefetch={false} className="text-link" href="/service/">サービス詳細を見る</Link></div><p className="caption">まず無料で試作を確認。契約は、納得してから。</p></div><aside className="request-note" aria-label="相談できることの例"><p className="eyebrow">たとえば、こんなこと。</p><p className="request-line">新しいメニューを、<br />もっと知ってもらいたい。</p><p className="request-line">ホームページを、<br />お店らしく整えたい。</p><p className="request-line">やりたいことはある。<br />でも、手が回らない。</p><Link prefetch={false} href="#service" className="note-link">相談できることを見る <span aria-hidden="true">↓</span></Link></aside></div><div className="hero-bottom"><p>話すところから、一緒に整理します。</p><p>相談 → 試作 → 確認 → 制作</p></div></div></section>
+    <section className="section" id="service"><div className="container"><div className="section-heading"><div><p className="eyebrow">01 / できること</p><h2>気になっていた、<br />その仕事から。</h2></div><p>誰に頼むかを探す前に、まず相談を。<br />お店の状況に合わせて、必要なものを整理します。</p></div><div className="service-rows">{[["Webサイト", "初めてのお客様にも、お店のことが伝わるように。", "紹介ページの制作、既存サイトの修正、予約や問い合わせへの案内。"], ["文章・SNS", "伝えたいことを、お店の言葉で。", "お知らせ文、商品やサービスの紹介文、SNS投稿の案。"], ["画像・バナー", "言葉だけでは伝えにくいときに。", "告知画像やバナーなど、用途に合わせた画像制作の相談。"], ["調査・改善", "どこから直すか、一緒に考える。", "競合や集客の簡易調査、Webの導線を見直すための提案。"]].map(([title, lead, body]) => <article className="service-row" key={title}><h3>{title}</h3><div><p className="service-lead">{lead}</p><p>{body}</p></div></article>)}</div><Link prefetch={false} className="text-link more-link" href="/service/">対応範囲と進め方を詳しく見る <span aria-hidden="true">↗</span></Link></div></section>
+    <section className="trial-band"><div className="container trial-inner"><div><p className="eyebrow">02 / 無料試作</p><h2>まず作ってみる。<br />続きは、見てから。</h2></div><div><p className="trial-lead">何ができるか、説明だけでは分からないから。</p><p>相談をもとに、簡易試作や提案を作ります。<br />実際に見て、方向性と必要な費用を確認してから、<br className="desktop-break" />契約するかを検討できます。</p><p className="trial-scope">無料試作に本番公開は含まれません。<br />有料の制作は、内容と料金を承認いただいた後に進めます。</p><Link prefetch={false} className="text-link" href="/pricing/">無料の範囲と料金を見る <span aria-hidden="true">↗</span></Link></div></div></section>
+    <section className="section" id="flow"><div className="container split-layout"><div><p className="eyebrow">03 / 相談から完成まで</p><h2>話して、見て、<br />確かめながら。</h2><p className="side-copy">専門用語や、完成した指示書は不要です。<br />大事な判断は、ご自身で確かめてから。</p></div><Flow /></div></section>
+    <section className="section section-muted" id="quality"><div className="container split-layout"><div><p className="eyebrow">04 / 大切にしていること</p><h2>作った後に、<br />確かめる時間を。</h2></div><div className="prose"><p>制作と検査を別の工程に分け、文章、表示、操作を確認します。気になる点は修正し、仕上げていきます。</p><p>公開や課金などの重要な操作は、人の承認を通してから。相談しただけで、有料作業が始まることはありません。</p><Link prefetch={false} className="text-link" href="/about/">アキナエルAIについて <span aria-hidden="true">↗</span></Link></div></div></section>
+    <section className="section choice-section"><div className="container split-layout"><div><p className="eyebrow">頼み方を選ぶときに</p><h2>自分で作る。<br />相談して任せる。</h2></div><div className="prose"><p>制作ツールで自分で編集する。汎用AIで案を考え、内容を確かめながら使う。制作会社に得意分野や対応範囲を聞いて依頼する。仕事の進め方にも、いくつかの選択肢があります。</p><p>アキナエルAIでは、相談から制作・検査までをチームが進めます。お店の方には情報を伝えていただき、試作と費用を見てから、契約を検討いただきます。</p><Link prefetch={false} className="text-link" href="/service/#roles">任せる範囲と確認することを見る</Link></div></div></section><section className="section"><div className="container"><div className="section-heading"><div><p className="eyebrow">05 / あなたの商いなら</p><h2>お店の数だけ、<br />相談のかたちがある。</h2></div><p>以下はご相談いただける内容の例です。<br />実在する顧客の実績ではありません。</p></div><div className="industry-list">{industries.map(item => <Link prefetch={false} href={`/industries/${item.slug}/`} key={item.slug}><span>{item.name}</span><strong>{item.request}</strong><span aria-hidden="true">↗</span></Link>)}</div><Link prefetch={false} className="text-link more-link" href="/cases/">相談例と作るものを見る <span aria-hidden="true">↗</span></Link></div></section>
+    <section className="section price-intro"><div className="container split-layout"><div><p className="eyebrow">06 / 料金</p><h2>必要な範囲から、<br />選べます。</h2></div><div><div className="price-summary"><p>お試し</p><p className="large-price">0<span>円</span></p></div><p>月額プランは、{plans[1].name} {plans[1].price}円から。<br />Webサイトの正式制作・公開は{webProduction.startingPrice}円からです。</p><p className="caption">表示料金は税込です。対象範囲と外部費用は料金ページでご確認ください。</p><Link prefetch={false} href="/pricing/" className="text-link">料金と契約の考え方を見る <span aria-hidden="true">↗</span></Link></div></div></section>
+    <section className="section"><div className="container split-layout"><div><p className="eyebrow">07 / よくある質問</p><h2>気になることを、<br />先に。</h2><Link prefetch={false} className="text-link more-link" href="/faq/">すべての質問を見る <span aria-hidden="true">↗</span></Link></div><FaqList limit={4} /></div></section><Closing />
+  </main>;
 }

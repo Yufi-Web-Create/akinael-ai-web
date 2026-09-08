@@ -9,3 +9,7 @@ test-results/
 !.env.example
 .DS_Store
 npm-debug.log*
+
+
+*.tsbuildinfo
+public/__qa*.html
