@@ -12,7 +12,7 @@ Routes: /, /service/, /pricing/, /faq/, /cases/, /industries/restaurant/, /indus
 Cases uses consultation examples, never fabricated delivered projects. Legal missing facts tracked; no formal policy invented.
 
 ## Frontend architecture decision
-Retain Next.js for this iteration. Existing strict TypeScript, ESLint, Vitest and browser suite install and baseline build pass; all current components are server components. Astro is a strong content-first option but would replace a working tested toolchain while formal facts and routes remain unfinished. No auth/backend lives here and no new client libraries are needed. Use pre-rendered routes, ordinary links, native details. Known tradeoff: Next framework JS remains; do not claim zero JS. Later Astro migration can compare emitted bytes without coupling to Core.
+Retain Next.js for this iteration. Existing strict TypeScript, ESLint, Vitest and browser suite install and baseline build pass; content pages are server components. Astro is a strong content-first option but would replace a working tested toolchain while formal facts and routes remain unfinished. No auth/backend lives here and no new client libraries are needed. Use pre-rendered routes, Next links with prefetch disabled, and native details. A small client menu wrapper closes on navigation and Escape; no other client library was added. Known tradeoff: Next framework JS remains; do not claim zero JS. Later Astro migration can compare emitted bytes without coupling to Core.
 Sources: https://docs.astro.build/en/concepts/why-astro/ and https://nextjs.org/docs/app/guides/static-exports .
 
 ## Direction / responsive / SEO / A11y
@@ -28,4 +28,4 @@ Core legal.html leaves operator, address, contact, terms, privacy policy, commer
 Install succeeded (386 packages). ESLint warning0 PASS, TypeScript PASS, Unit2/2 PASS, production build PASS. Preview initially failed because Next CLI rejects Vite --host/--strictPort. Minimal dev wrapper translates host and omits strictPort; second supervised preview healthy. No stack replacement for preview.
 
 ## Production boundary / exact next
-Production unchanged. No DNS, deploy, notifications, secrets, database mutations. Complete routes and QA; confirm formal legal material before release. Runtime handoff to preserve Research→Direction→Build→QA→Review→candidate evidence, not evidence of execution through Core Runtime.
+Production unchanged. No DNS, deploy, notifications, secrets, database mutations. All 12 content routes implemented; Draft PR #3 created. See PHASE7_QA.md for current gate results and PHASE7_RUNTIME_HANDOFF.md for build/hosting preparation. Confirm formal legal material before release. Runtime handoff to preserve Research→Direction→Build→QA→Review→candidate evidence, not evidence of execution through Core Runtime.
