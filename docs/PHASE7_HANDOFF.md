@@ -41,7 +41,7 @@
 - PR #4 / main CIはPlaywrightを含めPASS。旧「CI再実行中」「E2E未確認」「PR #4 merge待ち」は解消済み。
 - Homepage、4業種ページ、内部anchor、Portal導線、static build構成を確認。
 - Core production preflight: `OPTIONS /api/v2/auth/register` = 204、allow-origin / POST / content-typeを確認。
-- Core production validation request: `POST /api/v2/auth/register` = 400だが、error responseにCORS headerが欠落する契約不整合を発見。Core repoの別branchで修正・回帰testを進行。
+- Core production validation requestでerror responseのCORS header欠落を発見し、Core PR #67で修正・CI・独立レビュー・mergeまで完了。
 - Research/Directionの4文書が未記入templateだったため、既存実装を作り直さず、11件の公式Reference、競合5社、顧客言語、ADOPT/ADAPT/AVOID、Design/Copy Directionを補完。
 - Astro 8前に削除予定の`astro:content`経由zod importを`astro/zod`へ更新。
 - 登録widgetへ、Coreの既存`/legal#terms`・`/legal#privacy`にある暫定案内の確認欄を追加。未確定文書への法的同意とは表現せず、正式文書の確定をproduction publishのHuman Gateとして維持する。
@@ -55,8 +55,8 @@
 - Web baseline typecheck: PASS（修正前はdeprecated import hintsのみ）
 - Web baseline unit: 2/2 PASS
 - Web baseline build: 5 pages PASS
-- Web Quality Gate Run `34466164869`: **PASS**（lint / typecheck / unit 3/3 / build / Playwright 18/18）
-- Browser evidence artifact: `10147626981`（Playwright report、14日保持）
+- Web latest-head Quality Gate Run `34466642179`: **PASS**（lint / typecheck / unit 3/3 / build / Playwright 18/18）
+- Browser evidence artifact: `10147817599`（Playwright report、14日保持）
 - Core CORS fix PR #67: Core Quality Run `34465946885` **PASS**、independent review blocking 0、merge commit `0ddb862c569626a791e3f826decd402e55c82bc5`
 - Independent Visual / Copy / Technical / SEO-A11y review: 初回blocking 2件を修正し、再レビューblocking 0
 
