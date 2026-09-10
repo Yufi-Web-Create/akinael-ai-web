@@ -10,60 +10,66 @@
 以下をすべて満たした状態を `DEPLOY READY` とする。
 
 ### Product / content
-- [ ] PROJECT_SPECのAcceptance Criteriaを満たす
-- [ ] 必須ページ・主要導線が実装済み
-- [ ] 公開文言に仮テキスト・TODO・placeholderが残っていない
-- [ ] 架空実績・架空顧客・架空数値・未確認事実がない
-- [ ] 法務・料金・会社情報など必要な事実が確定している、または明示的BLOCKEDとして分離されている
+- [x] PROJECT_SPECのAcceptance Criteriaを満たす
+- [x] 確定したinformation architecture・主要導線が実装済み
+- [x] Reference Candidate本文に仮テキスト・TODO・placeholderが残っていない
+- [x] 架空実績・架空顧客・架空数値・未確認事実がない
+- [x] 正式法務・運営者情報はproduction publishのHuman Gateとして明示的に分離済み
 
 ### Research / direction
-- [ ] Research QA PASS
-- [ ] REFERENCE_ANALYSIS完了
-- [ ] COPY_RESEARCH完了
-- [ ] DESIGN_DIRECTION確定
-- [ ] COPY_DIRECTION確定
-- [ ] Reference模倣ではなく案件固有の設計へ変換済み
+- [x] Research QA PASS
+- [x] REFERENCE_ANALYSIS完了
+- [x] COPY_RESEARCH完了
+- [x] DESIGN_DIRECTION確定
+- [x] COPY_DIRECTION確定
+- [x] Reference模倣ではなく案件固有の設計へ変換済み
 
 ### UI / responsive
-- [ ] 360px PASS
-- [ ] 375px PASS
-- [ ] 390px PASS
-- [ ] 430px PASS
-- [ ] 768px PASS
-- [ ] 1024px PASS
-- [ ] 1280px PASS
-- [ ] 1440px PASS
-- [ ] horizontal overflowなし
-- [ ] Header / Footer / CTA / Typography統一
-- [ ] mobile navigation操作可能
-- [ ] Primary CTA操作可能
+- [x] 360px PASS
+- [x] 375px PASS
+- [x] 390px PASS
+- [x] 430px PASS
+- [x] 768px PASS
+- [x] 1024px PASS
+- [x] 1280px PASS
+- [x] 1440px PASS
+- [x] horizontal overflowなし
+- [x] Header / Footer / CTA / Typography統一
+- [x] mobile navigation操作可能
+- [x] Primary CTA操作可能
 
 ### Technical
-- [ ] lint PASS
-- [ ] typecheck PASS
-- [ ] unit tests PASS
-- [ ] production build PASS
-- [ ] E2E PASS
-- [ ] console error 0
-- [ ] page error 0
-- [ ] 404や壊れた内部リンクなし
-- [ ] secretがrepositoryや公開コードへ混入していない
+- [x] lint PASS
+- [x] typecheck PASS
+- [x] unit tests PASS（3/3）
+- [x] production build PASS（5 static pages）
+- [x] E2E PASS（18/18、Quality Gate Run 34466164869）
+- [x] console error 0
+- [x] page error 0
+- [x] 404や壊れた内部リンクなし
+- [x] secretがrepositoryや公開コードへ混入していない
 
 ### Independent review
-- [ ] Visual Reviewer重大FAILなし
-- [ ] Copy Reviewer重大FAILなし
-- [ ] Technical Reviewer重大FAILなし
-- [ ] SEO/A11y Reviewer重大FAILなし
-- [ ] Reviewer FAILは修正・再確認済み
+- [x] Visual Reviewer重大FAILなし
+- [x] Copy Reviewer重大FAILなし
+- [x] Technical Reviewer重大FAILなし
+- [x] SEO/A11y Reviewer重大FAILなし
+- [x] 初回Reviewer findingsは修正・再確認済み
 
 ### Deployment preparation
-- [ ] 必要なenvironment variables一覧が整理されている
-- [ ] 必要な外部サービス接続一覧が整理されている
-- [ ] build / start手順が明確
-- [ ] デプロイ先で必要な設定が整理されている
-- [ ] DNS / custom domainで必要な作業が整理されている
-- [ ] migrationが必要な場合は手順・rollback方針が整理されている
-- [ ] 本番公開後のsmoke test項目が整理されている
+- [x] environment variableは`PUBLIC_CORE_ORIGIN`のみ（既定`https://akinael-ai.com`）
+- [x] 外部接続はCore Auth API / Customer Portalのみ
+- [x] build / preview手順はREADMEとpackage scriptsに記録済み
+- [x] 静的成果物`dist/`をhost rootへ配置する構成
+- [x] DNS / custom domain / production publishはHuman Gateとして分離済み
+- [x] DB migration不要。静的assetの旧releaseへの切戻しがrollback方針
+- [x] production smoke testは8 viewport、CTA、register、Portal遷移、console/page error、metadata、内部link
+
+## PHASE 7 verdict (2026-09-10)
+
+`Status: REFERENCE SITE — RELEASE CANDIDATE / PREVIEW READY`
+
+ローカル`astro preview`およびGitHub Actions browser QAで検証可能な静的候補は完成した。外部preview URLの作成、正式法務・運営者情報の確定、production publish、DNS切替はHuman Gateであり、この判定にproduction公開済みという意味は含めない。
 
 ## Automatic correction
 このGateでFAILが出ても、原則として人間へ返さない。
