@@ -8,7 +8,7 @@
 - Result: **REFERENCE SITE — RELEASE CANDIDATE / PREVIEW READY**
 - Source of truth: `Yufi-Web-Create/akinael-ai-web` `main`
 - Main baseline before RC audit: `09e5bad1ab7d571ed051f25b319651ac4cbe32c8`
-- Current main / RC merge: `f4514f7f0352ec77326c87b1033a034056f8fa42`
+- RC application merge: `f4514f7f0352ec77326c87b1033a034056f8fa42`（以後のmain変更はhandoff文書のみ）
 - RC PR #5: **MERGED**
 - PR #4: **MERGED**
 - Quality Gate Run `34191984013`: **PASS**
