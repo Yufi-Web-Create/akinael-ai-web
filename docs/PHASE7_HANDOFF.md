@@ -8,7 +8,8 @@
 - Result: **REFERENCE SITE — RELEASE CANDIDATE / PREVIEW READY**
 - Source of truth: `Yufi-Web-Create/akinael-ai-web` `main`
 - Main baseline before RC audit: `09e5bad1ab7d571ed051f25b319651ac4cbe32c8`
-- RC PR: #5（Quality Gate PASS後にmerge）
+- Current main / RC merge: `f4514f7f0352ec77326c87b1033a034056f8fa42`
+- RC PR #5: **MERGED**
 - PR #4: **MERGED**
 - Quality Gate Run `34191984013`: **PASS**
 - `package.json`の`qa`はlint / typecheck / unit / build / Playwright E2Eを実行する。main CI PASSによりE2Eは完了済み。
@@ -57,6 +58,7 @@
 - Web baseline build: 5 pages PASS
 - Web latest-head Quality Gate Run `34466642179`: **PASS**（lint / typecheck / unit 3/3 / build / Playwright 18/18）
 - Browser evidence artifact: `10147817599`（Playwright report、14日保持）
+- Main post-merge Quality Gate Run `34477041641`: **PASS**
 - Core CORS fix PR #67: Core Quality Run `34465946885` **PASS**、independent review blocking 0、merge commit `0ddb862c569626a791e3f826decd402e55c82bc5`
 - Independent Visual / Copy / Technical / SEO-A11y review: 初回blocking 2件を修正し、再レビューblocking 0
 
