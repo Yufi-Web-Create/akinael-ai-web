@@ -43,7 +43,7 @@
 - [x] typecheck PASS
 - [x] unit tests PASS（3/3）
 - [x] production build PASS（5 static pages）
-- [x] E2E PASS（18/18、latest head Quality Gate Run 34466642179）
+- [x] E2E PASS（18/18、PR head Run 34466642179 / main post-merge Run 34477041641）
 - [x] console error 0
 - [x] page error 0
 - [x] 404や壊れた内部リンクなし
