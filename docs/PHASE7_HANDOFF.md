@@ -1,13 +1,14 @@
 # PHASE7_HANDOFF
 
-最終更新: 2026-09-10（ChatGPT Work、Release Candidate監査中）
+最終更新: 2026-09-10（ChatGPT Work、Release Candidate完成）
 
 ## CURRENT STATE
 
-- Phase: **PHASE 7 / Akinael Reference Production — IN PROGRESS**
-- Goal: **REFERENCE SITE — RELEASE CANDIDATE / PREVIEW READY**
+- Phase: **PHASE 7 / Akinael Reference Production — COMPLETE**
+- Result: **REFERENCE SITE — RELEASE CANDIDATE / PREVIEW READY**
 - Source of truth: `Yufi-Web-Create/akinael-ai-web` `main`
-- Main baseline: `09e5bad1ab7d571ed051f25b319651ac4cbe32c8`
+- Main baseline before RC audit: `09e5bad1ab7d571ed051f25b319651ac4cbe32c8`
+- RC PR: #5（Quality Gate PASS後にmerge）
 - PR #4: **MERGED**
 - Quality Gate Run `34191984013`: **PASS**
 - `package.json`の`qa`はlint / typecheck / unit / build / Playwright E2Eを実行する。main CI PASSによりE2Eは完了済み。
@@ -54,9 +55,10 @@
 - Web baseline typecheck: PASS（修正前はdeprecated import hintsのみ）
 - Web baseline unit: 2/2 PASS
 - Web baseline build: 5 pages PASS
-- Web latest full QA / CI: **PENDING**
-- Core CORS fix tests: 108/108 PASS（ローカル。PR/CI pending）
-- Independent Visual / Copy / Technical / SEO-A11y review: **PENDING**
+- Web Quality Gate Run `34466164869`: **PASS**（lint / typecheck / unit 3/3 / build / Playwright 18/18）
+- Browser evidence artifact: `10147626981`（Playwright report、14日保持）
+- Core CORS fix PR #67: Core Quality Run `34465946885` **PASS**、independent review blocking 0、merge commit `0ddb862c569626a791e3f826decd402e55c82bc5`
+- Independent Visual / Copy / Technical / SEO-A11y review: 初回blocking 2件を修正し、再レビューblocking 0
 
 ## PREVIEW READINESS
 
@@ -79,13 +81,10 @@
 
 ## EXACT NEXT ACTION
 
-1. Web latest diffへlint / typecheck / unit / build / Playwright E2Eを実行する。
-2. CI browser reportで8 viewport、4業種、CTA、register contract、console/page errorを確認する。
-3. Visual / Copy / Technical / SEO-A11yの独立レビューを実施し、blocking findingを修正する。
-4. Web PRをCI PASS後にmergeし、main SHAを確定する。
-5. CoreのCORS error-response fixを別PRでCI・review・mergeし、Render反映後にproduction POST error responseのCORS headerを再確認する。
-6. 全Gate PASSなら `REFERENCE SITE — RELEASE CANDIDATE / PREVIEW READY` としてPHASE 7を完了する。
-7. Preview hostingとproduction publishはHuman Gate。明示承認なしに外部公開・DNS変更しない。
+1. オーナーが正式な運営者・法務情報と公開先を確定する（Human Gate）。
+2. 必要なら既存契約内のstatic hostへ非production previewを配置し、同origin Auth handoffを含むsmoke testを行う。
+3. オーナーが明示承認した場合のみproduction publish / DNS切替を実行する。
+4. 公開後に8 viewport、CTA、register、Portal遷移、console/page error、metadata、内部linkをsmoke testする。
 
 ## HISTORICAL CHECKPOINT
 
