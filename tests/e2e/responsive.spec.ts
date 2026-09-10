@@ -39,6 +39,21 @@ const assertUsablePage = async (page: import("@playwright/test").Page, path: str
 
   expect(consoleErrors, `console errors should be empty on ${path}`).toEqual([]);
   expect(pageErrors, `page errors should be empty on ${path}`).toEqual([]);
+
+  const viewportFit = await page.evaluate(() => {
+    const viewportWidth = document.documentElement.clientWidth;
+    const selectors = [".site-header", "main", ".site-footer", ".header-actions", ".hero-actions"];
+    return selectors.flatMap((selector) =>
+      [...document.querySelectorAll<HTMLElement>(selector)].map((element) => {
+        const rect = element.getBoundingClientRect();
+        return { selector, left: rect.left, right: rect.right, width: rect.width, viewportWidth };
+      }),
+    );
+  });
+  for (const rect of viewportFit) {
+    expect(rect.left, `${rect.selector} should not begin outside ${path}`).toBeGreaterThanOrEqual(-1);
+    expect(rect.right, `${rect.selector} should not end outside ${path}`).toBeLessThanOrEqual(rect.viewportWidth + 1);
+  }
 };
 
 for (const viewport of viewports) {
@@ -53,11 +68,19 @@ for (const viewport of viewports) {
 }
 
 for (const path of industryPaths) {
-  test(`${path} is usable at mobile and desktop widths`, async ({ page }) => {
+  test(`${path} is usable at mobile and desktop widths`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await assertUsablePage(page, path);
+    await testInfo.attach(`${path.split("/").filter(Boolean).pop()}-390x844`, {
+      body: await page.screenshot({ fullPage: true }),
+      contentType: "image/png",
+    });
     await page.setViewportSize({ width: 1440, height: 900 });
     await assertUsablePage(page, path);
+    await testInfo.attach(`${path.split("/").filter(Boolean).pop()}-1440x900`, {
+      body: await page.screenshot({ fullPage: true }),
+      contentType: "image/png",
+    });
   });
 }
 
@@ -84,7 +107,75 @@ test("register widget rejects a short password before calling the API", async ({
   const widget = page.locator("#register-home");
   await widget.locator('input[type="email"]').fill("owner@example.com");
   await widget.locator('input[type="password"]').fill("short");
+  await widget.locator('input[name="consent"]').check();
   await widget.locator("button[type=submit]").click();
   await expect(widget.locator("[data-register-status]")).toHaveText(/12文字以上/);
   expect(requests, "the register API should not be called for an invalid password").toEqual([]);
+});
+
+test("register widget requires acknowledgement before calling the API", async ({ page }) => {
+  const requests: string[] = [];
+  page.on("request", (req) => {
+    if (req.url().includes("/api/v2/auth/register")) requests.push(req.url());
+  });
+  await page.goto("/", { waitUntil: "networkidle" });
+  const widget = page.locator("#register-home");
+  await widget.locator('input[type="email"]').fill("owner@example.com");
+  await widget.locator('input[type="password"]').fill("safe-test-password");
+  await widget.locator("button[type=submit]").click();
+  await expect(widget.locator("[data-register-status]")).toHaveText(/利用案内の確認/);
+  expect(requests, "the register API should not be called without acknowledgement").toEqual([]);
+});
+
+test("primary and customer CTAs lead to the intended destinations", async ({ page }) => {
+  await page.goto("/", { waitUntil: "networkidle" });
+  await page.getByRole("link", { name: "無料でAIに相談する" }).first().click();
+  await expect(page.locator("#register-home")).toBeVisible();
+
+  const portalHref = await page.getByRole("link", { name: "Customer Portalへログイン" }).first().getAttribute("href");
+  expect(portalHref).toBe("https://akinael-ai.com/portal/");
+});
+
+test("register widget follows the Core API success contract", async ({ page }) => {
+  await page.route("https://akinael-ai.com/api/v2/auth/register", async (route) => {
+    const request = route.request();
+    expect(request.method()).toBe("POST");
+    expect(request.postDataJSON()).toEqual({ email: "e2e@example.com", password: "safe-test-password" });
+    await route.fulfill({
+      status: 201,
+      contentType: "application/json",
+      headers: { "access-control-allow-origin": "*" },
+      body: JSON.stringify({ token: "e2e-browser-token" }),
+    });
+  });
+  await page.route("https://akinael-ai.com/portal/", async (route) => {
+    await route.fulfill({ status: 200, contentType: "text/html", body: "<title>Portal destination</title>" });
+  });
+
+  await page.goto("/", { waitUntil: "networkidle" });
+  const widget = page.locator("#register-home");
+  await widget.locator('input[type="email"]').fill("e2e@example.com");
+  await widget.locator('input[type="password"]').fill("safe-test-password");
+  await widget.locator('input[name="consent"]').check();
+  await widget.locator("button[type=submit]").click();
+  await expect(widget.locator("[data-register-status]")).toHaveText(/登録しました/);
+  await expect.poll(() => page.evaluate(() => localStorage.getItem("customer-token"))).toBe("e2e-browser-token");
+  await page.waitForURL("https://akinael-ai.com/portal/");
+});
+
+test("metadata, structured data, labels, and skip navigation are present", async ({ page }) => {
+  await page.goto("/", { waitUntil: "networkidle" });
+  await expect(page.locator('html[lang="ja"]')).toHaveCount(1);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://akinael-ai.com/");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /小さな店舗/);
+  await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(2);
+  await expect(page.getByLabel("メールアドレス")).toHaveCount(1);
+  await expect(page.getByLabel("パスワード（12文字以上）")).toHaveCount(1);
+  await expect(page.getByLabel(/利用条件の現行案内.*個人情報の取扱いに関する現行案内/)).toHaveCount(1);
+
+  const skip = page.getByRole("link", { name: "本文へ移動" });
+  await skip.focus();
+  await expect(skip).toBeVisible();
+  await skip.press("Enter");
+  await expect(page.locator("#main")).toBeFocused();
 });
