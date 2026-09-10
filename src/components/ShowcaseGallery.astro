@@ -1,0 +1,65 @@
+---
+const cards = [
+  {
+    eyebrow: "美容室・サロン",
+    before: "SNSの更新が半年止まったまま、メニューも古い情報だった。",
+    kind: "browser" as const,
+    title: "◯◯美容室｜くせ毛カットが得意な美容室",
+    body: "土曜日の空き枠あり。メニュー・料金・スタイル写真を掲載。",
+  },
+  {
+    eyebrow: "カフェ・飲食店",
+    before: "ランチメニューを、毎回お客様に口頭で説明していた。",
+    kind: "sns" as const,
+    body: "本日のランチは自家焙煎コーヒーと一緒にどうぞ。数量限定です☕",
+  },
+  {
+    eyebrow: "教室・スクール",
+    before: "体験レッスンの案内を、何から書けばいいか分からなかった。",
+    kind: "flyer" as const,
+    eyebrowOut: "体験レッスン受付中",
+    title: "そろばん、はじめませんか",
+    body: "少人数制・年齢問わず歓迎。まずはお気軽にご相談を。",
+  },
+  {
+    eyebrow: "住宅メンテナンス",
+    before: "問い合わせフォームがなく、電話が鳴らない日が続いていた。",
+    kind: "browser" as const,
+    title: "◯◯工務店｜雨どい修理も対応",
+    body: "見積り無料。地域密着ですばやく対応します。",
+  },
+];
+---
+
+<div class="showcase-scroller">
+  {cards.map((card) => (
+    <article class="showcase-card">
+      <span class="eyebrow">{card.eyebrow}</span>
+      <p class="showcase-before">{card.before}</p>
+      <div class="showcase-after">
+        {card.kind === "browser" && (
+          <div class="mock-browser">
+            <div class="mock-browser-bar"><span></span><span></span><span></span></div>
+            <div class="mock-browser-body">
+              <h4>{card.title}</h4>
+              <p>{card.body}</p>
+            </div>
+          </div>
+        )}
+        {card.kind === "sns" && (
+          <div class="mock-sns">
+            <div class="mock-sns-head"><span class="mock-sns-avatar" aria-hidden="true"></span><span>your_shop_name</span></div>
+            <p>{card.body}</p>
+          </div>
+        )}
+        {card.kind === "flyer" && (
+          <div class="mock-flyer">
+            <span class="eyebrow on-dark">{card.eyebrowOut}</span>
+            <h4>{card.title}</h4>
+            <p>{card.body}</p>
+          </div>
+        )}
+      </div>
+    </article>
+  ))}
+</div>

@@ -172,8 +172,8 @@ test("metadata, structured data, labels, and skip navigation are present", async
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://akinael-ai.com/");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /小さな店舗/);
   await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(2);
-  await expect(page.getByRole("heading", { name: "作ることだけでなく、確かめてから進める。" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "アキナエルAIの運営方針" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "道具だけを渡すのではなく、確かめてから進める。" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "チャットで話した内容が、この形になります。" })).toBeVisible();
   await expect(page.getByLabel("メールアドレス")).toHaveCount(1);
   await expect(page.getByLabel("パスワード（12文字以上）")).toHaveCount(1);
   await expect(page.getByLabel(/利用条件の現行案内.*個人情報の取扱いに関する現行案内/)).toHaveCount(1);

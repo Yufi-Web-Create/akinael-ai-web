@@ -1,0 +1,191 @@
+---
+interface IndustryDemo {
+  id: string;
+  label: string;
+  before: string;
+  placeholder: string;
+  defaultWord: string;
+  web: { title: string; body: string };
+  sns: { body: string };
+  flyer: { eyebrow: string; title: string; body: string };
+}
+
+const demos: IndustryDemo[] = [
+  {
+    id: "beauty",
+    label: "美容室・サロン",
+    before: "土曜の予約がなかなか埋まらなくて。得意なスタイルも伝わってない気がする。",
+    placeholder: "得意なスタイル（例：くせ毛カット）",
+    defaultWord: "くせ毛カット",
+    web: { title: "◯◯美容室｜{word}が得意な美容室", body: "土曜日の空き枠あり。メニュー・料金・スタイル写真を掲載しました。" },
+    sns: { body: "今週末、{word}のご相談も承っています。ご予約はプロフィールのリンクから✂️" },
+    flyer: { eyebrow: "SATURDAY OPEN", title: "{word}、お任せください", body: "土曜も営業中。ご予約はお電話または当日受付で。" },
+  },
+  {
+    id: "restaurant",
+    label: "カフェ・飲食店",
+    before: "ランチのメニュー、SNSに全然載せられてなくて。",
+    placeholder: "看板メニュー（例：自家焙煎コーヒー）",
+    defaultWord: "自家焙煎コーヒー",
+    web: { title: "◯◯珈琲｜{word}のお店", body: "ランチ11:30〜14:00。本日のメニューを毎朝更新しています。" },
+    sns: { body: "本日のランチは{word}と一緒にどうぞ。数量限定です☕" },
+    flyer: { eyebrow: "LUNCH MENU", title: "{word}、はじめました", body: "平日11:30〜。テイクアウトも承っています。" },
+  },
+  {
+    id: "school",
+    label: "教室・スクール",
+    before: "体験レッスンの案内を出したいけど、何をどう書けばいいか分からなくて。",
+    placeholder: "教えていること（例：そろばん）",
+    defaultWord: "そろばん",
+    web: { title: "◯◯教室｜{word}の体験レッスン受付中", body: "少人数制。まずは体験レッスンからお気軽にどうぞ。" },
+    sns: { body: "{word}の体験レッスン、今月あと3枠です。お問い合わせはDMから📚" },
+    flyer: { eyebrow: "体験レッスン受付中", title: "{word}、はじめませんか", body: "少人数制・年齢問わず歓迎。まずはお気軽にご相談を。" },
+  },
+  {
+    id: "home-service",
+    label: "住宅メンテナンス",
+    before: "問い合わせフォームがなくて、電話が来ないと仕事が増えなくて。",
+    placeholder: "得意な作業（例：雨どい修理）",
+    defaultWord: "雨どい修理",
+    web: { title: "◯◯工務店｜{word}も対応", body: "見積り無料。地域密着ですばやく対応します。" },
+    sns: { body: "{word}のご相談、無料でお見積りします。まずはお電話を🔧" },
+    flyer: { eyebrow: "無料見積り", title: "{word}のことなら", body: "地域密着30年。まずはお気軽にご相談ください。" },
+  },
+];
+---
+
+<div class="transform-demo" data-transform-demo data-demos={JSON.stringify(demos)}>
+  <div class="transform-picker" role="group" aria-label="業種を選ぶ">
+    {demos.map((demo, index) => (
+      <button type="button" aria-pressed={index === 0 ? "true" : "false"} data-demo-id={demo.id}>{demo.label}</button>
+    ))}
+  </div>
+
+  <div class="transform-input">
+    <label for="transform-word">あなたのお店のこだわりを一言（任意）</label>
+    <input type="text" id="transform-word" data-transform-word placeholder={demos[0].placeholder} maxlength="20" />
+  </div>
+
+  <div class="transform-stage">
+    <div class="transform-before">
+      <span class="eyebrow">チャットでの相談例</span>
+      <p data-transform-before>{demos[0].before}</p>
+    </div>
+
+    <div class="transform-stitch" aria-hidden="true">
+      <svg viewBox="0 0 48 24" fill="none">
+        <path d="M2 12h6m6 0h6m6 0h6m6 0h6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 9" />
+        <path d="M36 6l8 6-8 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+      </svg>
+    </div>
+
+    <div class="transform-output">
+      <div class="transform-tabs" role="tablist" aria-label="試作の種類">
+        <button type="button" role="tab" aria-selected="true" data-transform-tab="web">Webページ</button>
+        <button type="button" role="tab" aria-selected="false" data-transform-tab="sns">SNS投稿</button>
+        <button type="button" role="tab" aria-selected="false" data-transform-tab="flyer">チラシ見出し</button>
+      </div>
+
+      <div class="transform-panel" data-transform-panel="web">
+        <div class="mock-browser">
+          <div class="mock-browser-bar"><span></span><span></span><span></span></div>
+          <div class="mock-browser-body">
+            <h4 data-field="web-title">{demos[0].web.title.replace("{word}", demos[0].defaultWord)}</h4>
+            <p data-field="web-body">{demos[0].web.body}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="transform-panel" data-transform-panel="sns" hidden>
+        <div class="mock-sns">
+          <div class="mock-sns-head"><span class="mock-sns-avatar" aria-hidden="true"></span><span>your_shop_name</span></div>
+          <p data-field="sns-body">{demos[0].sns.body.replace("{word}", demos[0].defaultWord)}</p>
+        </div>
+      </div>
+
+      <div class="transform-panel" data-transform-panel="flyer" hidden>
+        <div class="mock-flyer">
+          <span class="eyebrow on-dark" data-field="flyer-eyebrow">{demos[0].flyer.eyebrow}</span>
+          <h4 data-field="flyer-title">{demos[0].flyer.title.replace("{word}", demos[0].defaultWord)}</h4>
+          <p data-field="flyer-body">{demos[0].flyer.body}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="transform-note">※ 試作イメージです。実際の内容は、チャットでの相談をもとにAIが作成し、公開前にご確認いただきます。</p>
+</div>
+
+<script>
+  interface IndustryDemo {
+    id: string;
+    label: string;
+    before: string;
+    placeholder: string;
+    defaultWord: string;
+    web: { title: string; body: string };
+    sns: { body: string };
+    flyer: { eyebrow: string; title: string; body: string };
+  }
+
+  const root = document.querySelector<HTMLElement>("[data-transform-demo]");
+  if (root) {
+    const demos: IndustryDemo[] = JSON.parse(root.dataset.demos || "[]");
+    const wordInput = root.querySelector<HTMLInputElement>("[data-transform-word]");
+    const beforeText = root.querySelector<HTMLElement>("[data-transform-before]");
+    const pickerButtons = root.querySelectorAll<HTMLButtonElement>(".transform-picker button");
+    const tabButtons = root.querySelectorAll<HTMLButtonElement>("[data-transform-tab]");
+    const panels = root.querySelectorAll<HTMLElement>("[data-transform-panel]");
+
+    let currentDemo = demos[0];
+    let currentWord = currentDemo?.defaultWord || "";
+
+    const render = () => {
+      if (!currentDemo) return;
+      const word = currentWord.trim() || currentDemo.defaultWord;
+      if (beforeText) beforeText.textContent = currentDemo.before;
+      const setField = (name: string, value: string) => {
+        const el = root!.querySelector<HTMLElement>(`[data-field="${name}"]`);
+        if (el) el.textContent = value.replace("{word}", word);
+      };
+      setField("web-title", currentDemo.web.title);
+      setField("web-body", currentDemo.web.body);
+      setField("sns-body", currentDemo.sns.body);
+      setField("flyer-eyebrow", currentDemo.flyer.eyebrow);
+      setField("flyer-title", currentDemo.flyer.title);
+      setField("flyer-body", currentDemo.flyer.body);
+    };
+
+    pickerButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const demo = demos.find((item) => item.id === button.dataset.demoId);
+        if (!demo) return;
+        currentDemo = demo;
+        currentWord = "";
+        if (wordInput) {
+          wordInput.value = "";
+          wordInput.placeholder = demo.placeholder;
+        }
+        pickerButtons.forEach((btn) => btn.setAttribute("aria-pressed", String(btn === button)));
+        render();
+      });
+    });
+
+    wordInput?.addEventListener("input", () => {
+      currentWord = wordInput.value;
+      render();
+    });
+
+    tabButtons.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const target = tab.dataset.transformTab;
+        tabButtons.forEach((t) => t.setAttribute("aria-selected", String(t === tab)));
+        panels.forEach((panel) => {
+          panel.hidden = panel.dataset.transformPanel !== target;
+        });
+      });
+    });
+
+    render();
+  }
+</script>

@@ -44,7 +44,7 @@ const structuredData = [
         <p class="hero-lede">{data.heroLead}</p>
         <div class="hero-actions">
           <a class="button button-primary" href="#register">無料でAIに相談する</a>
-          <a class="text-link" href="/#service">サービス全体を見る</a>
+          <a class="text-link" href="/#try">試作の例を見る</a>
         </div>
       </div>
     </div>
@@ -56,12 +56,9 @@ const structuredData = [
         <p class="eyebrow">こんな状態はありませんか</p>
         <h2 id="challenges-heading">{data.name}でよくあるお困りごと</h2>
       </div>
-      <ul class="deflist cols-2" style="list-style:none;padding:0;margin:0;">
-        {data.challenges.map((challenge, index) => (
-          <li class="deflist-item">
-            <span class="num">{String(index + 1).padStart(2, "0")}</span>
-            <p style="color:var(--color-muted);">{challenge}</p>
-          </li>
+      <ul class="trust-list">
+        {data.challenges.map((challenge) => (
+          <li><p>{challenge}</p></li>
         ))}
       </ul>
     </div>
@@ -74,9 +71,8 @@ const structuredData = [
         <h2 id="offerings-heading">{data.name}向けに整理できること</h2>
       </div>
       <div class="deflist cols-2">
-        {data.offerings.map((offering, index) => (
+        {data.offerings.map((offering) => (
           <div class="deflist-item">
-            <span class="num">{String(index + 1).padStart(2, "0")}</span>
             <h3>{offering.title}</h3>
             <p>{offering.description}</p>
           </div>
