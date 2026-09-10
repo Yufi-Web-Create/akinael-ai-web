@@ -611,6 +611,28 @@ p {
   color: var(--color-ink);
 }
 
+.register-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  margin-block: 0.8rem;
+  color: var(--color-muted);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.register-consent input {
+  flex: 0 0 auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.12rem;
+  accent-color: var(--color-green);
+}
+
+.register-consent a {
+  text-underline-offset: 2px;
+}
+
 .register-widget input:focus-visible {
   outline: 2px solid var(--color-green);
   outline-offset: 1px;

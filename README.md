@@ -38,5 +38,6 @@ AIエージェントは実装前に `AGENTS.md` と `docs/` を確認してく�
 - `docs/LEARNINGS.md`: 人間フィードバックからの共通学習
 
 ## Current state
-現在のTOPはProduction Systemを検証するための最小Reference実装です。
-完成サイトではありません。今後、この仕組みを使って正式なページ構成・コピー・デザイン・バックエンド連携を実装し、QA PASS後に公開候補とします。
+PHASE 7のReference Siteは、Astro static buildとしてhomepageと4業種ページを実装済みです。`main`のQuality Gateはlint / typecheck / unit / build / Playwright E2Eを含みます。
+
+現在の目標はproduction publishではなく、Release Candidate / Preview Readyです。本番公開、`akinael-ai.com`の置換、DNS変更はHuman Gateとして、オーナーの明示承認まで実行しません。最新の進行状況と残件は `docs/PHASE7_HANDOFF.md` を参照してください。

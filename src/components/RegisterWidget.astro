@@ -12,6 +12,10 @@ const coreOrigin = (import.meta.env.PUBLIC_CORE_ORIGIN || "https://akinael-ai.co
     <input id={`${id}-email`} name="email" type="email" inputmode="email" autocomplete="username" placeholder="メールアドレス" required />
     <label class="sr-only" for={`${id}-password`}>パスワード（12文字以上）</label>
     <input id={`${id}-password`} name="password" type="password" autocomplete="new-password" placeholder="パスワード（12文字以上）" required />
+    <label class="register-consent" for={`${id}-consent`}>
+      <input id={`${id}-consent`} name="consent" type="checkbox" required />
+      <span><a href={`${coreOrigin}/legal#terms`} target="_blank" rel="noopener">利用条件の現行案内</a>と<a href={`${coreOrigin}/legal#privacy`} target="_blank" rel="noopener">個人情報の取扱いに関する現行案内</a>を確認しました</span>
+    </label>
     <button class="button button-primary" type="submit">無料でAIに相談する</button>
     <p data-register-status role="status"></p>
   </form>
@@ -37,9 +41,10 @@ const coreOrigin = (import.meta.env.PUBLIC_CORE_ORIGIN || "https://akinael-ai.co
       const submitButton = form.querySelector("button[type=submit]") as HTMLButtonElement | null;
       const email = (form.elements.namedItem("email") as HTMLInputElement)?.value.trim();
       const password = (form.elements.namedItem("password") as HTMLInputElement)?.value ?? "";
-      if (!email || password.length < 12) {
+      const consent = (form.elements.namedItem("consent") as HTMLInputElement)?.checked ?? false;
+      if (!email || password.length < 12 || !consent) {
         status.dataset.tone = "error";
-        status.textContent = "メールアドレスと12文字以上のパスワードを入力してください。";
+        status.textContent = "メールアドレス、12文字以上のパスワード、利用案内の確認を完了してください。";
         return;
       }
       if (submitButton) submitButton.disabled = true;

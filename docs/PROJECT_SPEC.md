@@ -32,15 +32,16 @@
 ## Secondary CTA
 `サービス詳細を見る`
 
-## Required pages
-- `/` TOP
-- `/service` サービス詳細
-- `/pricing` 料金
-- `/faq` FAQ
-- `/cases` 事例・デモ
-- `/industries/[slug]` 業種別
-- `/about` 運営・サービス情報
-- 必要な法務ページ
+## Required information architecture（2026-09-10 owner decision）
+
+初期案の独立した`/service`、`/pricing`、`/faq`、`/cases`、`/about`は、同内容を重複させずhomepage内のanchor sectionとして提供する。Reference Productionの確定構成は次のハイブリッド構成とし、この節が旧Required pages案を置き換える。
+
+- `/` TOP（service / pricing / FAQ / process / comparison / about相当の主要情報とCTA）
+- `/industries/[slug]` 業種別4ページ
+- Customer PortalはCore site `/portal/`へ接続
+- 利用条件・個人情報の取扱いはCore site `/legal`へ接続。正式文書はHuman Gateであり、確定前は現行案内であることを明示する
+
+架空の事例を作らないため、正式な公開実績が提供されるまでは独立した`/cases`を必須としない。正式運営者情報が提供されるまでは独立した`/about`を必須とせず、サービスの運営方針のみhomepageに掲載する。
 
 ## TOP requirements
 - Hero: 誰向け / 何をする / CTAが5秒以内に理解できる
@@ -127,7 +128,7 @@
 - Design / Copy Direction確定
 - 5秒で「誰向けの何のサービスか」が分かる
 - Primary CTAが迷わず見つかる
-- 必須ページが完成している
+- 確定したRequired information architectureが完成している
 - 主要情報がスマートフォンでも読みやすい
 - 360〜1440pxのQAをPASSする
 - コピーが汎用AIサービスのテンプレ文に見えない
