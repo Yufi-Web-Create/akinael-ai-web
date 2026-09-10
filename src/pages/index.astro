@@ -12,6 +12,13 @@ const offerings = [
   { title: "集客・導線の調査", description: "問い合わせや予約までの導線を確認し、改善案を整理します。" },
 ];
 
+const comparison = [
+  { title: "制作会社に頼む場合", description: "担当者と要件や見積りを固めてから制作を進めるのが一般的です。アキナエルAIは、契約前の小さな相談と試作から始められます。" },
+  { title: "DIYサービスを使う場合", description: "自分で画面や文章を作る作業が中心です。アキナエルAIでは、普段の言葉で相談した内容を制作作業へつなげます。" },
+  { title: "汎用AIを使う場合", description: "回答や素材を得たあと、自分で組み立てる必要があります。アキナエルAIは、案件・成果物・確認状況を一つの流れで管理します。" },
+  { title: "アキナエルAIの運営方針", description: "制作するAIと検査する工程を分け、公開・課金など元に戻しにくい操作は人の明示承認があるまで実行しません。" },
+];
+
 const flow = [
   { title: "相談", body: "困っていること、やってみたいことを、普段の言葉でチャットに伝えます。" },
   { title: "無料の試作", body: "内容を整理し、方向性が分かる試作をまず確認できる形で作ります。" },
@@ -101,6 +108,25 @@ const structuredData = [
       </div>
       <div class="deflist cols-2">
         {offerings.map((item, index) => (
+          <div class="deflist-item">
+            <span class="num">{String(index + 1).padStart(2, "0")}</span>
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="difference" aria-labelledby="difference-heading">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">WHY AKINAEL AI</p>
+        <h2 id="difference-heading">作ることだけでなく、確かめてから進める。</h2>
+        <p>道具だけを渡すのではなく、相談、試作、制作、品質確認をつなぎます。人が決めるべき公開や契約は、自動で先へ進めません。</p>
+      </div>
+      <div class="deflist cols-2">
+        {comparison.map((item, index) => (
           <div class="deflist-item">
             <span class="num">{String(index + 1).padStart(2, "0")}</span>
             <h3>{item.title}</h3>
