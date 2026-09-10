@@ -123,7 +123,10 @@ test("register widget requires acknowledgement before calling the API", async ({
   await widget.locator('input[type="email"]').fill("owner@example.com");
   await widget.locator('input[type="password"]').fill("safe-test-password");
   await widget.locator("button[type=submit]").click();
-  await expect(widget.locator("[data-register-status]")).toHaveText(/利用案内の確認/);
+  const consentIsMissing = await widget.locator('input[name="consent"]').evaluate(
+    (input: HTMLInputElement) => input.validity.valueMissing,
+  );
+  expect(consentIsMissing).toBe(true);
   expect(requests, "the register API should not be called without acknowledgement").toEqual([]);
 });
 
