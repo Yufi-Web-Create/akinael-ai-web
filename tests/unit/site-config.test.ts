@@ -11,4 +11,9 @@ describe("siteConfig", () => {
     const destinations = siteConfig.nav.map((item) => item.href);
     expect(new Set(destinations).size).toBe(destinations.length);
   });
+
+  it("keeps the existing-customer destination separate from registration", () => {
+    expect(siteConfig.primaryCta.href).toBe("/#register");
+    expect(siteConfig.nav.map((item) => String(item.href))).not.toContain("/portal/");
+  });
 });
