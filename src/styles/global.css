@@ -401,6 +401,19 @@ p {
   margin-top: var(--space-1);
 }
 
+/* Below 640px, force phrase-unit line breaks so the headline never leaves a lone
+   particle or a mid-word split on its own line — the same "unnatural break" risk
+   the wider auto-wrap already avoids at desktop widths. */
+.hero-primary h1 br.mobile-break {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  .hero-primary h1 br.mobile-break {
+    display: inline;
+  }
+}
+
 .hero-lede {
   margin-top: var(--space-3);
   max-width: var(--measure);
@@ -809,15 +822,263 @@ p {
   margin-bottom: var(--space-2);
 }
 
-.showcase-after h4 {
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  margin-bottom: 0.3rem;
+/* Deliverable-quality mockups: higher-fidelity Web/SNS/Flyer previews for the
+   Before/After showcase, built to read as something that could ship as real client
+   work rather than an explanatory diagram. */
+.deliv-web {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--paper-raised);
 }
 
-.showcase-after p {
+.deliv-web-chrome {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0.5rem 0.6rem;
+  background: var(--line);
+}
+
+.deliv-web-chrome span:not(.deliv-web-url) {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(28, 43, 38, 0.32);
+  display: block;
+}
+
+.deliv-web-url {
+  margin-left: 0.4rem;
+  font-size: 0.68rem;
   color: var(--muted);
-  font-size: 0.88rem;
+  letter-spacing: 0.02em;
+}
+
+.deliv-web-nav {
+  display: flex;
+  gap: 0.7rem;
+  padding: 0.45rem 0.7rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.deliv-web-nav span {
+  font-size: 0.62rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+.deliv-web-hero {
+  position: relative;
+  padding: var(--space-3) var(--space-2) var(--space-2);
+}
+
+.deliv-web-art {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--noren);
+  color: var(--paper);
+}
+
+.deliv-web-art svg {
+  width: 14px;
+  height: 14px;
+}
+
+.deliv-web-eyebrow {
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--kaki-deep);
+  text-transform: uppercase;
+  margin: 0 0 0.3rem;
+}
+
+.deliv-web-hero h4 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.35;
+  margin: 0 0 0.35rem;
+  padding-right: 2rem;
+}
+
+.deliv-web-body {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.7rem;
+}
+
+.deliv-web-cta {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--paper);
+  background: var(--kaki);
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+}
+
+.deliv-sns {
+  max-width: 20rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--paper-raised);
+}
+
+.deliv-sns-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: var(--space-2) var(--space-2) 0.5rem;
+}
+
+.deliv-sns-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--kaki);
+  color: var(--paper);
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+}
+
+.deliv-sns-avatar svg {
+  width: 14px;
+  height: 14px;
+}
+
+.deliv-sns-handle {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.deliv-sns-photo {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(150deg, var(--noren) 0%, var(--noren-deep) 100%);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.deliv-sns-photo-icon {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0.16;
+}
+
+.deliv-sns-photo-icon svg {
+  width: 72%;
+  height: 72%;
+  color: var(--paper);
+}
+
+.deliv-sns-quote {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1.3;
+  color: var(--paper);
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.deliv-sns-actions {
+  display: flex;
+  gap: 0.7rem;
+  padding: 0.6rem var(--space-2) 0.2rem;
+  color: var(--ink);
+}
+
+.deliv-sns-actions svg {
+  width: 18px;
+  height: 18px;
+}
+
+.deliv-sns-caption {
+  padding: 0.3rem var(--space-2) var(--space-2);
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+
+.deliv-flyer {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.deliv-flyer-frame {
+  position: relative;
+  background: var(--noren-deep);
+  color: var(--paper);
+  padding: var(--space-3) var(--space-3) var(--space-2);
+  border: 1px solid rgba(247, 241, 228, 0.18);
+  outline: 1px solid rgba(247, 241, 228, 0.18);
+  outline-offset: -6px;
+}
+
+.deliv-flyer-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(247, 241, 228, 0.5);
+  margin-bottom: 0.6rem;
+}
+
+.deliv-flyer-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.deliv-flyer-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--kaki);
+  margin: 0 0 0.3rem;
+}
+
+.deliv-flyer-frame h4 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.deliv-flyer-rule {
+  display: block;
+  width: 2.2rem;
+  height: 2px;
+  background: var(--kaki);
+  margin: 0.6rem 0;
+}
+
+.deliv-flyer-body {
+  color: rgba(247, 241, 228, 0.82);
+  font-size: 0.85rem;
+  margin: 0 0 0.8rem;
+}
+
+.deliv-flyer-contact {
+  display: inline-block;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  color: var(--paper);
+  border-top: 1px solid rgba(247, 241, 228, 0.3);
+  padding-top: 0.5rem;
 }
 
 .showcase-disclaimer {
@@ -852,17 +1113,227 @@ p {
   }
 }
 
+/* Industry tile visuals: a distinct mini-composition per industry (not one template
+   recolored four times) — each a small "desk" backdrop with 1-2 layered deliverable
+   chips hinting at what actually gets made, echoing the hero-memo paper-note motif. */
 .industry-tile-visual {
-  background: var(--noren);
+  position: relative;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
   border-radius: var(--radius-card);
   aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.industry-tile-visual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 82% 12%, rgba(22, 78, 74, 0.08), transparent 55%);
+}
+
+.chip {
+  position: absolute;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: var(--shadow-paper);
+}
+
+.chip-bar {
+  display: block;
+  height: 0.5rem;
+  border-radius: 3px;
+  background: var(--line);
+}
+
+.chip-bar.short {
+  width: 60%;
+}
+
+/* Beauty: a mini site preview chip + a circular service-icon badge, offset like two
+   proofs laid on a counter. */
+.chip-web {
+  top: 12%;
+  left: 8%;
+  width: 62%;
+  padding: 0.5rem 0.6rem 0.7rem;
+  transform: rotate(-4deg);
+}
+
+.chip-dots {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 0.45rem;
+}
+
+.chip-dots i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--line);
+  display: block;
+}
+
+.chip-bar-title {
+  height: 0.65rem;
+  width: 70%;
+  background: var(--noren);
+  opacity: 0.75;
+  margin-bottom: 0.4rem;
+}
+
+.chip-bar-text {
+  margin-bottom: 0.32rem;
+}
+
+.chip-badge {
+  bottom: 10%;
+  right: 10%;
+  width: 30%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
   display: grid;
   place-items: center;
+  background: var(--kaki);
   color: var(--paper);
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  text-align: center;
-  padding: var(--space-3);
+  transform: rotate(6deg);
+}
+
+.chip-badge svg {
+  width: 40%;
+  height: 40%;
+}
+
+/* Cafe: a small menu ticket + the same circular badge treatment, colored for this
+   craft rather than reusing the beauty layout. */
+.chip-menu {
+  top: 14%;
+  left: 8%;
+  width: 64%;
+  padding: 0.55rem 0.65rem;
+  transform: rotate(-3deg);
+}
+
+.chip-menu-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.62rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.chip-menu-row:last-child {
+  margin-bottom: 0;
+}
+
+.chip-menu-row .chip-bar {
+  flex: 1;
+}
+
+/* School: a landing-page chip (eyebrow/title/CTA) plus a folded flyer corner —
+   two different deliverable shapes, not a resized copy of another industry's. */
+.chip-landing {
+  top: 10%;
+  left: 6%;
+  width: 66%;
+  padding: 0.55rem 0.65rem 0.65rem;
+  transform: rotate(-3deg);
+}
+
+.chip-bar-eyebrow {
+  height: 0.35rem;
+  width: 40%;
+  background: var(--kaki);
+  opacity: 0.7;
+  margin-bottom: 0.45rem;
+}
+
+.chip-landing .chip-bar-title {
+  background: var(--ink);
+  opacity: 0.65;
+}
+
+.chip-pill {
+  display: block;
+  width: 44%;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--kaki);
+  margin-top: 0.5rem;
+}
+
+.chip-corner {
+  bottom: 8%;
+  right: 8%;
+  width: 32%;
+  aspect-ratio: 3 / 4;
+  background: var(--noren-deep);
+  color: var(--paper);
+  display: grid;
+  place-items: center;
+  transform: rotate(7deg);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 22% 100%, 0 78%);
+}
+
+.chip-corner svg {
+  width: 34%;
+  height: 34%;
+}
+
+/* Home-service: a literal before/after split (this craft's own proof format) plus a
+   CTA badge, instead of the card-stack pattern used above. */
+.chip-split {
+  top: 14%;
+  left: 8%;
+  width: 68%;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  overflow: hidden;
+  transform: rotate(-2deg);
+}
+
+.chip-split-half {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.chip-split-half.before {
+  background: var(--line);
+  color: var(--muted);
+}
+
+.chip-split-half.after {
+  background: var(--noren);
+  color: var(--paper);
+}
+
+.chip-cta {
+  bottom: 10%;
+  right: 8%;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  background: var(--kaki);
+  color: var(--paper);
+  font-size: 0.66rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transform: rotate(4deg);
+}
+
+.chip-cta svg {
+  width: 13px;
+  height: 13px;
 }
 
 .industry-tile p {

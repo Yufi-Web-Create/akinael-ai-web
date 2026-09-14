@@ -1,32 +1,49 @@
 ---
+import { industryIcons } from "../lib/industry-icons";
+
 const cards = [
   {
+    id: "beauty",
     eyebrow: "美容室・サロン",
     before: "SNSの更新が半年止まったまま、メニューも古い情報だった。",
-    kind: "browser" as const,
-    title: "◯◯美容室｜くせ毛カットが得意な美容室",
+    kind: "web" as const,
+    url: "oo-beauty.jp",
+    navItems: ["ホーム", "メニュー", "アクセス"],
+    tag: "SATURDAY OPEN",
+    title: "くせ毛カットが得意な美容室",
     body: "土曜日の空き枠あり。メニュー・料金・スタイル写真を掲載。",
+    cta: "ご予約はこちら",
   },
   {
+    id: "restaurant",
     eyebrow: "カフェ・飲食店",
     before: "ランチメニューを、毎回お客様に口頭で説明していた。",
     kind: "sns" as const,
+    handle: "oo_coffee",
+    quote: "本日の\nおすすめ",
     body: "本日のランチは自家焙煎コーヒーと一緒にどうぞ。数量限定です☕",
   },
   {
+    id: "school",
     eyebrow: "教室・スクール",
     before: "体験レッスンの案内を、何から書けばいいか分からなかった。",
     kind: "flyer" as const,
-    eyebrowOut: "体験レッスン受付中",
+    tag: "体験レッスン受付中",
     title: "そろばん、はじめませんか",
     body: "少人数制・年齢問わず歓迎。まずはお気軽にご相談を。",
+    contact: "TEL 000-0000-0000",
   },
   {
+    id: "home-service",
     eyebrow: "住宅メンテナンス",
     before: "問い合わせフォームがなく、電話が鳴らない日が続いていた。",
-    kind: "browser" as const,
-    title: "◯◯工務店｜雨どい修理も対応",
+    kind: "web" as const,
+    url: "oo-koumuten.jp",
+    navItems: ["対応地域", "施工事例", "お問い合わせ"],
+    tag: "無料見積り",
+    title: "雨どい修理も対応",
     body: "見積り無料。地域密着ですばやく対応します。",
+    cta: "見積りを依頼する",
   },
 ];
 ---
@@ -37,26 +54,52 @@ const cards = [
       <span class="eyebrow">{card.eyebrow}</span>
       <p class="showcase-before">{card.before}</p>
       <div class="showcase-after">
-        {card.kind === "browser" && (
-          <div class="mock-browser">
-            <div class="mock-browser-bar"><span></span><span></span><span></span></div>
-            <div class="mock-browser-body">
+        {card.kind === "web" && (
+          <div class="deliv-web">
+            <div class="deliv-web-chrome" aria-hidden="true">
+              <span></span><span></span><span></span>
+              <span class="deliv-web-url">{card.url}</span>
+            </div>
+            <nav class="deliv-web-nav" aria-hidden="true">
+              {card.navItems!.map((item) => <span>{item}</span>)}
+            </nav>
+            <div class="deliv-web-hero">
+              <span class="deliv-web-art" aria-hidden="true" set:html={industryIcons[card.id]} />
+              <p class="deliv-web-eyebrow">{card.tag}</p>
               <h4>{card.title}</h4>
-              <p>{card.body}</p>
+              <p class="deliv-web-body">{card.body}</p>
+              <span class="deliv-web-cta">{card.cta}</span>
             </div>
           </div>
         )}
         {card.kind === "sns" && (
-          <div class="mock-sns">
-            <div class="mock-sns-head"><span class="mock-sns-avatar" aria-hidden="true"></span><span>your_shop_name</span></div>
-            <p>{card.body}</p>
+          <div class="deliv-sns">
+            <div class="deliv-sns-head">
+              <span class="deliv-sns-avatar" aria-hidden="true" set:html={industryIcons[card.id]} />
+              <span class="deliv-sns-handle">{card.handle}</span>
+            </div>
+            <div class="deliv-sns-photo" aria-hidden="true">
+              <span class="deliv-sns-photo-icon" set:html={industryIcons[card.id]} />
+              <span class="deliv-sns-quote">{card.quote!.split("\n").map((line) => <>{line}<br /></>)}</span>
+            </div>
+            <div class="deliv-sns-actions" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.2s-7.6-4.4-9.4-9A5 5 0 0 1 12 6.6 5 5 0 0 1 21.4 11.2c-1.8 4.6-9.4 9-9.4 9Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 1 1-3.4-6.5L21 4l-1 3.8A7.96 7.96 0 0 1 21 12Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 20 4l-4 16-5-6-6-2Z"/></svg>
+            </div>
+            <p class="deliv-sns-caption"><strong>{card.handle}</strong> {card.body}</p>
           </div>
         )}
         {card.kind === "flyer" && (
-          <div class="mock-flyer">
-            <span class="eyebrow on-dark">{card.eyebrowOut}</span>
-            <h4>{card.title}</h4>
-            <p>{card.body}</p>
+          <div class="deliv-flyer">
+            <div class="deliv-flyer-frame">
+              <span class="deliv-flyer-icon" aria-hidden="true" set:html={industryIcons[card.id]} />
+              <p class="deliv-flyer-eyebrow">{card.tag}</p>
+              <h4>{card.title}</h4>
+              <span class="deliv-flyer-rule" aria-hidden="true"></span>
+              <p class="deliv-flyer-body">{card.body}</p>
+              <span class="deliv-flyer-contact">{card.contact}</span>
+            </div>
           </div>
         )}
       </div>
