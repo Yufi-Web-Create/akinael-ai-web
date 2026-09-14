@@ -414,6 +414,13 @@ p {
   }
 }
 
+/* Keep the closing clause together so the auto-wrap that's otherwise welcome at wide
+   desktop widths can't strand a bare particle + period ("に。") on its own line — the
+   whole clause wraps to the next line as one unit instead. */
+.hero-primary h1 .line-unit {
+  white-space: nowrap;
+}
+
 .hero-lede {
   margin-top: var(--space-3);
   max-width: var(--measure);
