@@ -80,13 +80,13 @@ const demos: IndustryDemo[] = [
     </div>
 
     <div class="transform-output">
-      <div class="transform-tabs" role="tablist" aria-label="試作の種類">
-        <button type="button" role="tab" aria-selected="true" data-transform-tab="web">Webページ</button>
-        <button type="button" role="tab" aria-selected="false" data-transform-tab="sns">SNS投稿</button>
-        <button type="button" role="tab" aria-selected="false" data-transform-tab="flyer">チラシ見出し</button>
+      <div class="transform-tabs" role="group" aria-label="試作の種類">
+        <button type="button" aria-pressed="true" aria-controls="transform-panel-web" data-transform-tab="web">Webページ</button>
+        <button type="button" aria-pressed="false" aria-controls="transform-panel-sns" data-transform-tab="sns">SNS投稿</button>
+        <button type="button" aria-pressed="false" aria-controls="transform-panel-flyer" data-transform-tab="flyer">チラシ見出し</button>
       </div>
 
-      <div class="transform-panel" data-transform-panel="web">
+      <div class="transform-panel" id="transform-panel-web" data-transform-panel="web">
         <div class="mock-browser">
           <div class="mock-browser-bar"><span></span><span></span><span></span></div>
           <div class="mock-browser-body">
@@ -96,14 +96,14 @@ const demos: IndustryDemo[] = [
         </div>
       </div>
 
-      <div class="transform-panel" data-transform-panel="sns" hidden>
+      <div class="transform-panel" id="transform-panel-sns" data-transform-panel="sns" hidden>
         <div class="mock-sns">
           <div class="mock-sns-head"><span class="mock-sns-avatar" aria-hidden="true"></span><span>your_shop_name</span></div>
           <p data-field="sns-body">{demos[0].sns.body.replace("{word}", demos[0].defaultWord)}</p>
         </div>
       </div>
 
-      <div class="transform-panel" data-transform-panel="flyer" hidden>
+      <div class="transform-panel" id="transform-panel-flyer" data-transform-panel="flyer" hidden>
         <div class="mock-flyer">
           <span class="eyebrow on-dark" data-field="flyer-eyebrow">{demos[0].flyer.eyebrow}</span>
           <h4 data-field="flyer-title">{demos[0].flyer.title.replace("{word}", demos[0].defaultWord)}</h4>
@@ -179,7 +179,7 @@ const demos: IndustryDemo[] = [
     tabButtons.forEach((tab) => {
       tab.addEventListener("click", () => {
         const target = tab.dataset.transformTab;
-        tabButtons.forEach((t) => t.setAttribute("aria-selected", String(t === tab)));
+        tabButtons.forEach((t) => t.setAttribute("aria-pressed", String(t === tab)));
         panels.forEach((panel) => {
           panel.hidden = panel.dataset.transformPanel !== target;
         });

@@ -647,7 +647,7 @@ p {
   border-bottom: 2px solid transparent;
 }
 
-.transform-tabs button[aria-selected="true"] {
+.transform-tabs button[aria-pressed="true"] {
   color: var(--noren-deep);
   border-bottom-color: var(--kaki);
   font-weight: 600;
@@ -887,7 +887,10 @@ p {
 
 @media (min-width: 900px) {
   .flow-stepper {
-    grid-template-columns: repeat(5, 1fr);
+    /* auto-fit rather than a hardcoded column count: the number of steps in `flow`
+       (currently 4) drives the layout directly, so a future change to that array
+       can't silently reintroduce a step-count/column-count mismatch. */
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
   }
 }
 
