@@ -32,6 +32,7 @@ const cards = [
     title: "そろばん、はじめませんか",
     body: "少人数制・年齢問わず歓迎。まずはお気軽にご相談を。",
     contact: "TEL 000-0000-0000",
+    flyerCta: "体験を予約する",
   },
   {
     id: "home-service",
@@ -48,7 +49,9 @@ const cards = [
 ];
 ---
 
-<div class="showcase-scroller">
+<div class="showcase-carousel" data-showcase-carousel>
+  <p class="showcase-swipe-hint">横にスワイプしてご覧ください →</p>
+  <div class="showcase-scroller" data-showcase-scroller>
   {cards.map((card) => (
     <article class="showcase-card">
       <span class="eyebrow">{card.eyebrow}</span>
@@ -93,16 +96,68 @@ const cards = [
         {card.kind === "flyer" && (
           <div class="deliv-flyer">
             <div class="deliv-flyer-frame">
-              <span class="deliv-flyer-icon" aria-hidden="true" set:html={industryIcons[card.id]} />
-              <p class="deliv-flyer-eyebrow">{card.tag}</p>
+              <span class="deliv-flyer-motif" aria-hidden="true" set:html={industryIcons[card.id]} />
+              <div class="deliv-flyer-header">
+                <span class="deliv-flyer-icon" aria-hidden="true" set:html={industryIcons[card.id]} />
+                <p class="deliv-flyer-eyebrow">{card.tag}</p>
+              </div>
               <h4>{card.title}</h4>
               <span class="deliv-flyer-rule" aria-hidden="true"></span>
               <p class="deliv-flyer-body">{card.body}</p>
-              <span class="deliv-flyer-contact">{card.contact}</span>
+              <div class="deliv-flyer-footer">
+                <span class="deliv-flyer-contact">{card.contact}</span>
+                <span class="deliv-flyer-cta">{card.flyerCta}</span>
+              </div>
             </div>
           </div>
         )}
       </div>
     </article>
   ))}
+  </div>
+  <div class="showcase-affordance" aria-hidden="true">
+    <div class="showcase-dots" data-showcase-dots>
+      {cards.map((_, index) => <span class={`showcase-dot${index === 0 ? " active" : ""}`}></span>)}
+    </div>
+    <span class="showcase-counter" data-showcase-counter>1 / {cards.length}</span>
+  </div>
 </div>
+
+<script>
+  const carousel = document.querySelector<HTMLElement>("[data-showcase-carousel]");
+  if (carousel) {
+    const scroller = carousel.querySelector<HTMLElement>("[data-showcase-scroller]");
+    const cards = [...carousel.querySelectorAll<HTMLElement>(".showcase-card")];
+    const dots = [...carousel.querySelectorAll<HTMLElement>(".showcase-dot")];
+    const counter = carousel.querySelector<HTMLElement>("[data-showcase-counter]");
+
+    if (scroller && cards.length) {
+      let ticking = false;
+      const updateActive = () => {
+        const scrollerLeft = scroller.getBoundingClientRect().left;
+        let closestIndex = 0;
+        let closestDistance = Infinity;
+        cards.forEach((card, index) => {
+          const distance = Math.abs(card.getBoundingClientRect().left - scrollerLeft);
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestIndex = index;
+          }
+        });
+        dots.forEach((dot, index) => dot.classList.toggle("active", index === closestIndex));
+        if (counter) counter.textContent = `${closestIndex + 1} / ${cards.length}`;
+      };
+
+      scroller.addEventListener("scroll", () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          updateActive();
+          ticking = false;
+        });
+      });
+
+      updateActive();
+    }
+  }
+</script>

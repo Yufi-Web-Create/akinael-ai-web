@@ -202,6 +202,10 @@ p {
 
 .hero-primary {
   animation: hero-rise 640ms ease both;
+  /* A grid item's default min-width is auto, which sizes it to fit its content's widest
+     unbreakable run (the h1's nowrap .line-unit spans) even though that content visually
+     wraps just fine at the intended width — the classic grid min-content overflow trap. */
+  min-width: 0;
 }
 
 .hero-memo {
@@ -481,6 +485,46 @@ p {
   font-family: var(--font-display);
 }
 
+/* Memo-to-output mini flow: makes "a consultation becomes Web/SNS/flyer" visible at a
+   glance, without a second section — stays inside the same tilted note card. */
+.hero-memo-flow {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px dashed var(--line);
+  text-align: center;
+}
+
+.hero-memo-arrow {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin-bottom: 0.5rem;
+}
+
+.hero-memo-outputs {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.hero-output-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: var(--noren);
+  color: var(--paper);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.hero-output-chip svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
 /* Reassurance strip: single row, hairline-divided, not cards */
 .reassure-strip {
   list-style: none;
@@ -596,6 +640,39 @@ p {
 .transform-input input:focus-visible {
   outline: 2px solid var(--noren);
   outline-offset: 1px;
+}
+
+.transform-input-hint {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* Marks exactly where the typed word landed in each output, so the connection between
+   the input and the three previews is visible rather than assumed. New <mark> elements
+   (recreated on every render) replay the animation from the start automatically. */
+.transform-word {
+  background: transparent;
+  color: inherit;
+  font-weight: 700;
+  border-radius: 3px;
+  animation: word-flash 1100ms ease;
+}
+
+@keyframes word-flash {
+  0% {
+    background: var(--kaki);
+    color: var(--paper);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .transform-word {
+    animation: none;
+  }
 }
 
 .transform-stage {
@@ -806,6 +883,53 @@ p {
   }
 }
 
+/* Swipe affordance: a mobile-only hint that the card row scrolls horizontally. Desktop
+   already shows a peek of the next card as its own visual cue, so this stays hidden there. */
+.showcase-swipe-hint {
+  display: none;
+  font-size: 0.8rem;
+  color: rgba(247, 241, 228, 0.68);
+  margin-bottom: var(--space-2);
+}
+
+.showcase-affordance {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+@media (max-width: 767px) {
+  .showcase-swipe-hint,
+  .showcase-affordance {
+    display: flex;
+  }
+}
+
+.showcase-dots {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.showcase-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(247, 241, 228, 0.35);
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.showcase-dot.active {
+  background: var(--kaki);
+  transform: scale(1.3);
+}
+
+.showcase-counter {
+  font-size: 0.78rem;
+  color: rgba(247, 241, 228, 0.68);
+}
+
 .showcase-card {
   flex: 0 0 auto;
   width: min(19rem, 84vw);
@@ -815,6 +939,10 @@ p {
   border-radius: var(--radius-card);
   padding: var(--space-3);
   box-shadow: var(--shadow-paper);
+  /* Reset text color at the card boundary: this card is an opaque light surface even
+     when its parent section is a dark .band, so descendants without their own color
+     must not inherit the band's light-on-dark default. */
+  color: var(--ink);
 }
 
 .showcase-card .eyebrow {
@@ -1019,19 +1147,52 @@ p {
   color: var(--ink);
 }
 
+/* Outer paper "mat" the dark card sits on, like a postcard mounted with a print margin —
+   distinguishes this from a flat color block filling the whole slot. */
 .deliv-flyer {
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  padding: 0.5rem;
 }
 
 .deliv-flyer-frame {
   position: relative;
+  overflow: hidden;
   background: var(--noren-deep);
   color: var(--paper);
   padding: var(--space-3) var(--space-3) var(--space-2);
+  border-radius: 7px;
   border: 1px solid rgba(247, 241, 228, 0.18);
   outline: 1px solid rgba(247, 241, 228, 0.18);
   outline-offset: -6px;
+}
+
+/* A large, faded industry icon standing in for illustration/photography — grounded in
+   the craft rather than a stock decoration, and cheap to render at any size. */
+.deliv-flyer-motif {
+  position: absolute;
+  top: -12%;
+  right: -12%;
+  width: 62%;
+  aspect-ratio: 1 / 1;
+  opacity: 0.1;
+  color: var(--paper);
+  pointer-events: none;
+}
+
+.deliv-flyer-motif svg {
+  width: 100%;
+  height: 100%;
+}
+
+.deliv-flyer-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
 }
 
 .deliv-flyer-icon {
@@ -1039,9 +1200,9 @@ p {
   place-items: center;
   width: 34px;
   height: 34px;
+  flex-shrink: 0;
   border-radius: 50%;
   border: 1px solid rgba(247, 241, 228, 0.5);
-  margin-bottom: 0.6rem;
 }
 
 .deliv-flyer-icon svg {
@@ -1055,10 +1216,11 @@ p {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--kaki);
-  margin: 0 0 0.3rem;
+  margin: 0;
 }
 
 .deliv-flyer-frame h4 {
+  position: relative;
   font-family: var(--font-display);
   font-size: 1.35rem;
   line-height: 1.35;
@@ -1066,6 +1228,7 @@ p {
 }
 
 .deliv-flyer-rule {
+  position: relative;
   display: block;
   width: 2.2rem;
   height: 2px;
@@ -1074,24 +1237,48 @@ p {
 }
 
 .deliv-flyer-body {
+  position: relative;
   color: rgba(247, 241, 228, 0.82);
   font-size: 0.85rem;
   margin: 0 0 0.8rem;
 }
 
+.deliv-flyer-footer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-top: 0.2rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(247, 241, 228, 0.3);
+}
+
 .deliv-flyer-contact {
-  display: inline-block;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   letter-spacing: 0.03em;
   color: var(--paper);
-  border-top: 1px solid rgba(247, 241, 228, 0.3);
-  padding-top: 0.5rem;
+}
+
+.deliv-flyer-cta {
+  display: inline-block;
+  font-size: 0.66rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--kaki);
+  color: var(--paper);
+  white-space: nowrap;
 }
 
 .showcase-disclaimer {
   margin-top: var(--space-3);
   font-size: 0.82rem;
   color: var(--muted);
+}
+
+.band .showcase-disclaimer {
+  color: rgba(247, 241, 228, 0.75);
 }
 
 /* Industry tiles: asymmetric, alternating */
@@ -1477,6 +1664,78 @@ p {
   margin-top: 0.6rem;
   color: rgba(247, 241, 228, 0.82);
   font-size: 0.92rem;
+}
+
+/* Two visually separate groups — monthly plans vs. the one-time production fee — at the
+   same visual weight, so neither reads as a footnote of the other. */
+.pricing-group + .pricing-divider {
+  margin-top: var(--space-4);
+}
+
+.pricing-divider + .pricing-group {
+  margin-top: var(--space-3);
+}
+
+.pricing-group-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: rgba(247, 241, 228, 0.65);
+  margin: 0 0 var(--space-2);
+}
+
+.pricing-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: rgba(247, 241, 228, 0.55);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.pricing-divider::before,
+.pricing-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(247, 241, 228, 0.22);
+}
+
+.pricing-standalone {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  background: rgba(247, 241, 228, 0.06);
+  border: 1px solid rgba(247, 241, 228, 0.22);
+  border-radius: var(--radius-card);
+  padding: var(--space-3);
+}
+
+.pricing-standalone-info strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+
+.pricing-standalone-info p {
+  margin-top: 0.4rem;
+  color: rgba(247, 241, 228, 0.82);
+  font-size: 0.88rem;
+  max-width: 34rem;
+}
+
+.pricing-standalone-amount {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  white-space: nowrap;
+}
+
+.pricing-standalone-amount small {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(247, 241, 228, 0.75);
 }
 
 .pricing-note {
