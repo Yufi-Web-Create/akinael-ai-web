@@ -1914,6 +1914,13 @@ p {
   line-height: 1.55;
 }
 
+/* --muted (#5f6f66) is a light-background color — on the homepage's final-cta band
+   (dark green) it dropped to ~1.8:1, an AA failure for exactly the consent text a user
+   must read before submitting personal data. */
+.band .register-consent {
+  color: rgba(247, 241, 228, 0.75);
+}
+
 .register-consent input {
   flex: 0 0 auto;
   width: 1.15rem;
