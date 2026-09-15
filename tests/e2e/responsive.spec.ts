@@ -371,7 +371,19 @@ test("direct fragment URLs land on the correct section", async ({ page }) => {
     ["#pricing", "#pricing-heading"],
     ["#faq", "#faq-heading"],
   ] as const) {
-    await page.goto(`/${fragment}`, { waitUntil: "networkidle" });
+    // Loading the URL with the fragment already attached lets the browser's native
+    // scroll-to-anchor race against the display webfont swapping in: "networkidle" only
+    // means requests are done, not that the resulting reflow has been painted, so the
+    // anchor scroll can fire against fallback-font metrics and then get silently
+    // shifted out of view once the real font applies (observed as a real, if
+    // infrequent, CI flake). Loading the bare path first, letting fonts settle, and
+    // only then setting the hash avoids that race while still exercising the same
+    // native fragment-scroll behavior a real navigation triggers.
+    await page.goto("/", { waitUntil: "networkidle" });
+    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate((hash) => {
+      window.location.hash = hash;
+    }, fragment);
     await expect(page.locator(headingSelector)).toBeInViewport();
   }
 });
