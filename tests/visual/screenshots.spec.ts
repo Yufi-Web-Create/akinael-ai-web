@@ -4,9 +4,12 @@ import { expect, test } from "@playwright/test";
 // Run with: npm run qa:visual
 // Output lands in visual-evidence/ (gitignored, and uploaded as a CI artifact) for design review.
 const homeViewports = [
-  { name: "360", width: 360, height: 900 },
+  { name: "375", width: 375, height: 900 },
   { name: "390", width: 390, height: 900 },
+  { name: "768", width: 768, height: 1024 },
   { name: "820", width: 820, height: 1100 },
+  { name: "1023", width: 1023, height: 900 },
+  { name: "1024", width: 1024, height: 900 },
   { name: "1440", width: 1440, height: 950 },
 ] as const;
 

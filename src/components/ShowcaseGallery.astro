@@ -50,7 +50,17 @@ const cards = [
 ---
 
 <div class="showcase-carousel" data-showcase-carousel>
-  <p class="showcase-swipe-hint">横にスワイプしてご覧ください →</p>
+  <div class="showcase-controls">
+    <p class="showcase-swipe-hint">横にスワイプしてご覧ください →</p>
+    <div class="showcase-arrows" data-showcase-arrows>
+      <button type="button" class="showcase-arrow" data-showcase-prev aria-label="前の試作例を表示">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
+      </button>
+      <button type="button" class="showcase-arrow" data-showcase-next aria-label="次の試作例を表示">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
   <div class="showcase-scroller" data-showcase-scroller>
   {cards.map((card) => (
     <article class="showcase-card">
@@ -67,8 +77,10 @@ const cards = [
               {card.navItems!.map((item) => <span>{item}</span>)}
             </nav>
             <div class="deliv-web-hero">
-              <span class="deliv-web-art" aria-hidden="true" set:html={industryIcons[card.id]} />
-              <p class="deliv-web-eyebrow">{card.tag}</p>
+              <div class="deliv-web-header">
+                <span class="deliv-web-art" aria-hidden="true" set:html={industryIcons[card.id]} />
+                <p class="deliv-web-eyebrow">{card.tag}</p>
+              </div>
               <h4>{card.title}</h4>
               <p class="deliv-web-body">{card.body}</p>
               <span class="deliv-web-cta">{card.cta}</span>
@@ -130,9 +142,13 @@ const cards = [
     const cards = [...carousel.querySelectorAll<HTMLElement>(".showcase-card")];
     const dots = [...carousel.querySelectorAll<HTMLElement>(".showcase-dot")];
     const counter = carousel.querySelector<HTMLElement>("[data-showcase-counter]");
+    const prevButton = carousel.querySelector<HTMLButtonElement>("[data-showcase-prev]");
+    const nextButton = carousel.querySelector<HTMLButtonElement>("[data-showcase-next]");
 
     if (scroller && cards.length) {
       let ticking = false;
+      let activeIndex = 0;
+
       const updateActive = () => {
         const scrollerLeft = scroller.getBoundingClientRect().left;
         let closestIndex = 0;
@@ -144,8 +160,17 @@ const cards = [
             closestIndex = index;
           }
         });
+        activeIndex = closestIndex;
         dots.forEach((dot, index) => dot.classList.toggle("active", index === closestIndex));
         if (counter) counter.textContent = `${closestIndex + 1} / ${cards.length}`;
+
+        // Disabled state is based on actual scroll position, not just the closest-card
+        // index: once enough cards fit in the remaining width, scrolling to the "next"
+        // card index can already be at max scrollLeft, so index-based disabling never
+        // fires for "next" even though there's nothing left to scroll to.
+        const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+        if (prevButton) prevButton.disabled = scroller.scrollLeft <= 1;
+        if (nextButton) nextButton.disabled = scroller.scrollLeft >= maxScrollLeft - 1;
       };
 
       scroller.addEventListener("scroll", () => {
@@ -156,6 +181,14 @@ const cards = [
           ticking = false;
         });
       });
+
+      const scrollToIndex = (index: number) => {
+        const clamped = Math.max(0, Math.min(cards.length - 1, index));
+        cards[clamped].scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+      };
+
+      prevButton?.addEventListener("click", () => scrollToIndex(activeIndex - 1));
+      nextButton?.addEventListener("click", () => scrollToIndex(activeIndex + 1));
 
       updateActive();
     }

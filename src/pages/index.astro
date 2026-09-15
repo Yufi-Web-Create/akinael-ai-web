@@ -163,61 +163,14 @@ const structuredData = [
         <h2 id="industries-heading">あなたの業種の相談例を、先に見てみる。</h2>
         <p>美容室、飲食店、教室、住宅メンテナンスなど、業種ごとのお困りごとに合わせた相談例をご覧いただけます。</p>
       </div>
-      <div class="industry-tiles">
+      <div class="industry-nav-grid">
         {industries.map((entry) => (
-          <a class="industry-tile" href={`/industries/${entry.id}/`}>
-            <div class={`industry-tile-visual visual-${entry.id}`} aria-hidden="true">
-              {entry.id === "beauty" && (
-                <>
-                  <div class="chip chip-web">
-                    <span class="chip-dots"><i></i><i></i><i></i></span>
-                    <span class="chip-bar chip-bar-title"></span>
-                    <span class="chip-bar chip-bar-text"></span>
-                    <span class="chip-bar chip-bar-text short"></span>
-                  </div>
-                  <div class="chip chip-badge" set:html={industryIcons.beauty} />
-                </>
-              )}
-              {entry.id === "restaurant" && (
-                <>
-                  <div class="chip chip-menu">
-                    <span class="chip-menu-row"><span class="chip-bar chip-bar-text short"></span><span>¥480</span></span>
-                    <span class="chip-menu-row"><span class="chip-bar chip-bar-text short"></span><span>¥620</span></span>
-                    <span class="chip-menu-row"><span class="chip-bar chip-bar-text short"></span><span>¥390</span></span>
-                  </div>
-                  <div class="chip chip-badge" set:html={industryIcons.restaurant} />
-                </>
-              )}
-              {entry.id === "school" && (
-                <>
-                  <div class="chip chip-landing">
-                    <span class="chip-bar chip-bar-eyebrow"></span>
-                    <span class="chip-bar chip-bar-title"></span>
-                    <span class="chip-bar chip-bar-title short"></span>
-                    <span class="chip-pill"></span>
-                  </div>
-                  <div class="chip chip-corner" set:html={industryIcons.school} />
-                </>
-              )}
-              {entry.id === "home-service" && (
-                <>
-                  <div class="chip chip-split">
-                    <span class="chip-split-half before">Before</span>
-                    <span class="chip-split-half after">After</span>
-                  </div>
-                  <div class="chip chip-cta">
-                    <span set:html={industryIcons["home-service"]} />
-                    無料見積り
-                  </div>
-                </>
-              )}
-            </div>
-            <div>
-              <span class="eyebrow">{entry.data.heroEyebrow}</span>
-              <h3>{entry.data.name}</h3>
-              <p>{entry.data.heroLead}</p>
-              <span class="text-link">相談例を見る →</span>
-            </div>
+          <a class="industry-nav-card" href={`/industries/${entry.id}/`}>
+            <span class="industry-nav-icon" aria-hidden="true" set:html={industryIcons[entry.id]} />
+            <span class="eyebrow">{entry.data.heroEyebrow}</span>
+            <h3>{entry.data.name}</h3>
+            <p>{entry.data.heroLead}</p>
+            <span class="text-link">相談例を見る →</span>
           </a>
         ))}
       </div>

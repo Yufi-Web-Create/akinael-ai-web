@@ -294,3 +294,122 @@ test("metadata, structured data, labels, and skip navigation are present", async
   await skip.press("Enter");
   await expect(page.locator("#main")).toBeFocused();
 });
+
+// Below 1024px the horizontal nav is hidden and a hamburger-triggered panel is the only
+// way to reach できること/業種別/料金/よくある質問 — this was a real gap on a prior HEAD
+// (no nav, no substitute), so these assert the full open/close/keyboard contract at each
+// side of the 1024px breakpoint, not just that a toggle button exists.
+for (const width of [375, 768, 1023]) {
+  test(`mobile nav panel is fully operable at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/", { waitUntil: "networkidle" });
+
+    await expect(page.locator(".main-nav")).toBeHidden();
+    const toggle = page.locator("[data-menu-toggle]");
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+
+    const panel = page.locator("[data-menu-panel]");
+    await expect(panel).toBeHidden();
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await expect(panel).toBeVisible();
+    for (const label of ["できること", "業種別", "料金", "よくある質問", "Customer Portalへログイン"]) {
+      await expect(panel.getByRole("link", { name: label })).toBeVisible();
+    }
+    await expect(page.locator("body")).toHaveCSS("overflow", "hidden");
+
+    // Esc closes and returns focus to the toggle.
+    await page.keyboard.press("Escape");
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await expect(panel).toBeHidden();
+    await expect(toggle).toBeFocused();
+    await expect(page.locator("body")).not.toHaveCSS("overflow", "hidden");
+
+    // Overlay click closes.
+    await toggle.click();
+    await expect(panel).toBeVisible();
+    await page.locator("[data-menu-overlay]").click({ position: { x: 5, y: 5 } });
+    await expect(panel).toBeHidden();
+
+    // Clicking a link inside the panel closes it too (checked via the anchor-navigation
+    // test below for the scroll behavior itself).
+    await toggle.click();
+    await panel.getByRole("link", { name: "料金" }).click();
+    await expect(panel).toBeHidden();
+
+    // Keyboard-only: Tab reaches the toggle, Enter opens it.
+    await page.goto("/", { waitUntil: "networkidle" });
+    await toggle.focus();
+    await page.keyboard.press("Enter");
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  });
+}
+
+test("desktop nav stays visible and the toggle is hidden at 1024px", async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 800 });
+  await page.goto("/", { waitUntil: "networkidle" });
+  await expect(page.locator(".main-nav")).toBeVisible();
+  await expect(page.locator("[data-menu-toggle]")).toBeHidden();
+});
+
+// A target existing in the DOM (already covered by the anchor-existence test above) is
+// not the same as clicking a link actually scrolling the target into view — this proved
+// worth checking separately, since a large scroll distance combined with a short wait
+// can look like "nothing happened" without actually being broken.
+test("clicking a header nav link scrolls its target section into view", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/", { waitUntil: "networkidle" });
+
+  await page.locator('.main-nav a[href="/#pricing"]').click();
+  await expect(page.locator("#pricing-heading")).toBeInViewport({ timeout: 5000 });
+});
+
+test("direct fragment URLs land on the correct section", async ({ page }) => {
+  for (const [fragment, headingSelector] of [
+    ["#pricing", "#pricing-heading"],
+    ["#faq", "#faq-heading"],
+  ] as const) {
+    await page.goto(`/${fragment}`, { waitUntil: "networkidle" });
+    await expect(page.locator(headingSelector)).toBeInViewport();
+  }
+});
+
+test("Transform Demo industry switch updates every field, not just the input reflection", async ({ page }) => {
+  await page.goto("/", { waitUntil: "networkidle" });
+
+  const industries = [
+    { label: "カフェ・飲食店", url: "oo-coffee.jp" },
+    { label: "教室・スクール", url: "oo-school.jp" },
+    { label: "住宅メンテナンス", url: "oo-koumuten.jp" },
+    { label: "美容室・サロン", url: "oo-beauty.jp" },
+  ];
+
+  for (const industry of industries) {
+    const button = page.locator(".transform-picker button", { hasText: industry.label });
+    await button.click();
+    await expect(button).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator('[data-field="web-url"]')).toHaveText(industry.url);
+  }
+});
+
+test("Showcase carousel arrows scroll and reach a correct disabled state", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/", { waitUntil: "networkidle" });
+  await page.locator("#showcase").scrollIntoViewIfNeeded();
+
+  const prevButton = page.locator("[data-showcase-prev]");
+  const nextButton = page.locator("[data-showcase-next]");
+
+  await expect(prevButton).toBeDisabled();
+  await expect(nextButton).toBeEnabled();
+
+  await nextButton.click();
+  await expect(nextButton).toBeDisabled({ timeout: 3000 });
+  await expect(prevButton).toBeEnabled();
+
+  await prevButton.click();
+  await expect(prevButton).toBeDisabled({ timeout: 3000 });
+  await expect(nextButton).toBeEnabled();
+});

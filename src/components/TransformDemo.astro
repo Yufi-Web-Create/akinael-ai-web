@@ -127,8 +127,10 @@ const demos: IndustryDemo[] = [
             {demos[0].web.navItems.map((item) => <span>{item}</span>)}
           </nav>
           <div class="deliv-web-hero">
-            <span class="deliv-web-art" aria-hidden="true" set:html={industryIcons[demos[0].id]} />
-            <p class="deliv-web-eyebrow" data-field="web-tag">{demos[0].web.tag}</p>
+            <div class="deliv-web-header">
+              <span class="deliv-web-art" aria-hidden="true" set:html={industryIcons[demos[0].id]} />
+              <p class="deliv-web-eyebrow" data-field="web-tag">{demos[0].web.tag}</p>
+            </div>
             <h4 data-field="web-title">{demos[0].web.title.replace("{word}", demos[0].defaultWord)}</h4>
             <p class="deliv-web-body" data-field="web-body">{demos[0].web.body}</p>
             <span class="deliv-web-cta" data-field="web-cta">{demos[0].web.cta}</span>

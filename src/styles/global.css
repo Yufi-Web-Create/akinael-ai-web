@@ -5,7 +5,12 @@
   --noren: #164e4a;
   --noren-deep: #0f332f;
   --kaki: #dd6b45;
-  --kaki-deep: #b8502f;
+  /* Nudged from #b8502f: the original was 4.41:1 on --paper, just under the 4.5:1 AA
+     text threshold. */
+  --kaki-deep: #b04e2f;
+  /* --kaki lightened toward --paper for text-on-dark-green contexts (e.g. an eyebrow
+     label on the flyer's noren-deep card) — --kaki itself only reaches 2.8-4.1:1 there. */
+  --kaki-on-dark: #e9a78d;
   --line: #e4dac4;
   --muted: #5f6f66;
 
@@ -287,6 +292,9 @@ p {
   gap: 0.75rem;
 }
 
+/* Below 1024px, the Customer Portal link lives in the mobile nav panel instead (see
+   below) — showing it twice would clutter a header that already has to fit the primary
+   CTA and the menu toggle in the same row. */
 .header-actions .text-link {
   display: none;
 }
@@ -296,16 +304,148 @@ p {
 }
 
 @media (min-width: 640px) {
-  .header-actions .text-link {
-    display: inline;
-  }
-
   .header-cta-short {
     display: none;
   }
 
   .header-cta-full {
     display: inline;
+  }
+}
+
+@media (min-width: 1024px) {
+  .header-actions .text-link {
+    display: inline;
+  }
+}
+
+/* Menu toggle: hamburger <-> X via three bars, no second icon asset needed. Hidden at
+   desktop widths, where the full horizontal nav is already visible. */
+.menu-toggle {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.menu-toggle:focus-visible {
+  outline: 2px solid var(--noren);
+  outline-offset: 2px;
+}
+
+.menu-toggle-bars {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 13px;
+}
+
+.menu-toggle-bars span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+  transition: transform 180ms ease, opacity 180ms ease, top 180ms ease;
+}
+
+.menu-toggle-bars span:nth-child(1) {
+  top: 0;
+}
+
+.menu-toggle-bars span:nth-child(2) {
+  top: 5.5px;
+}
+
+.menu-toggle-bars span:nth-child(3) {
+  top: 11px;
+}
+
+.menu-toggle[aria-expanded="true"] .menu-toggle-bars span:nth-child(1) {
+  top: 5.5px;
+  transform: rotate(45deg);
+}
+
+.menu-toggle[aria-expanded="true"] .menu-toggle-bars span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle[aria-expanded="true"] .menu-toggle-bars span:nth-child(3) {
+  top: 5.5px;
+  transform: rotate(-45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-toggle-bars span {
+    transition: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .menu-toggle {
+    display: none;
+  }
+}
+
+.mobile-nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 43, 38, 0.4);
+  z-index: 19;
+}
+
+.mobile-nav-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 21;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 16px 32px -18px rgba(28, 43, 38, 0.4);
+  padding: var(--space-3) var(--gutter) var(--space-4);
+}
+
+.mobile-nav-panel nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+
+.mobile-nav-panel nav a {
+  display: block;
+  padding: 0.9rem 0.2rem;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 1.05rem;
+}
+
+.mobile-nav-panel nav a:focus-visible {
+  outline: 2px solid var(--noren);
+  outline-offset: -2px;
+}
+
+.mobile-nav-actions {
+  margin-top: var(--space-3);
+  display: grid;
+  gap: 0.9rem;
+  justify-items: start;
+}
+
+@media (min-width: 1024px) {
+  .mobile-nav-overlay,
+  .mobile-nav-panel {
+    display: none;
   }
 }
 
@@ -557,6 +697,9 @@ p {
   font-family: var(--font-display);
   font-size: 1.05rem;
   margin-bottom: 0.35rem;
+  /* Redistributes lines evenly instead of leaving a short trailing fragment (e.g. a bare
+     verb ending) alone on its own line at narrow tablet column widths. */
+  text-wrap: balance;
 }
 
 .reassure-strip span {
@@ -706,7 +849,7 @@ p {
   display: none;
   align-items: center;
   justify-content: center;
-  color: var(--kaki);
+  color: var(--kaki-deep);
 }
 
 @media (min-width: 860px) {
@@ -883,13 +1026,65 @@ p {
   }
 }
 
+.showcase-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
 /* Swipe affordance: a mobile-only hint that the card row scrolls horizontally. Desktop
-   already shows a peek of the next card as its own visual cue, so this stays hidden there. */
+   gets explicit arrow buttons instead (below) — the showcase reliably overflows even at
+   1440px, so a "peek of the next card" alone isn't a strong enough cue for mouse users. */
 .showcase-swipe-hint {
   display: none;
   font-size: 0.8rem;
   color: rgba(247, 241, 228, 0.68);
-  margin-bottom: var(--space-2);
+}
+
+.showcase-arrows {
+  display: none;
+  gap: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .showcase-arrows {
+    display: flex;
+  }
+}
+
+.showcase-arrow {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(247, 241, 228, 0.35);
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.showcase-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+.showcase-arrow:hover:not(:disabled) {
+  border-color: var(--paper);
+  background: rgba(247, 241, 228, 0.12);
+}
+
+.showcase-arrow:focus-visible {
+  outline: 2px solid var(--kaki);
+  outline-offset: 2px;
+}
+
+.showcase-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
 }
 
 .showcase-affordance {
@@ -1005,26 +1200,34 @@ p {
 }
 
 .deliv-web-hero {
-  position: relative;
   padding: var(--space-3) var(--space-2) var(--space-2);
 }
 
+/* The icon badge used to float in the card's top-right corner — a position and shape
+   (small circle) that reads as a close/dismiss control in common UI conventions,
+   especially where the icon itself is an X-like shape (e.g. scissors). Placed inline
+   with the eyebrow instead, matching the flyer's header treatment. */
+.deliv-web-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
 .deliv-web-art {
-  position: absolute;
-  top: var(--space-2);
-  right: var(--space-2);
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   display: grid;
   place-items: center;
   border-radius: 50%;
   background: var(--noren);
   color: var(--paper);
+  flex-shrink: 0;
 }
 
 .deliv-web-art svg {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
 }
 
 .deliv-web-eyebrow {
@@ -1033,7 +1236,7 @@ p {
   letter-spacing: 0.08em;
   color: var(--kaki-deep);
   text-transform: uppercase;
-  margin: 0 0 0.3rem;
+  margin: 0;
 }
 
 .deliv-web-hero h4 {
@@ -1041,7 +1244,6 @@ p {
   font-size: 1.05rem;
   line-height: 1.35;
   margin: 0 0 0.35rem;
-  padding-right: 2rem;
 }
 
 .deliv-web-body {
@@ -1215,7 +1417,7 @@ p {
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--kaki);
+  color: var(--kaki-on-dark);
   margin: 0;
 }
 
@@ -1281,264 +1483,71 @@ p {
   color: rgba(247, 241, 228, 0.75);
 }
 
-/* Industry tiles: asymmetric, alternating */
-.industry-tiles {
-  display: grid;
-  gap: var(--space-4);
-}
-
-.industry-tile {
+/* Industry navigation: compact, honest cards pointing to each industry page — not a
+   second Showcase. Earlier abstract "mini composition" chips (color bars standing in for
+   text) read as loading-skeleton placeholders rather than finished content, and duplicated
+   what the Interactive Demo and Showcase already explain. A single real icon + real copy
+   avoids both problems. */
+.industry-nav-grid {
   display: grid;
   gap: var(--space-3);
-  align-items: center;
-  padding-block: var(--space-3);
-  border-top: 1px solid var(--line);
-  text-decoration: none;
-  color: var(--ink);
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
 }
 
-@media (min-width: 768px) {
-  .industry-tile {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .industry-tile:nth-child(even) .industry-tile-visual {
-    order: 2;
-  }
-}
-
-/* Industry tile visuals: a distinct mini-composition per industry (not one template
-   recolored four times) — each a small "desk" backdrop with 1-2 layered deliverable
-   chips hinting at what actually gets made, echoing the hero-memo paper-note motif. */
-.industry-tile-visual {
-  position: relative;
+.industry-nav-card {
+  display: block;
+  padding: var(--space-3);
   background: var(--paper-raised);
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
+  text-decoration: none;
+  color: var(--ink);
+  transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
 
-.industry-tile-visual::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 82% 12%, rgba(22, 78, 74, 0.08), transparent 55%);
-}
-
-.chip {
-  position: absolute;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 10px;
+.industry-nav-card:hover,
+.industry-nav-card:focus-visible {
+  border-color: var(--noren);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-paper);
 }
 
-.chip-bar {
-  display: block;
-  height: 0.5rem;
-  border-radius: 3px;
-  background: var(--line);
+@media (prefers-reduced-motion: reduce) {
+  .industry-nav-card:hover,
+  .industry-nav-card:focus-visible {
+    transform: none;
+  }
 }
 
-.chip-bar.short {
-  width: 60%;
-}
-
-/* Beauty: a mini site preview chip + a circular service-icon badge, offset like two
-   proofs laid on a counter. */
-.chip-web {
-  top: 12%;
-  left: 8%;
-  width: 62%;
-  padding: 0.5rem 0.6rem 0.7rem;
-  transform: rotate(-4deg);
-}
-
-.chip-dots {
-  display: flex;
-  gap: 3px;
-  margin-bottom: 0.45rem;
-}
-
-.chip-dots i {
-  width: 5px;
-  height: 5px;
+.industry-nav-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  background: var(--line);
-  display: block;
+  background: var(--noren);
+  color: var(--paper);
+  margin-bottom: var(--space-2);
 }
 
-.chip-bar-title {
-  height: 0.65rem;
-  width: 70%;
-  background: var(--noren);
-  opacity: 0.75;
+.industry-nav-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.industry-nav-card h3 {
   margin-bottom: 0.4rem;
 }
 
-.chip-bar-text {
-  margin-bottom: 0.32rem;
-}
-
-.chip-badge {
-  bottom: 10%;
-  right: 10%;
-  width: 30%;
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: var(--kaki);
-  color: var(--paper);
-  transform: rotate(6deg);
-}
-
-.chip-badge svg {
-  width: 40%;
-  height: 40%;
-}
-
-/* Cafe: a small menu ticket + the same circular badge treatment, colored for this
-   craft rather than reusing the beauty layout. */
-.chip-menu {
-  top: 14%;
-  left: 8%;
-  width: 64%;
-  padding: 0.55rem 0.65rem;
-  transform: rotate(-3deg);
-}
-
-.chip-menu-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.4rem;
-  font-size: 0.62rem;
+.industry-nav-card p {
   color: var(--muted);
-  font-weight: 600;
+  margin-bottom: 0.7rem;
 }
 
-.chip-menu-row:last-child {
-  margin-bottom: 0;
-}
-
-.chip-menu-row .chip-bar {
-  flex: 1;
-}
-
-/* School: a landing-page chip (eyebrow/title/CTA) plus a folded flyer corner —
-   two different deliverable shapes, not a resized copy of another industry's. */
-.chip-landing {
-  top: 10%;
-  left: 6%;
-  width: 66%;
-  padding: 0.55rem 0.65rem 0.65rem;
-  transform: rotate(-3deg);
-}
-
-.chip-bar-eyebrow {
-  height: 0.35rem;
-  width: 40%;
-  background: var(--kaki);
-  opacity: 0.7;
-  margin-bottom: 0.45rem;
-}
-
-.chip-landing .chip-bar-title {
-  background: var(--ink);
-  opacity: 0.65;
-}
-
-.chip-pill {
-  display: block;
-  width: 44%;
-  height: 0.55rem;
-  border-radius: 999px;
-  background: var(--kaki);
-  margin-top: 0.5rem;
-}
-
-.chip-corner {
-  bottom: 8%;
-  right: 8%;
-  width: 32%;
-  aspect-ratio: 3 / 4;
-  background: var(--noren-deep);
-  color: var(--paper);
-  display: grid;
-  place-items: center;
-  transform: rotate(7deg);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 22% 100%, 0 78%);
-}
-
-.chip-corner svg {
-  width: 34%;
-  height: 34%;
-}
-
-/* Home-service: a literal before/after split (this craft's own proof format) plus a
-   CTA badge, instead of the card-stack pattern used above. */
-.chip-split {
-  top: 14%;
-  left: 8%;
-  width: 68%;
-  aspect-ratio: 16 / 9;
-  display: flex;
-  overflow: hidden;
-  transform: rotate(-2deg);
-}
-
-.chip-split-half {
-  flex: 1;
-  display: grid;
-  place-items: center;
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-
-.chip-split-half.before {
-  background: var(--line);
-  color: var(--muted);
-}
-
-.chip-split-half.after {
-  background: var(--noren);
-  color: var(--paper);
-}
-
-.chip-cta {
-  bottom: 10%;
-  right: 8%;
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.7rem;
-  border-radius: 999px;
-  background: var(--kaki);
-  color: var(--paper);
-  font-size: 0.66rem;
-  font-weight: 600;
-  white-space: nowrap;
-  transform: rotate(4deg);
-}
-
-.chip-cta svg {
-  width: 13px;
-  height: 13px;
-}
-
-.industry-tile p {
-  color: var(--muted);
-  margin-top: 0.5rem;
-}
-
-.industry-tile .text-link {
-  margin-top: var(--space-2);
+.industry-nav-card .text-link {
   display: inline-block;
 }
+
 
 /* Flow: horizontal stepper */
 .flow-stepper {
@@ -1614,7 +1623,7 @@ p {
 
 .pricing-guide-row b {
   font-family: var(--font-display);
-  color: var(--kaki);
+  color: var(--kaki-on-dark);
   flex-shrink: 0;
 }
 
@@ -1796,7 +1805,7 @@ p {
 
 .faq-list summary::after {
   content: "+";
-  color: var(--kaki);
+  color: var(--kaki-deep);
   flex-shrink: 0;
 }
 
@@ -1871,6 +1880,10 @@ p {
 
 .footer-meta {
   color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.footer-legal a {
   font-size: 0.82rem;
 }
 
