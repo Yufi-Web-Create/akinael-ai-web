@@ -15,13 +15,38 @@ const { entry } = Astro.props;
 const { data } = entry;
 const { Content } = await render(entry);
 const title = `${data.name}のWeb・SNS相談 | アキナエルAI`;
+const pageUrl = `https://akinael-ai.com/industries/${entry.id}/`;
 const structuredData = [
   {
     "@context": "https://schema.org",
     "@type": "Service",
     name: `アキナエルAI ${data.name}向けサービス`,
     description: data.metaDescription,
-    provider: { "@type": "Organization", name: "アキナエルAI" },
+    url: pageUrl,
+    provider: {
+      "@type": "Organization",
+      name: "アキナエルAI",
+      url: "https://akinael-ai.com/",
+    },
+    areaServed: "JP",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "アキナエルAI",
+        item: "https://akinael-ai.com/",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: `${data.name}向けサービス`,
+        item: pageUrl,
+      },
+    ],
   },
   {
     "@context": "https://schema.org",
