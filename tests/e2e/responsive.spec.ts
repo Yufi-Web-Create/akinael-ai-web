@@ -367,42 +367,56 @@ test("clicking a header nav link scrolls its target section into view", async ({
 });
 
 test("direct fragment URLs land on the correct section", async ({ page }) => {
+  // A real direct load with the fragment already in the URL (not a bare-path load
+  // followed by setting location.hash) — this is the actual behavior a visitor gets
+  // from a bookmark, a shared link, or a reload. It previously raced the display
+  // webfont's swap-in reflow, which could shift an already-scrolled-to target out of
+  // view; that's now fixed at the source (BaseLayout's font link uses
+  // display=optional instead of display=swap), so this exercises the real path
+  // directly instead of routing around the race in the test.
   for (const [fragment, headingSelector] of [
-    ["#pricing", "#pricing-heading"],
-    ["#faq", "#faq-heading"],
+    ["/#pricing", "#pricing-heading"],
+    ["/#faq", "#faq-heading"],
   ] as const) {
-    // Loading the URL with the fragment already attached lets the browser's native
-    // scroll-to-anchor race against the display webfont swapping in: "networkidle" only
-    // means requests are done, not that the resulting reflow has been painted, so the
-    // anchor scroll can fire against fallback-font metrics and then get silently
-    // shifted out of view once the real font applies (observed as a real, if
-    // infrequent, CI flake). Loading the bare path first, letting fonts settle, and
-    // only then setting the hash avoids that race while still exercising the same
-    // native fragment-scroll behavior a real navigation triggers.
-    await page.goto("/", { waitUntil: "networkidle" });
-    await page.evaluate(() => document.fonts.ready);
-    await page.evaluate((hash) => {
-      window.location.hash = hash;
-    }, fragment);
+    await page.goto(fragment, { waitUntil: "networkidle" });
     await expect(page.locator(headingSelector)).toBeInViewport();
   }
 });
 
-test("Transform Demo industry switch updates every field, not just the input reflection", async ({ page }) => {
+test("Transform Demo: Web/SNS/Flyer outputs and personalization all switch per industry", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
 
   const industries = [
-    { label: "カフェ・飲食店", url: "oo-coffee.jp" },
-    { label: "教室・スクール", url: "oo-school.jp" },
-    { label: "住宅メンテナンス", url: "oo-koumuten.jp" },
-    { label: "美容室・サロン", url: "oo-beauty.jp" },
+    { label: "カフェ・飲食店", url: "oo-coffee.jp", handle: "oo_coffee", word: "自家焙煎コーヒー" },
+    { label: "教室・スクール", url: "oo-school.jp", handle: "oo_school", word: "そろばん" },
+    { label: "住宅メンテナンス", url: "oo-koumuten.jp", handle: "oo_koumuten", word: "雨どい修理" },
+    { label: "美容室・サロン", url: "oo-beauty.jp", handle: "oo_beauty", word: "くせ毛カット" },
   ];
 
   for (const industry of industries) {
     const button = page.locator(".transform-picker button", { hasText: industry.label });
     await button.click();
     await expect(button).toHaveAttribute("aria-pressed", "true");
+
+    // Web output: not just the active-button state, the actual rendered output.
+    await page.locator('[data-transform-tab="web"]').click();
     await expect(page.locator('[data-field="web-url"]')).toHaveText(industry.url);
+    await expect(page.locator('[data-field="web-title"]')).toContainText(industry.word);
+
+    // SNS output.
+    await page.locator('[data-transform-tab="sns"]').click();
+    await expect(page.locator('[data-field="sns-handle"]')).toHaveText(industry.handle);
+    await expect(page.locator('[data-field="sns-body"]')).toContainText(industry.word);
+
+    // Flyer output.
+    await page.locator('[data-transform-tab="flyer"]').click();
+    await expect(page.locator('[data-field="flyer-title"]')).toContainText(industry.word);
+
+    // Personalization reflection: a custom typed word actually replaces the default
+    // word in the currently visible output, per industry.
+    const customWord = `お試し${industry.label}`;
+    await page.locator("#transform-word").fill(customWord);
+    await expect(page.locator('[data-field="flyer-title"]')).toContainText(customWord);
   }
 });
 

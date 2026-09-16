@@ -7,6 +7,8 @@ const cards = [
     eyebrow: "美容室・サロン",
     before: "SNSの更新が半年止まったまま、メニューも古い情報だった。",
     kind: "web" as const,
+    photo: "/assets/visual/showcase-beauty-1.webp",
+    photoAlt: "自然光の差し込む木と漆喰の小さな美容室（制作イメージ）",
     url: "oo-beauty.jp",
     navItems: ["ホーム", "メニュー", "アクセス"],
     tag: "SATURDAY OPEN",
@@ -19,6 +21,8 @@ const cards = [
     eyebrow: "カフェ・飲食店",
     before: "ランチメニューを、毎回お客様に口頭で説明していた。",
     kind: "sns" as const,
+    photo: "/assets/visual/showcase-cafe-2.webp",
+    photoAlt: "湯気の立つコーヒーと手作りのカフェランチ（制作イメージ）",
     handle: "oo_coffee",
     quote: "本日の\nおすすめ",
     body: "本日のランチは自家焙煎コーヒーと一緒にどうぞ。数量限定です☕",
@@ -28,6 +32,8 @@ const cards = [
     eyebrow: "教室・スクール",
     before: "体験レッスンの案内を、何から書けばいいか分からなかった。",
     kind: "flyer" as const,
+    photo: "/assets/visual/showcase-school-2.webp",
+    photoAlt: "そろばんを使って学ぶ子どもの手元（制作イメージ）",
     tag: "体験レッスン受付中",
     title: "そろばん、はじめませんか",
     body: "少人数制・年齢問わず歓迎。まずはお気軽にご相談を。",
@@ -38,9 +44,9 @@ const cards = [
     id: "home-service",
     eyebrow: "住宅メンテナンス",
     before: "問い合わせフォームがなく、電話が鳴らない日が続いていた。",
-    kind: "web" as const,
-    url: "oo-koumuten.jp",
-    navItems: ["対応地域", "施工事例", "お問い合わせ"],
+    kind: "before-after" as const,
+    beforePhoto: "/assets/visual/showcase-home-before.webp",
+    afterPhoto: "/assets/visual/showcase-home-after.webp",
     tag: "無料見積り",
     title: "雨どい修理も対応",
     body: "見積り無料。地域密着ですばやく対応します。",
@@ -76,6 +82,9 @@ const cards = [
             <nav class="deliv-web-nav" aria-hidden="true">
               {card.navItems!.map((item) => <span>{item}</span>)}
             </nav>
+            <div class="deliv-web-photo">
+              <img src={card.photo} alt={card.photoAlt} width="760" height="507" loading="lazy" />
+            </div>
             <div class="deliv-web-hero">
               <div class="deliv-web-header">
                 <span class="deliv-web-art" aria-hidden="true" set:html={industryIcons[card.id]} />
@@ -93,9 +102,10 @@ const cards = [
               <span class="deliv-sns-avatar" aria-hidden="true" set:html={industryIcons[card.id]} />
               <span class="deliv-sns-handle">{card.handle}</span>
             </div>
-            <div class="deliv-sns-photo" aria-hidden="true">
-              <span class="deliv-sns-photo-icon" set:html={industryIcons[card.id]} />
-              <span class="deliv-sns-quote">{card.quote!.split("\n").map((line) => <>{line}<br /></>)}</span>
+            <div class="deliv-sns-photo">
+              <img class="deliv-sns-photo-img" src={card.photo} alt={card.photoAlt} width="760" height="507" loading="lazy" />
+              <span class="deliv-sns-photo-scrim" aria-hidden="true"></span>
+              <span class="deliv-sns-quote" aria-hidden="true">{card.quote!.split("\n").map((line) => <>{line}<br /></>)}</span>
             </div>
             <div class="deliv-sns-actions" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.2s-7.6-4.4-9.4-9A5 5 0 0 1 12 6.6 5 5 0 0 1 21.4 11.2c-1.8 4.6-9.4 9-9.4 9Z"/></svg>
@@ -108,7 +118,8 @@ const cards = [
         {card.kind === "flyer" && (
           <div class="deliv-flyer">
             <div class="deliv-flyer-frame">
-              <span class="deliv-flyer-motif" aria-hidden="true" set:html={industryIcons[card.id]} />
+              <img class="deliv-flyer-photo" src={card.photo} alt={card.photoAlt} width="760" height="507" loading="lazy" />
+              <span class="deliv-flyer-scrim" aria-hidden="true"></span>
               <div class="deliv-flyer-header">
                 <span class="deliv-flyer-icon" aria-hidden="true" set:html={industryIcons[card.id]} />
                 <p class="deliv-flyer-eyebrow">{card.tag}</p>
@@ -120,6 +131,29 @@ const cards = [
                 <span class="deliv-flyer-contact">{card.contact}</span>
                 <span class="deliv-flyer-cta">{card.flyerCta}</span>
               </div>
+            </div>
+          </div>
+        )}
+        {card.kind === "before-after" && (
+          <div class="deliv-before-after">
+            <div class="deliv-before-after-images">
+              <figure>
+                <img src={card.beforePhoto} alt="施工前のイメージ（制作サンプル）" width="760" height="507" loading="lazy" />
+                <figcaption>Before</figcaption>
+              </figure>
+              <figure>
+                <img src={card.afterPhoto} alt="施工後のイメージ（制作サンプル）" width="760" height="507" loading="lazy" />
+                <figcaption>After</figcaption>
+              </figure>
+            </div>
+            <div class="deliv-before-after-body">
+              <div class="deliv-before-after-header">
+                <span class="deliv-before-after-icon" aria-hidden="true" set:html={industryIcons[card.id]} />
+                <p class="deliv-before-after-eyebrow">{card.tag}</p>
+              </div>
+              <h4>{card.title}</h4>
+              <p>{card.body}</p>
+              <span class="deliv-before-after-cta">{card.cta}</span>
             </div>
           </div>
         )}

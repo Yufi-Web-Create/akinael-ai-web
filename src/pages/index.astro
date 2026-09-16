@@ -8,6 +8,13 @@ import { industryIcons } from "../lib/industry-icons";
 
 const industries = (await getCollection("industries")).sort((a, b) => a.data.order - b.data.order);
 
+const industryPhotos: Record<string, { src: string; alt: string }> = {
+  beauty: { src: "/assets/visual/industry-beauty.webp", alt: "自然光の差し込む小さな美容室（制作イメージ）" },
+  restaurant: { src: "/assets/visual/industry-cafe.webp", alt: "木と陶器に囲まれた小さな個人カフェの店内（制作イメージ）" },
+  school: { src: "/assets/visual/industry-school.webp", alt: "地域の小さな教室で学ぶ子どもと先生（制作イメージ）" },
+  "home-service": { src: "/assets/visual/industry-home.webp", alt: "戸建住宅の雨どいを点検する作業員の手元（制作イメージ）" },
+};
+
 const reassurances = [
   { title: "専門知識は不要です", body: "普段の言葉で、困っていることを伝えるだけで相談できます。" },
   { title: "まずは無料の試作から", body: "実際に作られるものを見てから、契約するかを判断できます。" },
@@ -22,17 +29,38 @@ const flow = [
 ];
 
 const pricing = [
-  { plan: "TRY", name: "お試し", amount: "0", unit: "円", note: "簡易相談、集客案、SNS案、簡易リサーチ、簡易試作。" },
-  { plan: "MINI", name: "本契約ミニ", amount: "3,980", unit: "円 / 月", note: "日常の相談、文章制作、簡易調査、少量の画像素材。" },
-  { plan: "GROW", name: "しっかり運用", amount: "7,980", unit: "円 / 月", note: "Web、SNS、SEO、競合、アクセスの継続改善。" },
-  { plan: "ADVANCED", name: "発展運用", amount: "17,800", unit: "円 / 月", note: "高度な分析、自動化、業務改善、広告運用の利用資格。" },
-];
-
-const pricingGuide = [
-  { plan: "お試し", body: "まずは試作だけ見てみたい方へ" },
-  { plan: "本契約ミニ", body: "SNSや小さな更新をAIに任せたい方へ" },
-  { plan: "しっかり運用", body: "Web・SNS・集客まで継続して相談したい方へ" },
-  { plan: "発展運用", body: "広告運用まで、しっかり任せたい方へ" },
+  {
+    plan: "TRY",
+    name: "お試し",
+    amount: "0",
+    unit: "円",
+    audience: "まずは試作だけ見てみたい方へ",
+    note: "簡易相談、集客案、SNS案、簡易リサーチ、簡易試作。",
+  },
+  {
+    plan: "MINI",
+    name: "本契約ミニ",
+    amount: "3,980",
+    unit: "円 / 月",
+    audience: "SNSや小さな更新をAIに任せたい方へ",
+    note: "日常の相談、文章制作、簡易調査、少量の画像素材。",
+  },
+  {
+    plan: "GROW",
+    name: "しっかり運用",
+    amount: "7,980",
+    unit: "円 / 月",
+    audience: "Web・SNS・集客まで継続して相談したい方へ",
+    note: "Web、SNS、SEO、競合、アクセスの継続改善。",
+  },
+  {
+    plan: "ADVANCED",
+    name: "発展運用",
+    amount: "17,800",
+    unit: "円 / 月",
+    audience: "広告運用まで、しっかり任せたい方へ",
+    note: "高度な分析、自動化、業務改善、広告運用の利用資格。",
+  },
 ];
 
 const trust = [
@@ -94,25 +122,30 @@ const structuredData = [
           <a class="text-link" href="#flow">作り方の流れを見る</a>
         </div>
       </div>
-      <div class="hero-memo">
-        <p class="eyebrow">よくある相談の例</p>
-        <dl>
-          <div><dt>お店</dt><dd>1人で運営する美容室</dd></div>
-          <div><dt>困りごと</dt><dd>メニューの更新が止まっている</dd></div>
-          <div><dt>相談内容</dt><dd>「料金表を直したい。写真も入れ替えたい」</dd></div>
-        </dl>
-        <div class="hero-memo-flow" aria-hidden="true">
-          <span class="hero-memo-arrow">↓ こんな形に</span>
-          <div class="hero-memo-outputs">
-            <span class="hero-output-chip">
+      <div class="hero-visual">
+        <figure class="hero-photo">
+          <img
+            src="/assets/visual/hero-shop-owner.webp"
+            alt="営業の合間に、自分のお店のパソコンで発信内容を確認する店主（制作イメージ）"
+            width="1760"
+            height="1173"
+            loading="eager"
+            fetchpriority="high"
+          />
+          <span class="hero-photo-tag">制作イメージ</span>
+        </figure>
+        <div class="hero-proof" aria-hidden="true">
+          <span class="hero-proof-label">↓ こんな形に</span>
+          <div class="hero-proof-chips">
+            <span class="hero-proof-chip">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg>
               Web
             </span>
-            <span class="hero-output-chip">
+            <span class="hero-proof-chip">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="3.5"/><circle cx="17" cy="7" r="0.9" fill="currentColor" stroke="none"/></svg>
               SNS
             </span>
-            <span class="hero-output-chip">
+            <span class="hero-proof-chip">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6V3Z"/><path d="M15 3v3h3"/></svg>
               チラシ
             </span>
@@ -166,11 +199,16 @@ const structuredData = [
       <div class="industry-nav-grid">
         {industries.map((entry) => (
           <a class="industry-nav-card" href={`/industries/${entry.id}/`}>
-            <span class="industry-nav-icon" aria-hidden="true" set:html={industryIcons[entry.id]} />
-            <span class="eyebrow">{entry.data.heroEyebrow}</span>
-            <h3>{entry.data.name}</h3>
-            <p>{entry.data.heroLead}</p>
-            <span class="text-link">相談例を見る →</span>
+            <div class="industry-nav-photo">
+              <img src={industryPhotos[entry.id].src} alt={industryPhotos[entry.id].alt} width="520" height="347" loading="lazy" />
+              <span class="industry-nav-icon" aria-hidden="true" set:html={industryIcons[entry.id]} />
+            </div>
+            <div class="industry-nav-body">
+              <span class="eyebrow">{entry.data.heroEyebrow}</span>
+              <h3>{entry.data.name}</h3>
+              <p>{entry.data.heroLead}</p>
+              <span class="text-link">相談例を見る →</span>
+            </div>
           </a>
         ))}
       </div>
@@ -205,18 +243,14 @@ const structuredData = [
       </div>
       <div class="pricing-group">
         <p class="pricing-group-label">月額プラン — 日々の相談・運用サポート</p>
-        <div class="pricing-guide">
-          {pricingGuide.map((item) => (
-            <div class="pricing-guide-row"><b>{item.plan}</b><span>— {item.body}</span></div>
-          ))}
-        </div>
         <div class="pricing-grid">
           {pricing.map((item) => (
             <div class="pricing-item">
               <span class="plan">{item.plan}</span>
-              <strong>{item.name}</strong>
-              <strong>{item.amount}<small>{item.unit}</small></strong>
-              <p>{item.note}</p>
+              <strong class="pricing-item-name">{item.name}</strong>
+              <strong class="pricing-item-amount">{item.amount}<small>{item.unit}</small></strong>
+              <p class="pricing-item-audience">{item.audience}</p>
+              <p class="pricing-item-note">{item.note}</p>
             </div>
           ))}
         </div>
@@ -272,11 +306,22 @@ const structuredData = [
 
   <div class="awning-edge" aria-hidden="true"></div>
   <section class="section band final-cta" id="register">
-    <div class="container">
-      <p class="eyebrow on-dark">まずは、ひとことから</p>
-      <h2>あなたのお店のことを聞かせてください。</h2>
-      <p class="lede" style="color:rgba(247,241,228,0.82);">無料登録後、相談を始められます。カード登録は不要です。試作を見たあとで、契約するか検討できます。</p>
-      <RegisterWidget id="register-home" />
+    <div class="container final-cta-grid">
+      <div class="final-cta-copy">
+        <p class="eyebrow on-dark">まずは、ひとことから</p>
+        <h2>あなたのお店のことを聞かせてください。</h2>
+        <p class="lede" style="color:rgba(247,241,228,0.82);">無料登録後、相談を始められます。カード登録は不要です。試作を見たあとで、契約するか検討できます。</p>
+        <RegisterWidget id="register-home" />
+      </div>
+      <div class="final-cta-photo">
+        <img
+          src="/assets/visual/cta-objects.webp"
+          alt="スマートフォンやノート、カードを並べた仕事机（制作イメージ）"
+          width="1000"
+          height="667"
+          loading="lazy"
+        />
+      </div>
     </div>
   </section>
 </BaseLayout>

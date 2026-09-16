@@ -14,6 +14,14 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { data } = entry;
 const { Content } = await render(entry);
+
+const industryPhotos: Record<string, { src: string; alt: string }> = {
+  beauty: { src: "/assets/visual/showcase-beauty-1.webp", alt: "自然光の差し込む木と漆喰の小さな美容室（制作イメージ）" },
+  restaurant: { src: "/assets/visual/showcase-cafe-1.webp", alt: "木と陶器に囲まれた小さな個人カフェの店内（制作イメージ）" },
+  school: { src: "/assets/visual/showcase-school-1.webp", alt: "地域の小さな教室で教材に取り組む子どもと先生（制作イメージ）" },
+  "home-service": { src: "/assets/visual/industry-home.webp", alt: "戸建住宅の雨どいを点検する作業員の手元（制作イメージ）" },
+};
+const photo = industryPhotos[entry.id];
 const title = `${data.name}のWeb・SNS相談 | アキナエルAI`;
 const structuredData = [
   {
@@ -46,6 +54,12 @@ const structuredData = [
           <a class="button button-primary" href="#register">無料でAIに相談する</a>
           <a class="text-link" href="/#try">試作の例を見る</a>
         </div>
+      </div>
+      <div class="hero-visual industry-hero-visual">
+        <figure class="hero-photo">
+          <img src={photo.src} alt={photo.alt} width="760" height="507" loading="eager" fetchpriority="high" />
+          <span class="hero-photo-tag">制作イメージ</span>
+        </figure>
       </div>
     </div>
   </section>

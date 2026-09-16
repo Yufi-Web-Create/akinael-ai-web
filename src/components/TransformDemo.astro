@@ -7,6 +7,8 @@ interface IndustryDemo {
   before: string;
   placeholder: string;
   defaultWord: string;
+  photo: string;
+  photoAlt: string;
   web: { url: string; navItems: string[]; tag: string; title: string; body: string; cta: string };
   sns: { handle: string; quote: string; body: string };
   flyer: { tag: string; title: string; body: string; contact: string; cta: string };
@@ -19,6 +21,8 @@ const demos: IndustryDemo[] = [
     before: "土曜の予約がなかなか埋まらなくて。得意なスタイルも伝わってない気がする。",
     placeholder: "得意なスタイル（例：くせ毛カット）",
     defaultWord: "くせ毛カット",
+    photo: "/assets/visual/demo-beauty.webp",
+    photoAlt: "木の施術台に置かれたハサミと櫛とタオル（制作イメージ）",
     web: {
       url: "oo-beauty.jp",
       navItems: ["ホーム", "メニュー", "アクセス"],
@@ -36,6 +40,8 @@ const demos: IndustryDemo[] = [
     before: "ランチのメニュー、SNSに全然載せられてなくて。",
     placeholder: "看板メニュー（例：自家焙煎コーヒー）",
     defaultWord: "自家焙煎コーヒー",
+    photo: "/assets/visual/demo-cafe.webp",
+    photoAlt: "カウンターでハンドドリップする店主の手元（制作イメージ）",
     web: {
       url: "oo-coffee.jp",
       navItems: ["ホーム", "メニュー", "アクセス"],
@@ -53,6 +59,8 @@ const demos: IndustryDemo[] = [
     before: "体験レッスンの案内を出したいけど、何をどう書けばいいか分からなくて。",
     placeholder: "教えていること（例：そろばん）",
     defaultWord: "そろばん",
+    photo: "/assets/visual/demo-school.webp",
+    photoAlt: "そろばんを使って学ぶ子どもの手元（制作イメージ）",
     web: {
       url: "oo-school.jp",
       navItems: ["ホーム", "レッスン", "料金"],
@@ -70,6 +78,8 @@ const demos: IndustryDemo[] = [
     before: "問い合わせフォームがなくて、電話が来ないと仕事が増えなくて。",
     placeholder: "得意な作業（例：雨どい修理）",
     defaultWord: "雨どい修理",
+    photo: "/assets/visual/demo-home.webp",
+    photoAlt: "戸建住宅の雨どいを点検する作業員の手元（制作イメージ）",
     web: {
       url: "oo-koumuten.jp",
       navItems: ["対応地域", "施工事例", "お問い合わせ"],
@@ -126,6 +136,9 @@ const demos: IndustryDemo[] = [
           <nav class="deliv-web-nav" data-field-nav="web" aria-hidden="true">
             {demos[0].web.navItems.map((item) => <span>{item}</span>)}
           </nav>
+          <div class="deliv-web-photo">
+            <img data-field-photo="web" src={demos[0].photo} alt={demos[0].photoAlt} width="760" height="507" />
+          </div>
           <div class="deliv-web-hero">
             <div class="deliv-web-header">
               <span class="deliv-web-art" aria-hidden="true" set:html={industryIcons[demos[0].id]} />
@@ -144,9 +157,10 @@ const demos: IndustryDemo[] = [
             <span class="deliv-sns-avatar" aria-hidden="true" set:html={industryIcons[demos[0].id]} />
             <span class="deliv-sns-handle" data-field="sns-handle">{demos[0].sns.handle}</span>
           </div>
-          <div class="deliv-sns-photo" aria-hidden="true">
-            <span class="deliv-sns-photo-icon" data-field-icon="sns" set:html={industryIcons[demos[0].id]} />
-            <span class="deliv-sns-quote" data-field="sns-quote">
+          <div class="deliv-sns-photo">
+            <img class="deliv-sns-photo-img" data-field-photo="sns" src={demos[0].photo} alt={demos[0].photoAlt} width="760" height="507" />
+            <span class="deliv-sns-photo-scrim" aria-hidden="true"></span>
+            <span class="deliv-sns-quote" data-field="sns-quote" aria-hidden="true">
               {demos[0].sns.quote.split("\n").map((line) => <>{line}<br /></>)}
             </span>
           </div>
@@ -162,7 +176,8 @@ const demos: IndustryDemo[] = [
       <div class="transform-panel" id="transform-panel-flyer" data-transform-panel="flyer" hidden>
         <div class="deliv-flyer">
           <div class="deliv-flyer-frame">
-            <span class="deliv-flyer-motif" aria-hidden="true" set:html={industryIcons[demos[0].id]} />
+            <img class="deliv-flyer-photo" data-field-photo="flyer" src={demos[0].photo} alt={demos[0].photoAlt} width="760" height="507" />
+            <span class="deliv-flyer-scrim" aria-hidden="true"></span>
             <div class="deliv-flyer-header">
               <span class="deliv-flyer-icon" aria-hidden="true" set:html={industryIcons[demos[0].id]} />
               <p class="deliv-flyer-eyebrow" data-field="flyer-tag">{demos[0].flyer.tag}</p>
@@ -190,6 +205,8 @@ const demos: IndustryDemo[] = [
     before: string;
     placeholder: string;
     defaultWord: string;
+    photo: string;
+    photoAlt: string;
     web: { url: string; navItems: string[]; tag: string; title: string; body: string; cta: string };
     sns: { handle: string; quote: string; body: string };
     flyer: { tag: string; title: string; body: string; contact: string; cta: string };
@@ -204,9 +221,8 @@ const demos: IndustryDemo[] = [
     const pickerButtons = root.querySelectorAll<HTMLButtonElement>(".transform-picker button");
     const tabButtons = root.querySelectorAll<HTMLButtonElement>("[data-transform-tab]");
     const panels = root.querySelectorAll<HTMLElement>("[data-transform-panel]");
-    const iconTargets = root.querySelectorAll<HTMLElement>(
-      ".deliv-web-art, .deliv-sns-avatar, [data-field-icon='sns'], .deliv-flyer-icon",
-    );
+    const iconTargets = root.querySelectorAll<HTMLElement>(".deliv-web-art, .deliv-sns-avatar, .deliv-flyer-icon");
+    const photoTargets = root.querySelectorAll<HTMLImageElement>("[data-field-photo]");
 
     let currentDemo = demos[0];
     let currentWord = currentDemo?.defaultWord || "";
@@ -302,6 +318,11 @@ const demos: IndustryDemo[] = [
             el.innerHTML = iconMarkup;
           });
         }
+
+        photoTargets.forEach((img) => {
+          img.src = demo.photo;
+          img.alt = demo.photoAlt;
+        });
 
         render();
       });
