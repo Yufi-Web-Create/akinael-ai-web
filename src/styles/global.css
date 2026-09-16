@@ -643,29 +643,70 @@ p {
   margin-bottom: 0.4rem;
 }
 
-.hero-proof-chips {
+/* Two miniature deliverable previews standing in for "this same shop's Web page" and
+   "this same shop's SNS post" — deliberately shaped like small screenshots (browser
+   chrome dots, a photo-card quote square), not pill buttons, so nothing here reads as
+   an interactive control that does nothing when pressed. */
+.hero-proof-previews {
   display: flex;
-  gap: 0.4rem;
-  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.5rem;
 }
 
-.hero-proof-chip {
-  display: inline-flex;
+.hero-preview-web {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  width: 7.6rem;
+  padding: 0.4rem 0.5rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.hero-preview-chrome {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 0.2rem;
+}
+
+.hero-preview-chrome i {
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+.hero-preview-web strong {
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.hero-preview-web-sub {
+  font-size: 0.56rem;
+  color: var(--muted);
+}
+
+.hero-preview-sns {
+  display: flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: 999px;
-  background: var(--noren);
-  color: var(--paper);
-  font-size: 0.72rem;
-  font-weight: 600;
-  white-space: nowrap;
+  justify-content: center;
+  width: 4.4rem;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+  border-radius: 6px;
+  background: linear-gradient(150deg, var(--noren) 0%, var(--noren-deep) 100%);
 }
 
-.hero-proof-chip svg {
-  width: 12px;
-  height: 12px;
-  flex-shrink: 0;
+.hero-preview-sns-quote {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  line-height: 1.3;
+  color: var(--paper);
+  text-align: center;
 }
 
 /* Reassurance strip: single row, hairline-divided, not cards */
