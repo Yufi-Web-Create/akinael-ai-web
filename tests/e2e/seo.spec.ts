@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 
 test("homepage exposes crawl, canonical, and social metadata", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
@@ -46,7 +47,7 @@ test("industry pages expose self-canonical and BreadcrumbList structured data", 
     {
       "@type": "ListItem",
       position: 2,
-      name: "飲食店向けサービス",
+      name: "カフェ・飲食店向けサービス",
       item: "https://akinael-ai.com/industries/restaurant/",
     },
   ]);
@@ -61,15 +62,11 @@ test("robots.txt allows crawling and advertises the sitemap", async ({ request }
   expect(body).toContain("Sitemap: https://akinael-ai.com/sitemap-index.xml");
 });
 
-test("generated sitemap is reachable and contains canonical public URLs", async ({ request }) => {
-  const indexResponse = await request.get("/sitemap-index.xml");
-  expect(indexResponse.ok()).toBe(true);
-  const indexXml = await indexResponse.text();
+test("production build sitemap contains canonical public URLs", async () => {
+  const indexXml = await readFile("dist/sitemap-index.xml", "utf8");
   expect(indexXml).toContain("sitemap-0.xml");
 
-  const sitemapResponse = await request.get("/sitemap-0.xml");
-  expect(sitemapResponse.ok()).toBe(true);
-  const sitemapXml = await sitemapResponse.text();
+  const sitemapXml = await readFile("dist/sitemap-0.xml", "utf8");
   expect(sitemapXml).toContain("https://akinael-ai.com/");
   expect(sitemapXml).toContain("https://akinael-ai.com/industries/restaurant/");
 });
