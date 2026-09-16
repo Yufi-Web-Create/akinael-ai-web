@@ -1,80 +1,53 @@
 ---
-import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import RegisterWidget from "../components/RegisterWidget.astro";
-
-const industries = (await getCollection("industries")).sort((a, b) => a.data.order - b.data.order);
+import "../styles/lp.css";
 
 const painPoints = [
-  { title: "更新する人がいない", description: "Webサイトやお知らせを直したくても、社内に担当できる人がいません。" },
-  { title: "頼れる先が見つからない", description: "小さなお店・事業の規模に合う、気軽に相談できる制作の頼み先が見つかりません。" },
-  { title: "AIを使いこなせない", description: "AIが便利そうなのは分かっていても、何をどう頼めばよいのか分かりません。" },
+  { title: "更新する人がいない", description: "Webサイトを更新できていない、SNS投稿を考える時間がない、チラシや画像を作れる人がいない。そんなお店・事業者様は少なくありません。" },
+  { title: "頼れる先が見つからない", description: "外注費は高いし、制作会社に頼めるほど要件も固まっていない。専任の担当者を雇う余裕もない、というのが本音ではないでしょうか。" },
+  { title: "AIを使いこなせない", description: "AIが便利そうなのは分かるけれど、使い方もプロンプトの考え方も分からない。そのまま手つかずになっていませんか。" },
 ];
 
-// 6 numbered value props. Consolidates this site's previous competitor-comparison section
-// (制作会社/DIYサービス/汎用AIとの違い) into the new design's masthead-bordered layout —
-// same underlying, previously-reviewed substance, restructured to match the new spec rather
-// than kept as a separate duplicate section.
 const values = [
-  { title: "普段の言葉で相談できる", description: "専門用語や仕様書は不要です。困りごとをそのまま話してください。" },
-  { title: "契約前に試作を見られる", description: "制作会社のように見積りだけで進めず、試作を確認してから検討できます。" },
-  { title: "小さな商いにやさしい価格", description: "お試しは0円。月額プランも小規模店舗・事業者に合わせた価格です。" },
-  { title: "作る工程と確かめる工程を分離", description: "制作するAIと検査する工程を分け、品質を確認してから次へ進めます。" },
-  { title: "公開・課金は人が確認", description: "元に戻しにくい操作は、AIだけで自動実行せず人の承認を必須にしています。" },
-  { title: "継続的な改善も相談できる", description: "作って終わりではなく、契約プランに応じて公開後の改善も続けて相談できます。" },
+  "あなたの言葉で相談できる",
+  "専門知識やプロンプト作成は不要",
+  "相談内容をAIが整理",
+  "必要な制作物・施策を具体化",
+  "実際の制作物まで形にする",
+  "実物を直接確認",
 ];
 
 const offerings = [
-  { title: "AI相談・集客相談", description: "経営や集客の困りごとを、普段の言葉でAIに相談できます。" },
-  { title: "SNS投稿案・キャッチコピー", description: "投稿文やキャッチコピー、案内文の下書きを作成します。" },
-  { title: "Webサイト・LP制作・改善", description: "既存サイトの部分修正から、新規制作・公開まで対応します。" },
-  { title: "チラシ・バナー制作", description: "チラシやSNS用バナーなど、必要な販促物を相談できます。" },
-  { title: "簡易リサーチ・施策提案", description: "競合や地域情報を調べ、実行できる施策を提案します。" },
-  { title: "継続的な制作・運用支援", description: "公開後の更新・改善・分析まで、契約プランに応じて継続支援します。" },
+  { kicker: "相談", title: "AI相談・集客相談", description: "何から始めればいいか分からない状態からでも、AIに相談しながら集客のヒントを一緒に整理します。" },
+  { kicker: "発信", title: "SNS投稿案・キャッチコピー", description: "話した内容から、投稿文やキャッチコピーの案をAIが作成します。" },
+  { kicker: "Web", title: "Webサイト・LP制作／改善", description: "新しく作るのはもちろん、今あるサイトの改善提案にも対応します。" },
+  { kicker: "画像", title: "チラシ・バナー制作", description: "紙のチラシからSNS用バナーまで、画像制作をおまかせいただけます。" },
+  { kicker: "調査", title: "簡易リサーチ・施策提案", description: "簡単な調査から、キャンペーンや施策のアイデアづくりまでご相談いただけます。" },
+  { kicker: "継続", title: "継続的な制作・運用支援", description: "作って終わりにせず、継続した制作・改善までサポートします。" },
 ];
 
-const flow = [
-  { title: "AIに相談", body: "困っていること、やってみたいことを、普段の言葉でチャットに伝えます。" },
-  { title: "内容整理", body: "AIが相談内容を整理し、必要な作業内容へまとめます。" },
-  { title: "AIによる提案・制作", body: "整理した内容をもとに、AIが提案・制作を進めます。" },
-  { title: "プレビュー確認", body: "できあがった内容を、実際の画面で確認できます。" },
-  { title: "修正", body: "気になる点があれば、そのままAIに修正を相談できます。" },
-  { title: "人による承認", body: "公開・課金など重要な操作の前には、必ず人が内容を確認します。" },
-  { title: "公開・利用", body: "承認後に公開・利用を開始し、その後も改善を相談できます。" },
-];
+const flow = ["AIに相談", "内容整理", "AIによる提案・制作", "プレビュー確認", "修正", "人による承認", "公開・利用"];
 
 const slides = [
-  { src: "/assets/screenshots/public-home.png", alt: "アキナエルAI 公開サイトのトップページ" },
-  { src: "/assets/screenshots/portal-home.png", alt: "お客様マイページ ホーム画面" },
-  { src: "/assets/screenshots/portal-chat.png", alt: "お客様マイページ AIに相談する画面" },
-  { src: "/assets/screenshots/portal-works.png", alt: "お客様マイページ 制作物一覧画面" },
-  { src: "/assets/screenshots/admin-home.png", alt: "運営者向け管理ツール ホーム画面" },
-  { src: "/assets/screenshots/admin-project.png", alt: "運営者向け管理ツール 案件詳細画面" },
+  { src: "/assets/screenshots/lp-01-home.webp", alt: "アキナエルAI お客様マイページのホーム画面" },
+  { src: "/assets/screenshots/lp-02-chat.webp", alt: "AIに相談する画面" },
+  { src: "/assets/screenshots/lp-03-summary.webp", alt: "相談内容を確認する画面" },
+  { src: "/assets/screenshots/lp-04-works.webp", alt: "制作物を確認する画面" },
+  { src: "/assets/screenshots/lp-05-plan.webp", alt: "プランとお支払いの画面" },
+  { src: "/assets/screenshots/lp-06-settings.webp", alt: "設定画面" },
 ];
 
 const pricingSupport = [
-  { plan: "TRY", name: "お試し", amount: "0", unit: "円", note: "簡易相談、集客案、SNS案、簡易リサーチ、簡易試作。" },
-  { plan: "MINI", name: "本契約ミニ", amount: "3,980", unit: "円 / 月", note: "日常の相談、文章制作、簡易調査、少量の画像素材。" },
-  { plan: "GROW", name: "しっかり運用", amount: "7,980", unit: "円 / 月", note: "Web、SNS、SEO、競合、アクセスの継続改善。" },
-  { plan: "ADVANCED", name: "発展運用", amount: "17,800", unit: "円 / 月", note: "高度な分析、自動化、業務改善、広告運用の利用資格。" },
+  { name: "お試し", price: "¥0", description: "AI相談・簡易集客相談・SNS投稿案・キャッチコピー・簡易Web改善提案・簡易リサーチ・簡易Web試作。利用量・作業量には上限があります。", meta: "実際の成果物を見てから、本契約を判断できます" },
+  { name: "本契約ミニ", price: "¥3,980", unit: "／月", description: "小規模な相談・制作を継続して依頼したい事業者様向け。" },
+  { name: "しっかり運用", price: "¥7,980", unit: "／月", description: "SNSやWebなどを継続的に制作・改善していきたい事業者様向け。" },
+  { name: "発展運用", price: "¥17,800", unit: "／月", description: "より幅広い制作・運用・集客施策まで任せたい事業者様向け。" },
 ];
 
 const pricingMenu = [
-  { plan: "WEB", name: "Web正式制作・公開", amount: "19,800", unit: "円 〜", note: "最大5ページ程度、スマホ対応、基本SEO、問い合わせフォームなど。" },
-  { plan: "ADS", name: "Instagram広告運用", amount: "広告費の20%", unit: "（最低5,500円/月）", note: "戦略立案からクリエイティブ、配信、効果確認まで。" },
-];
-
-const faq = [
-  { q: "専門知識がなくても相談できますか？", a: "はい。今のお困りごとを普段の言葉で伝えてください。必要な情報は対話の中で整理します。" },
-  { q: "AIだけで勝手に公開されませんか？", a: "公開や課金などの重要操作は人間承認が前提です。確認なしで元に戻しにくい操作を進めることはありません。" },
-  { q: "料金は決まっていますか？", a: "お試しは0円。本契約ミニは月額3,980円、しっかり運用は月額7,980円、発展運用は月額17,800円です。追加作業が必要な場合は内容と料金を先に説明し、明確な承認後に開始します。相談だけで料金は発生しません。" },
-  { q: "Webサイト制作はいくらですか？", a: "正式制作・公開は19,800円からです。標準は最大5ページ程度、スマートフォン対応、基本SEO、Google Map、問い合わせフォーム、公開作業など。ページ追加、予約、EC、CMSなどは個別見積りです。" },
-  { q: "無料でどこまでできますか？", a: "簡易相談、集客やSNS投稿の案、簡易リサーチ、Webサイトの簡易試作までがお試し0円の範囲です。本番公開、本格的なSEO施工、継続的なSNS運用などは含まれません。" },
-  { q: "勝手に料金が発生しませんか？", a: "発生しません。相談だけでは契約にならず、プラン外の作業は見積りと提案までです。作業内容、料金、対象範囲を説明し、明確な承認をいただくまで有料作業を始めません。" },
-  { q: "公開前に確認できますか？", a: "はい。試作を確認し、内容に納得してから正式制作や公開へ進むかを判断できます。" },
-  { q: "解約できますか？", a: "月額プランの解約条件と返金条件は契約前に明示します。現時点で未確定の条件を、このサイト上で断定することはありません。" },
-  { q: "データはどう扱われますか？", a: "相談内容や顧客情報は公開ページへ埋め込まず、認証された領域で管理します。保存期間、削除方法、外部サービスへの送信範囲は、正式なプライバシーポリシーで明示します。" },
-  { q: "どんな業種が対象ですか？", a: "美容室やサロン、飲食店、教室、住宅メンテナンスなどのご相談が多いですが、業種を限定しているわけではありません。Web担当者やマーケティング担当がいない小規模な店舗・事業者であれば、業種を問わずご相談いただけます。" },
+  { name: "Web正式制作・公開", price: "¥19,800〜", description: "無料試作とは別に、本番用Webサイトとして正式に制作・公開する場合の料金です。" },
+  { name: "Instagram広告運用", price: "広告費の20%", description: "最低5,500円／月。広告費は別途ご負担いただきます。発展運用プランでの対応が基本です。" },
 ];
 
 const structuredData = [
@@ -83,269 +56,178 @@ const structuredData = [
     "@type": "Organization",
     name: "アキナエルAI",
     url: "https://akinael-ai.com/",
-    description: "商いの願いを叶えるAI。小さな店舗・事業のWeb・SNS・文章・画像の相談から制作、継続改善まで対応します。",
+    description: "商いの願いを叶えるAI。小さな店舗・地域事業のWeb・SNS・文章・画像の相談から制作、継続改善まで対応します。",
     logo: "https://akinael-ai.com/assets/logos/logo-horizontal.svg",
   },
   {
     "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faq.map((item) => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: { "@type": "Answer", text: item.a },
-    })),
+    "@type": "Service",
+    name: "アキナエルAI",
+    serviceType: "小規模店舗・地域事業者向けAI制作・運用支援",
+    provider: { "@type": "Organization", name: "アキナエルAI" },
+    areaServed: "JP",
+    url: "https://akinael-ai.com/",
   },
 ];
 ---
 
 <BaseLayout
   title="アキナエルAI｜商いの願いを、AIが叶えます。"
-  description="小さな店舗・地域事業者のためのAI相談役。Webサイト、SNS、文章、画像、調査をチャットで相談し、無料の試作を確認してから契約を検討できます。"
+  description="小さな店舗・地域事業者のためのAI相談役。Webサイト、SNS、文章、画像、調査を普段の言葉で相談し、無料の試作を確認してから契約を検討できます。"
   path="/"
   structuredData={structuredData}
 >
-  <section class="hero">
-    <div class="container">
-      <div class="hero-primary">
-        <p class="eyebrow">FOR SMALL LOCAL BUSINESS</p>
-        <h1 class="hero-title">
-          <span class="cmyk" data-text="商いの願いを、">商いの願いを、</span>
-          <span class="cmyk" data-text="AIが叶えます。">AIが叶えます。</span>
-        </h1>
-        <p class="hero-lede">
-          Web担当者がいない小さなお店・事業者のための相談役です。Webサイト、SNS、文章、画像、調査のことを、チャットで相談しながら形にしていきます。
-        </p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="#register">AIに相談してみる</a>
-          <a class="text-link" href="#pricing">料金を見る</a>
-        </div>
-        <ul class="hero-chips">
-          <li>まずは無料でおためし</li>
-          <li>普段の言葉でOK</li>
-          <li>専門知識は不要</li>
-          <li>成果物を見てから契約</li>
-          <li>最終確認は人がします</li>
-          <li>小さな商いにやさしい価格</li>
-        </ul>
+  <div class="landing-v2">
+    <section class="lp-hero">
+      <h1 class="lp-hero-title">
+        <span class="cmyk-head"><span class="paper">商いの願いを、</span><span class="plate plate-c" aria-hidden="true">商いの願いを、</span><span class="plate plate-m" aria-hidden="true">商いの願いを、</span><span class="plate plate-y" aria-hidden="true">商いの願いを、</span></span>
+        <span class="cmyk-head"><span class="paper">AIが叶えます。</span><span class="plate plate-c" aria-hidden="true">AIが叶えます。</span><span class="plate plate-m" aria-hidden="true">AIが叶えます。</span><span class="plate plate-y" aria-hidden="true">AIが叶えます。</span></span>
+      </h1>
+      <p class="lp-hero-copy">むずかしい言葉やプロンプトは、いりません。あなたの言葉で相談するだけで、AIがWebサイトやSNS投稿、チラシまで一緒に作成します。</p>
+      <div class="lp-actions">
+        <a class="btn btn-primary lp-primary" href="#register">AIに相談してみる</a>
+        <a class="btn btn-ghost" href="#pricing">料金を見る</a>
       </div>
-      <div class="hero-example">
-        <p class="eyebrow">よくある相談の例</p>
-        <dl>
-          <div><dt>お店</dt><dd>1人で運営する美容室</dd></div>
-          <div><dt>困りごと</dt><dd>メニューの更新が止まっている</dd></div>
-          <div><dt>相談内容</dt><dd>「料金表を直したい。写真も入れ替えたい」</dd></div>
-        </dl>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="section" aria-labelledby="pain-heading">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">よくあるお困りごと</p>
-        <h2 id="pain-heading">こんなことで止まっていませんか。</h2>
-      </div>
-      <div class="pain-grid">
+    <section class="lp-section" aria-labelledby="pain-heading">
+      <p class="lp-kicker" id="pain-heading">こんなお困り、ありませんか？</p>
+      <div class="lp-pain-grid">
         {painPoints.map((item) => (
-          <div class="pain-item">
-            <h3>{item.title}</h3>
+          <article>
+            <h2>{item.title}</h2>
             <p>{item.description}</p>
-          </div>
+          </article>
         ))}
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="section" id="difference" aria-labelledby="difference-heading">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">WHY AKINAEL AI</p>
-        <h2 id="difference-heading">選ばれる理由</h2>
+    <section class="lp-section" id="value" aria-labelledby="difference-heading">
+      <div class="lp-rule-thick" aria-hidden="true"></div>
+      <div class="lp-value-head">
+        <span id="difference-heading">アキナエルAIが選ばれる理由</span>
+        <span>普段の言葉で、そのまま相談</span>
       </div>
-      <div class="value-frame">
-        <div class="value-grid">
-          {values.map((item, index) => (
-            <div class="value-item">
-              <span class="num">{String(index + 1).padStart(2, "0")}</span>
-              <div>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div class="lp-rule" aria-hidden="true"></div>
+      <div class="lp-value-grid">
+        {values.map((item, index) => (
+          <p><span>{String(index + 1).padStart(2, "0")}</span>{item}</p>
+        ))}
       </div>
-    </div>
-  </section>
+      <div class="lp-rule" aria-hidden="true"></div>
+    </section>
 
-  <section class="section" id="service" aria-labelledby="service-heading">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">WHAT WE DO</p>
-        <h2 id="service-heading">できること</h2>
-        <p>話していただいた内容をアキナエルAIが整理し、必要な作業へつなげます。お店の方に判断していただくのは、本当に必要な場面だけです。</p>
-      </div>
-      <div class="offer-grid">
+    <section class="lp-section" id="offer" aria-labelledby="service-heading">
+      <p class="lp-kicker">できること</p>
+      <h2 class="lp-section-title" id="service-heading">相談から制作・運用まで、まとめておまかせ</h2>
+      <div class="lp-card-grid">
         {offerings.map((item) => (
-          <div class="offer-card">
+          <article class="lp-card">
+            <span class="lp-card-kicker">{item.kicker}</span>
             <h3>{item.title}</h3>
             <p>{item.description}</p>
-          </div>
+          </article>
         ))}
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="section" id="industries" aria-labelledby="industries-heading">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">BUILT FOR YOUR SHOP</p>
-        <h2 id="industries-heading">その業種にしか、伝わらない言葉がある。</h2>
-        <p>業種ごとのお困りごとに合わせた相談内容をご覧いただけます。</p>
+    <section class="lp-section lp-flow" aria-labelledby="flow-heading">
+      <div>
+        <p class="lp-kicker">ご利用の流れ</p>
+        <h2 class="lp-flow-title" id="flow-heading">むずかしいことは、ありません</h2>
+        <ol>
+          {flow.map((item, index) => <li><span>{index + 1}</span>{item}</li>)}
+        </ol>
+        <p class="lp-flow-note">公開や課金の前には、必ず人の目で確認します。ご安心ください。</p>
       </div>
-      <div class="industry-links">
-        {industries.map((entry) => (
-          <a class="industry-link" href={`/industries/${entry.id}/`}>
-            <span class="eyebrow">{entry.data.heroEyebrow}</span>
-            <h3>{entry.data.name}</h3>
-            <p>{entry.data.heroLead}</p>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="flow" aria-labelledby="flow-heading">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">HOW IT WORKS</p>
-        <h2 id="flow-heading">ご利用の流れ</h2>
-      </div>
-      <div class="flow-layout">
-        <div>
-          <ol class="flow-steps">
-            {flow.map((step, index) => (
-              <li>
-                <span class="num">{String(index + 1).padStart(2, "0")}</span>
-                <div>
-                  <h3>{step.title}</h3>
-                  <p>{step.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-          <p class="flow-note">公開や課金の前には、必ず人の目で確認します。</p>
-        </div>
-        <div class="slider" data-slider role="group" aria-label="実際の画面の例" aria-roledescription="carousel">
+      <figure class="lp-slider" data-slider role="group" aria-label="実際のお客様マイページ画面" aria-roledescription="carousel">
+        <div class="lp-slider-frame halftone">
           {slides.map((slide, index) => (
-            <img src={slide.src} alt={slide.alt} class={index === 0 ? "is-active" : ""} loading="lazy" width="960" height="720" />
+            <img src={slide.src} alt={slide.alt} class={index === 0 ? "is-active" : ""} loading={index === 0 ? "eager" : "lazy"} width="1200" height="900" />
           ))}
-          <div class="slider-dots" data-slider-dots>
-            {slides.map((_, index) => (
-              <button type="button" aria-label={`${index + 1}枚目を表示`} class={index === 0 ? "is-active" : ""} data-index={index}></button>
-            ))}
-          </div>
         </div>
-      </div>
-    </div>
-  </section>
+        <div class="lp-slider-dots" data-slider-dots>
+          {slides.map((slide, index) => (
+            <button type="button" aria-label={`${slide.alt}を表示`} class={index === 0 ? "is-active" : ""} data-index={index}></button>
+          ))}
+        </div>
+      </figure>
+    </section>
 
-  <section class="section band" id="pricing" aria-labelledby="pricing-heading">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow on-dark">PRICING</p>
-        <h2 id="pricing-heading">相談だけなら、0円から。</h2>
-        <p>必要な範囲が見えてから選べます。追加作業は先に内容と料金を説明し、明確な承認をいただいてから始めます。</p>
+    <section class="lp-section" id="pricing" aria-labelledby="pricing-heading">
+      <p class="lp-kicker">料金</p>
+      <h2 class="lp-section-title lp-pricing-title" id="pricing-heading">小さな商いでも、続けやすい価格に</h2>
+      <div class="lp-seg" role="radiogroup" aria-label="料金の種類" data-pricing-toggle>
+        <label><input type="radio" name="plan-view" value="support" checked />継続サポートプラン</label>
+        <label><input type="radio" name="plan-view" value="menu" />単体メニュー</label>
       </div>
-      <div class="pricing-toggle" role="tablist" aria-label="料金の種類" data-pricing-toggle>
-        <button type="button" role="tab" aria-selected="true" aria-controls="pricing-support" class="is-active" data-target="pricing-support">継続サポートプラン</button>
-        <button type="button" role="tab" aria-selected="false" aria-controls="pricing-menu" data-target="pricing-menu">単体メニュー</button>
-      </div>
-      <div class="pricing-panel" id="pricing-support" role="tabpanel">
-        <div class="pricing-grid">
+      <div class="lp-pricing-panel" data-panel="support">
+        <div class="lp-pricing-grid">
           {pricingSupport.map((item) => (
-            <div class="pricing-item">
-              <span class="plan">{item.plan}</span>
-              <strong>{item.name}</strong>
-              <strong>{item.amount}<small>{item.unit}</small></strong>
-              <p>{item.note}</p>
-            </div>
+            <article class="lp-card lp-price-card">
+              <span class="lp-card-kicker">{item.name}</span>
+              <h3>{item.price}{item.unit && <small>{item.unit}</small>}</h3>
+              <p>{item.description}</p>
+              {item.meta && <p class="lp-card-meta">{item.meta}</p>}
+            </article>
           ))}
         </div>
       </div>
-      <div class="pricing-panel menu" id="pricing-menu" role="tabpanel" hidden>
-        <div class="pricing-grid menu">
+      <div class="lp-pricing-panel" data-panel="menu" hidden>
+        <div class="lp-pricing-grid lp-pricing-grid-menu">
           {pricingMenu.map((item) => (
-            <div class="pricing-item">
-              <span class="plan">{item.plan}</span>
-              <strong>{item.name}</strong>
-              <strong>{item.amount}<small>{item.unit}</small></strong>
-              <p>{item.note}</p>
-            </div>
+            <article class="lp-card lp-price-card">
+              <span class="lp-card-kicker">{item.name}</span>
+              <h3>{item.price}</h3>
+              <p>{item.description}</p>
+            </article>
           ))}
         </div>
       </div>
-      <p class="pricing-note">表示料金はすべて税込です。外部費用（ドメイン、広告費等）はお客様負担です。プラン外の作業は承認後に開始します。承認前に無断で課金・公開することはありません。</p>
-    </div>
-  </section>
+      <ul class="lp-disclaimer">
+        <li>・独自ドメインなど外部サービスの費用はお客様のご負担となります。</li>
+        <li>・プラン外の作業は、内容と料金をご提示し、ご承認いただいたうえで開始します。</li>
+        <li>・ご承認前に、無断で課金・公開することはありません。</li>
+      </ul>
+    </section>
 
-  <section class="section" id="faq" aria-labelledby="faq-heading">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">FAQ</p>
-        <h2 id="faq-heading">気になることに、先にお答えします。</h2>
-      </div>
-      <div class="faq-list">
-        {faq.map((item) => (
-          <details>
-            <summary>{item.q}</summary>
-            <p>{item.a}</p>
-          </details>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="section final-cta" id="register">
-    <div class="container">
-      <p class="eyebrow">まずは、ひとことから</p>
-      <h2>まずは無料で、相談してみませんか？</h2>
-      <p class="lede">無料登録後、相談を始められます。カード登録は不要です。試作を見たあとで、契約するか検討できます。</p>
+    <section class="lp-final" id="register" aria-labelledby="register-heading">
+      <h2 id="register-heading">まずは無料で、相談してみませんか？</h2>
+      <p>成果物を見てから、本契約を決められます。普段の言葉で話すだけで大丈夫です。</p>
       <RegisterWidget id="register-home" />
-    </div>
-  </section>
+    </section>
+  </div>
 </BaseLayout>
 
 <script>
-  const toggle = document.querySelector<HTMLElement>("[data-pricing-toggle]");
-  if (toggle) {
-    const buttons = Array.from(toggle.querySelectorAll<HTMLButtonElement>("button[data-target]"));
-    buttons.forEach((button) => {
-      button.addEventListener("click", () => {
-        buttons.forEach((other) => {
-          const active = other === button;
-          other.classList.toggle("is-active", active);
-          other.setAttribute("aria-selected", String(active));
-          const panel = document.getElementById(other.dataset.target || "");
-          if (panel) panel.hidden = !active;
-        });
+  const pricingToggle = document.querySelector<HTMLElement>("[data-pricing-toggle]");
+  if (pricingToggle) {
+    const radios = Array.from(pricingToggle.querySelectorAll<HTMLInputElement>('input[name="plan-view"]'));
+    const panels = Array.from(document.querySelectorAll<HTMLElement>("[data-panel]"));
+    radios.forEach((radio) => {
+      radio.addEventListener("change", () => {
+        panels.forEach((panel) => { panel.hidden = panel.dataset.panel !== radio.value; });
       });
     });
   }
 
   const slider = document.querySelector<HTMLElement>("[data-slider]");
   if (slider) {
-    const images = Array.from(slider.querySelectorAll("img"));
+    const images = Array.from(slider.querySelectorAll<HTMLImageElement>("img"));
     const dots = Array.from(slider.querySelectorAll<HTMLButtonElement>("[data-slider-dots] button"));
     let active = 0;
+    let timer: number | undefined;
     const show = (index: number) => {
       active = index;
       images.forEach((img, i) => img.classList.toggle("is-active", i === index));
       dots.forEach((dot, i) => dot.classList.toggle("is-active", i === index));
     };
-    dots.forEach((dot) => dot.addEventListener("click", () => show(Number(dot.dataset.index))));
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      window.setInterval(() => show((active + 1) % images.length), 3500);
-    }
+    const start = () => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (timer) window.clearInterval(timer);
+      timer = window.setInterval(() => show((active + 1) % images.length), 3500);
+    };
+    dots.forEach((dot) => dot.addEventListener("click", () => { show(Number(dot.dataset.index)); start(); }));
+    start();
   }
 </script>
