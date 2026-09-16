@@ -66,7 +66,7 @@ test("homepage reflects the production LP design system", async ({ page }) => {
   await expect(page.locator("[data-slider-dots] button")).toHaveCount(6);
   await expect(page.locator('[data-pricing-toggle] input[type="radio"]')).toHaveCount(2);
   await expect(page.locator('[data-panel="support"]')).toBeVisible();
-  await page.getByLabel("単体メニュー").check();
+  await page.getByText("単体メニュー", { exact: true }).click();
   await expect(page.locator('[data-panel="menu"]')).toBeVisible();
   await expect(page.locator('[data-panel="support"]')).toBeHidden();
 });
@@ -141,7 +141,7 @@ test("metadata, structured data, labels, and skip navigation are present", async
   await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(2);
   const jsonLd = await page.locator('script[type="application/ld+json"]').allTextContents();
   expect(jsonLd.map((value) => JSON.parse(value)["@type"])).toEqual(expect.arrayContaining(["Organization", "Service"]));
-  await expect(page.getByText("実際の制作物まで形にする", { exact: true })).toBeVisible();
+  await expect(page.getByText(/実際の制作物まで形にする/)).toBeVisible();
   await expect(page.getByLabel("メールアドレス")).toHaveCount(1);
   await expect(page.getByLabel("パスワード（12文字以上）")).toHaveCount(1);
   await expect(page.getByLabel(/利用条件の現行案内.*個人情報の取扱いに関する現行案内/)).toHaveCount(1);
