@@ -3,7 +3,7 @@ import { siteConfig } from "../../src/lib/site-config";
 
 describe("siteConfig", () => {
   it("has a clear primary CTA", () => {
-    expect(siteConfig.primaryCta.label).toBe("無料でAIに相談する");
+    expect(siteConfig.primaryCta.label).toBe("AIに相談してみる");
     expect(siteConfig.primaryCta.href).toBeTruthy();
   });
 

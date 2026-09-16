@@ -30,7 +30,7 @@ const assertUsablePage = async (page: import("@playwright/test").Page, path: str
 
   await expect(page.locator("main")).toBeVisible();
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.getByRole("link", { name: "無料でAIに相談する" }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: "AIに相談してみる" }).first()).toBeVisible();
 
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
@@ -132,10 +132,10 @@ test("register widget requires acknowledgement before calling the API", async ({
 
 test("primary and customer CTAs lead to the intended destinations", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
-  await page.getByRole("link", { name: "無料でAIに相談する" }).first().click();
+  await page.getByRole("link", { name: "AIに相談してみる" }).first().click();
   await expect(page.locator("#register-home")).toBeVisible();
 
-  const portalHref = await page.getByRole("link", { name: "Customer Portalへログイン" }).first().getAttribute("href");
+  const portalHref = await page.getByRole("link", { name: "ログイン", exact: true }).first().getAttribute("href");
   expect(portalHref).toBe("https://akinael-ai.com/portal/");
 });
 
@@ -172,8 +172,8 @@ test("metadata, structured data, labels, and skip navigation are present", async
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://akinael-ai.com/");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /小さな店舗/);
   await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(2);
-  await expect(page.getByRole("heading", { name: "作ることだけでなく、確かめてから進める。" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "アキナエルAIの運営方針" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "選ばれる理由" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "公開・課金は人が確認" })).toBeVisible();
   await expect(page.getByLabel("メールアドレス")).toHaveCount(1);
   await expect(page.getByLabel("パスワード（12文字以上）")).toHaveCount(1);
   await expect(page.getByLabel(/利用条件の現行案内.*個人情報の取扱いに関する現行案内/)).toHaveCount(1);

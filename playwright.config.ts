@@ -22,5 +22,12 @@ export default defineConfig({
     url: "http://127.0.0.1:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
+    // Recent Astro versions auto-detect an AI coding agent's environment and silently fork
+    // `astro dev` into a self-managed background daemon, exiting the process Playwright
+    // itself spawned almost immediately ("Process from config.webServer exited early") even
+    // though the daemon goes on to serve the port just fine. ASTRO_DEV_BACKGROUND (any
+    // non-empty value) opts back into the normal foreground server Playwright's webServer
+    // lifecycle expects — see node_modules/astro/dist/cli/dev/index.js.
+    env: { ASTRO_DEV_BACKGROUND: "0" },
   },
 });
