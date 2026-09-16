@@ -14,15 +14,18 @@ const industries = [
     <div>
       <a class="brand" href="/" aria-label="アキナエルAI トップ">
         <img src="/assets/logos/logo-mark.svg" alt="" width="28" height="28" />
+        <span>アキナエルAI</span>
       </a>
-      <p class="footer-meta" style="margin-top:0.6rem;">© {year} アキナエルAI</p>
+      <p class="footer-meta" style="margin-top:0.6rem;">商いの願いを、AIが叶えます。</p>
+      <p class="footer-meta">© {year} アキナエルAI</p>
     </div>
     <ul class="footer-nav">
+      <li><a href="/#difference">選ばれる理由</a></li>
       <li><a href="/#service">できること</a></li>
       <li><a href="/#pricing">料金</a></li>
       <li><a href="/#faq">よくある質問</a></li>
       {industries.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
-      <li><a href={`${coreOrigin}/portal/`}>Customer Portalへログイン</a></li>
+      <li><a href={`${coreOrigin}/portal/`}>ログイン</a></li>
     </ul>
   </div>
 </footer>
