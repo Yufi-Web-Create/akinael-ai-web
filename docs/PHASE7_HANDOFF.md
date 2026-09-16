@@ -1,93 +1,143 @@
 # PHASE7_HANDOFF
 
-最終更新: 2026-09-10（ChatGPT Work、Release Candidate完成）
+最終更新: 2026-09-16（production publish後）
 
 ## CURRENT STATE
 
-- Phase: **PHASE 7 / Akinael Reference Production — COMPLETE**
-- Result: **REFERENCE SITE — RELEASE CANDIDATE / PREVIEW READY**
+- Phase: **PHASE 7 / Akinael Reference Production — COMPLETE / PRODUCTION LIVE**
 - Source of truth: `Yufi-Web-Create/akinael-ai-web` `main`
-- Main baseline before RC audit: `09e5bad1ab7d571ed051f25b319651ac4cbe32c8`
-- RC application merge: `f4514f7f0352ec77326c87b1033a034056f8fa42`（以後のmain変更はhandoff文書のみ）
-- RC PR #5: **MERGED**
-- PR #4: **MERGED**
-- Quality Gate Run `34191984013`: **PASS**
-- `package.json`の`qa`はlint / typecheck / unit / build / Playwright E2Eを実行する。main CI PASSによりE2Eは完了済み。
-- Historical branch `phase7/reference-site-build`は保持するが、merge済みのためsource of truthには使用しない。
-- Production publish / DNS切替: **未実行（Human Gate）**
+- Production public site: `https://akinael-ai.com/`
+- Render Static Site: `akinael-ai-web` (`https://akinael-ai-web.onrender.com`)
+- Public-site production commit at publish: `b9399cb4306c853ede8704912a83408e72d22d6f`
+- Public-site redesign PR #9: **MERGED**
+- SEO hardening PR #10: **MERGED**
+- Production domain `akinael-ai.com`: Render **Verified / Certificate Issued**
+- `www.akinael-ai.com`: Render側に追加済み、2026-09-16時点では **Waiting for DNS**
+- Owner browser smoke check after cutover: **問題なし**
 
-## IMPLEMENTED
+## PRODUCTION ROUTING
 
-- Astro + TypeScript、`output: "static"`
-- Homepageと4業種ページ: beauty / restaurant / school / home-service
-- 登録CTA、Customer Portal導線
+`akinael-ai.com` のルートはRender Static Site `akinael-ai-web` が担当する。
+Core / Portal / Adminは既存Web Service `akinael-ai` (`https://misesapo-ai.onrender.com`) を維持し、Static SiteのRedirects/Rewritesで以下をCoreへ転送する。
+
+- `/api/*`
+- `/portal/*`
+- `/admin/*`
+- `/legal`
+- `/payment/*`
+- `/mypage`
+
+`/portal` と `/admin` は末尾スラッシュ付きURLへredirectする。
+
+この構成により、公開サイトをStatic Siteで配信しながら既存Core API / Customer Portal / Adminを同一custom domain配下で維持する。
+
+## IMPLEMENTED PUBLIC SITE
+
+- Astro + TypeScript、static output
+- Homepage
+- 業種別4ページ: beauty / restaurant / school / home-service
+- 新規顧客CTA / register flow
+- Customer Portalログイン導線
 - Content Collectionによる業種別コンテンツ
-- SEO metadata、canonical、sitemap、robots、Organization / Service / FAQ JSON-LD
-- Core API `/api/v2/auth/register`接続（`PUBLIC_CORE_ORIGIN`、既定値`https://akinael-ai.com`）
 - responsive matrix 360 / 375 / 390 / 430 / 768 / 1024 / 1280 / 1440px
+- self-hosted fonts
+- production build / Render Static Site auto deploy
+
+## SEO / DISCOVERABILITY
+
+公開前・公開時点で以下を実装済み。
+
+- unique title / meta description
+- canonical URL
+- `lang="ja"`
+- sitemap (`/sitemap-index.xml`)
+- robots.txt
+- robots meta (`index,follow`, large image preview許可)
+- Open Graph metadata
+- large-image OGP (`/assets/screenshots/public-home.png`)
+- Twitter large-image card
+- Organization JSON-LD
+- Service JSON-LD
+- FAQPage JSON-LD
+- industry page BreadcrumbList JSON-LD
+- image / form accessibility metadata
+- SEO専用Playwright regression test
+
+PR #10のQuality Gateはlint / typecheck / unit / build / Playwrightを含めPASS後にmergeした。
 
 ## OWNER DECISIONS
 
-- Homepage CTA: 新規顧客は既存register flowを維持し、成功後`/portal/`へ。既存顧客は`/portal/`へ直接案内。
-- Page structure: homepage single-page + 4業種ページのハイブリッド。一般仕様の`/service`等を独立ページとして重複実装しない。
-- 公式サイトrepoは本repo。Core repoはAPI / Worker / Portal / Adminを担当。
-- Astro static-firstを維持し、React SPA化しない。
-- 未確定の法人格、正式運営者、対応地域、実績を捏造しない。
-- Production publish / DNS切替は明示承認まで行わない。
+- Homepage primary CTA: `AIに相談してみる`
+- 新規顧客は既存register flowを利用し、成功後`/portal/`へ移動する。
+- 既存顧客は`/portal/`へ直接案内する。
+- Homepage single-page + 4業種ページのハイブリッド構成を維持する。
+- 公式公開サイトのsource repoは本repo。Core repoはAPI / Worker / Portal / Adminを担当する。
+- Astro static-firstを維持し、React SPAへ置き換えない。
+- 未確定の法人格、正式運営者情報、所在地、実績等をSEO目的で捏造しない。
+- 2026-09-16、オーナーがproduction publishを明示承認し、Render custom domain cutoverを実施した。
 
-## RELEASE CANDIDATE AUDIT — 2026-09-10
+## PRODUCTION PUBLISH — 2026-09-16
 
-### Confirmed baseline
+1. Public-site PR #9をmainへmerge。
+2. SEO auditを実施し、PR #10でmetadata / OGP / Breadcrumb / Service schema / regression testを追加。
+3. PR #10 Quality Gate PASS後にmainへmerge。
+4. Render Static Site `akinael-ai-web` を作成。
+5. latest main `b9399cb4306c853ede8704912a83408e72d22d6f` のbuildがLiveになることを確認。
+6. Static SiteへCore route rewritesを設定。
+7. custom domain `akinael-ai.com` を旧Core Web ServiceからStatic Siteへ付け替え。
+8. Renderで `Verified / Certificate Issued` を確認。
+9. オーナー環境の実ブラウザで公開後表示を確認し「問題なさそう」と確認済み。
 
-- PR #4 / main CIはPlaywrightを含めPASS。旧「CI再実行中」「E2E未確認」「PR #4 merge待ち」は解消済み。
-- Homepage、4業種ページ、内部anchor、Portal導線、static build構成を確認。
-- Core production preflight: `OPTIONS /api/v2/auth/register` = 204、allow-origin / POST / content-typeを確認。
-- Core production validation requestでerror responseのCORS header欠落を発見し、Core PR #67で修正・CI・独立レビュー・mergeまで完了。
-- Research/Directionの4文書が未記入templateだったため、既存実装を作り直さず、11件の公式Reference、競合5社、顧客言語、ADOPT/ADAPT/AVOID、Design/Copy Directionを補完。
-- Astro 8前に削除予定の`astro:content`経由zod importを`astro/zod`へ更新。
-- 登録widgetへ、Coreの既存`/legal#terms`・`/legal#privacy`にある暫定案内の確認欄を追加。未確定文書への法的同意とは表現せず、正式文書の確定をproduction publishのHuman Gateとして維持する。
-- skip linkの遷移先`main`をプログラムフォーカス可能にした。
-- E2EをCTA、Portal URL、register success contract、metadata/JSON-LD、labels、skip navigationまで拡張。
-- CIへPlaywright HTML report（14日保持）を追加し、実ブラウザ証跡を取得可能にした。
+## REMAINING POST-LAUNCH TASKS
 
-### Current verification status
+### 1. `www` DNS
 
-- Web baseline lint: PASS
-- Web baseline typecheck: PASS（修正前はdeprecated import hintsのみ）
-- Web baseline unit: 2/2 PASS
-- Web baseline build: 5 pages PASS
-- Web latest-head Quality Gate Run `34466642179`: **PASS**（lint / typecheck / unit 3/3 / build / Playwright 18/18）
-- Browser evidence artifact: `10147817599`（Playwright report、14日保持）
-- Main post-merge Quality Gate Run `34477041641`: **PASS**
-- Core CORS fix PR #67: Core Quality Run `34465946885` **PASS**、independent review blocking 0、merge commit `0ddb862c569626a791e3f826decd402e55c82bc5`
-- Independent Visual / Copy / Technical / SEO-A11y review: 初回blocking 2件を修正し、再レビューblocking 0
+`www.akinael-ai.com` はrootへredirectする設定がRender側にあるが、DNSは未検証。
+DNS providerで `www` を `akinael-ai-web.onrender.com` へ向けるCNAMEにする。
+Render公式ガイドに従い、競合する古い`www` CNAME/redirect recordや不要なAAAA recordがある場合は整理する。
+Render側で `www.akinael-ai.com` がVerified / Certificate Issuedになるまで確認する。
 
-## PREVIEW READINESS
+### 2. Search Console / indexing
 
-- `astro build`の`dist/`は静的hostへそのまま配置可能。
-- ローカル`astro preview`とGitHub Actions上のPlaywright browser QAをpreview経路として使用できる。専用の外部preview URLは未設定であり、GitHub Pages / Render等への非production preview deployも明示的な公開先選択までは実行しない。
-- Preview buildで`PUBLIC_CORE_ORIGIN`を未指定の場合はproduction Coreへ接続する。previewでregisterを実行するとproduction Auth dataを作るため、QAではrequest interceptionを使い実顧客・production customerを作成しない。
-- `customer-token`はorigin scopedであるため、別originのpreviewで登録したtokenはproduction Portalへ引き継がれない。現在のmock E2EはAPI契約と遷移先のみを確認し、認証済みPortal handoffを証明しない。同一originで公開された時点のproduction smoke testが必要。
-- `akinael-ai.com`置換、DNS変更、本番公開はHuman Gate。
+production URLが安定したら以下を実施する。
 
-## HUMAN GATE / BLOCKED FACTS
+- Google Search Console property確認/登録
+- `https://akinael-ai.com/sitemap-index.xml` 送信
+- Homepage / 4 industry pagesのURL Inspection
+- indexing状態確認
+- crawl / canonical error確認
 
-- 正式運営者名、所在地、連絡先、正式な利用規約・プライバシーポリシー・特商法表記は未確定。Release CandidateではCore `/legal`の「販売開始前に確定」とする正直な暫定表示へリンクするが、正式販売・production publish前に事業/法務判断が必要。
-- production publish、DNS、実顧客通知、新規有料契約、payment/refund、production data削除、Secret操作は禁止。
+### 3. Post-launch SEO operations
 
-## RETAIN / DO NOT DELETE
+データが蓄積後、以下を実測ベースで改善する。
 
-- 本repo・Core repoのremote branchを削除しない。
-- PHASE 1〜6のE2E / production dataを削除しない。
-- 秘密情報、token、credentialをdocs / log / commitへ保存しない。
+- search queries
+- impressions / clicks / CTR
+- ranking pages
+- Core Web Vitals
+- organic conversion to register / consultation
+- industry page performance
+
+### 4. Legal / operator information
+
+正式運営者名、所在地、連絡先、正式な利用規約・プライバシーポリシー・特商法表記など、未確定の事業・法務情報は別Human Gateとして残る。
+公開サイトでは未確定事項を断定しない。
+
+## DO NOT BREAK
+
+- `akinael-ai.com` の `/api/*`, `/portal/*`, `/admin/*` rewriteを削除しない。
+- Core repo / Worker / Supabase Authを公開サイト側へ複製しない。
+- Portal/Adminを検索index対象にしない。
+- production secretを公開site repoへ保存しない。
+- 未確定の法人・実績・法務情報をSEO目的で生成しない。
 
 ## EXACT NEXT ACTION
 
-1. オーナーが正式な運営者・法務情報と公開先を確定する（Human Gate）。
-2. 必要なら既存契約内のstatic hostへ非production previewを配置し、同origin Auth handoffを含むsmoke testを行う。
-3. オーナーが明示承認した場合のみproduction publish / DNS切替を実行する。
-4. 公開後に8 viewport、CTA、register、Portal遷移、console/page error、metadata、内部linkをsmoke testする。
+1. `www.akinael-ai.com` のDNSを完成させる。
+2. RenderでwwwのVerified / Certificate Issuedを確認する。
+3. Search Consoleでsitemapと主要URLのindexing確認を開始する。
+4. 公開後データが蓄積したら検索クエリ / Core Web Vitals / CTA conversionを基準に改善する。
 
-## HISTORICAL CHECKPOINT
+## HISTORICAL NOTE
 
-PR #4以前の記録では、branch `phase7/reference-site-build`、commit `6582ea8` / `391dc9b`、CI再実行・Playwright未確認・merge待ちとされていた。これらは2026-09-10時点で解消済みの履歴であり、現在状態・next actionとして使用しない。
+2026-09-10時点ではRelease Candidate / Preview Readyで、production publish / DNS切替がHuman Gateとして残っていた。このGateは2026-09-16にオーナーの明示承認を得て解除され、本番公開まで完了した。
