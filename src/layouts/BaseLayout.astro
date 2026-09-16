@@ -21,14 +21,6 @@ const { title, description, path = "/", structuredData = [] } = Astro.props;
 const siteUrl = "https://akinael-ai.com";
 const canonical = new URL(path, siteUrl).toString();
 const ogImage = new URL("/assets/screenshots/public-home.png", siteUrl).toString();
-const websiteStructuredData = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "アキナエルAI",
-  alternateName: "Akinael AI",
-  url: `${siteUrl}/`,
-  inLanguage: "ja",
-};
 // Defensively escape "<" so a data value can never terminate the script tag early
 // (e.g. a value containing "</script>"), even though current sources are all
 // author-controlled content, not user input.
@@ -58,7 +50,6 @@ const toSafeJsonLd = (value: Record<string, unknown>) => JSON.stringify(value).r
     <meta name="twitter:image" content={ogImage} />
     <meta name="twitter:image:alt" content="アキナエルAI 公開サイト" />
     <link rel="icon" href="/assets/logos/favicon.svg" />
-    <script type="application/ld+json" is:inline set:html={toSafeJsonLd(websiteStructuredData)} />
     {structuredData.map((entry) => (
       <script type="application/ld+json" is:inline set:html={toSafeJsonLd(entry)} />
     ))}
