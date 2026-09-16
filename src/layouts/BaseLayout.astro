@@ -21,6 +21,7 @@ const { title, description, path = "/", structuredData = [] } = Astro.props;
 const siteUrl = "https://akinael-ai.com";
 const canonical = new URL(path, siteUrl).toString();
 const ogImage = new URL("/assets/screenshots/public-home.png", siteUrl).toString();
+const gaMeasurementId = "G-HMHXGL2ZJ7";
 // Defensively escape "<" so a data value can never terminate the script tag early
 // (e.g. a value containing "</script>"), even though current sources are all
 // author-controlled content, not user input.
@@ -50,6 +51,16 @@ const toSafeJsonLd = (value: Record<string, unknown>) => JSON.stringify(value).r
     <meta name="twitter:image" content={ogImage} />
     <meta name="twitter:image:alt" content="アキナエルAI 公開サイト" />
     <link rel="icon" href="/assets/logos/favicon.svg" />
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}></script>
+    <script is:inline define:vars={{ gaMeasurementId }}>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+      window.gtag("js", new Date());
+      window.gtag("config", gaMeasurementId, { anonymize_ip: true });
+      window.akinaelTrack = function (eventName, params = {}) {
+        window.gtag("event", eventName, params);
+      };
+    </script>
     {structuredData.map((entry) => (
       <script type="application/ld+json" is:inline set:html={toSafeJsonLd(entry)} />
     ))}
@@ -61,5 +72,21 @@ const toSafeJsonLd = (value: Record<string, unknown>) => JSON.stringify(value).r
       <slot />
     </main>
     <Footer />
+    <script is:inline>
+      document.addEventListener("click", (event) => {
+        const target = event.target instanceof Element ? event.target.closest("a,button") : null;
+        if (!target || !(target instanceof HTMLElement) || !window.akinaelTrack) return;
+
+        const href = target instanceof HTMLAnchorElement ? target.getAttribute("href") || "" : "";
+        const label = (target.textContent || "").trim().replace(/\s+/g, " ").slice(0, 120);
+
+        if (href.includes("/portal/")) {
+          window.akinaelTrack("portal_click", { link_text: label, link_url: href, page_path: location.pathname });
+        }
+        if (label.includes("AIに相談") || label.includes("無料でAIに相談")) {
+          window.akinaelTrack("consultation_cta_click", { link_text: label, link_url: href, page_path: location.pathname });
+        }
+      });
+    </script>
   </body>
 </html>

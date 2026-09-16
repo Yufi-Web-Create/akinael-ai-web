@@ -24,6 +24,10 @@ const coreOrigin = (import.meta.env.PUBLIC_CORE_ORIGIN || "https://akinael-ai.co
 <script>
   const widgets = document.querySelectorAll<HTMLElement>("[data-register-widget]");
   const tokenKey = "customer-token";
+  const track = (eventName: string, params: Record<string, string | number | boolean> = {}) => {
+    const tracker = (window as Window & { akinaelTrack?: (name: string, payload?: Record<string, unknown>) => void }).akinaelTrack;
+    tracker?.(eventName, params);
+  };
 
   widgets.forEach((widget) => {
     const coreOrigin = widget.dataset.coreOrigin || "https://akinael-ai.com";
@@ -42,9 +46,11 @@ const coreOrigin = (import.meta.env.PUBLIC_CORE_ORIGIN || "https://akinael-ai.co
       const email = (form.elements.namedItem("email") as HTMLInputElement)?.value.trim();
       const password = (form.elements.namedItem("password") as HTMLInputElement)?.value ?? "";
       const consent = (form.elements.namedItem("consent") as HTMLInputElement)?.checked ?? false;
+      track("sign_up_start", { page_path: window.location.pathname });
       if (!email || password.length < 12 || !consent) {
         status.dataset.tone = "error";
         status.textContent = "メールアドレス、12文字以上のパスワード、利用案内の確認を完了してください。";
+        track("sign_up_validation_error", { page_path: window.location.pathname });
         return;
       }
       if (submitButton) submitButton.disabled = true;
@@ -62,16 +68,20 @@ const coreOrigin = (import.meta.env.PUBLIC_CORE_ORIGIN || "https://akinael-ai.co
         }
         if (body.confirmationRequired) {
           status.textContent = "確認メールを送信しました。メール内のリンクを開いてください。";
+          track("sign_up_confirmation_required", { page_path: window.location.pathname });
           return;
         }
         if (body.token) localStorage.setItem(tokenKey, body.token);
         status.textContent = "登録しました。Customer Portalへ移動します…";
+        track("sign_up", { method: "email", page_path: window.location.pathname });
+        track("consultation_start", { source: "public_register", page_path: window.location.pathname });
         window.setTimeout(() => {
           window.location.href = `${coreOrigin}/portal/`;
         }, 500);
       } catch (error) {
         status.dataset.tone = "error";
         status.textContent = error instanceof Error ? error.message : "登録に失敗しました。";
+        track("sign_up_error", { page_path: window.location.pathname });
       } finally {
         if (submitButton) submitButton.disabled = false;
       }
