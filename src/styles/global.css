@@ -1734,7 +1734,17 @@ p {
   gap: var(--space-3);
 }
 
+/* A 4-column grid starting at 768px leaves each card too narrow for its own price:
+   "17,800円 / 月" was wrapping across three lines at exactly 768-1023px — the one
+   section whose entire job is "readable at a glance." A 2-column step first gives
+   each card roughly double the width in that range. */
 @media (min-width: 768px) {
+  .pricing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
   .pricing-grid {
     grid-template-columns: repeat(4, 1fr);
   }
