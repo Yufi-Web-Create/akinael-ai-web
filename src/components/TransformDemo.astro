@@ -1,0 +1,348 @@
+---
+import { industryIcons } from "../lib/industry-icons";
+
+interface IndustryDemo {
+  id: string;
+  label: string;
+  before: string;
+  placeholder: string;
+  defaultWord: string;
+  photo: string;
+  photoAlt: string;
+  web: { url: string; navItems: string[]; tag: string; title: string; body: string; cta: string };
+  sns: { handle: string; quote: string; body: string };
+  flyer: { tag: string; title: string; body: string; contact: string; cta: string };
+}
+
+const demos: IndustryDemo[] = [
+  {
+    id: "beauty",
+    label: "美容室・サロン",
+    before: "土曜の予約がなかなか埋まらなくて。得意なスタイルも伝わってない気がする。",
+    placeholder: "得意なスタイル（例：くせ毛カット）",
+    defaultWord: "くせ毛カット",
+    photo: "/assets/visual/demo-beauty.webp",
+    photoAlt: "木の施術台に置かれたハサミと櫛とタオル（制作イメージ）",
+    web: {
+      url: "oo-beauty.jp",
+      navItems: ["ホーム", "メニュー", "アクセス"],
+      tag: "SATURDAY OPEN",
+      title: "◯◯美容室｜{word}が得意な美容室",
+      body: "土曜日の空き枠あり。メニュー・料金・スタイル写真を掲載しました。",
+      cta: "ご予約はこちら",
+    },
+    sns: { handle: "oo_beauty", quote: "今週末\n空きあり", body: "今週末、{word}のご相談も承っています。ご予約はプロフィールのリンクから✂️" },
+    flyer: { tag: "SATURDAY OPEN", title: "{word}、お任せください", body: "土曜も営業中。ご予約はお電話または当日受付で。", contact: "TEL 000-0000-0000", cta: "予約する" },
+  },
+  {
+    id: "restaurant",
+    label: "カフェ・飲食店",
+    before: "ランチのメニュー、SNSに全然載せられてなくて。",
+    placeholder: "看板メニュー（例：自家焙煎コーヒー）",
+    defaultWord: "自家焙煎コーヒー",
+    photo: "/assets/visual/demo-cafe.webp",
+    photoAlt: "カウンターでハンドドリップする店主の手元（制作イメージ）",
+    web: {
+      url: "oo-coffee.jp",
+      navItems: ["ホーム", "メニュー", "アクセス"],
+      tag: "LUNCH MENU",
+      title: "◯◯珈琲｜{word}のお店",
+      body: "ランチ11:30〜14:00。本日のメニューを毎朝更新しています。",
+      cta: "メニューを見る",
+    },
+    sns: { handle: "oo_coffee", quote: "本日の\nおすすめ", body: "本日のランチは{word}と一緒にどうぞ。数量限定です☕" },
+    flyer: { tag: "LUNCH MENU", title: "{word}、はじめました", body: "平日11:30〜。テイクアウトも承っています。", contact: "TEL 000-0000-0000", cta: "メニューを見る" },
+  },
+  {
+    id: "school",
+    label: "教室・スクール",
+    before: "体験レッスンの案内を出したいけど、何をどう書けばいいか分からなくて。",
+    placeholder: "教えていること（例：そろばん）",
+    defaultWord: "そろばん",
+    photo: "/assets/visual/demo-school.webp",
+    photoAlt: "そろばんを使って学ぶ子どもの手元（制作イメージ）",
+    web: {
+      url: "oo-school.jp",
+      navItems: ["ホーム", "レッスン", "料金"],
+      tag: "体験レッスン受付中",
+      title: "◯◯教室｜{word}の体験レッスン受付中",
+      body: "少人数制。まずは体験レッスンからお気軽にどうぞ。",
+      cta: "体験を申し込む",
+    },
+    sns: { handle: "oo_school", quote: "体験\n受付中", body: "{word}の体験レッスン、今月あと3枠です。お問い合わせはDMから📚" },
+    flyer: { tag: "体験レッスン受付中", title: "{word}、はじめませんか", body: "少人数制・年齢問わず歓迎。まずはお気軽にご相談を。", contact: "TEL 000-0000-0000", cta: "体験を予約する" },
+  },
+  {
+    id: "home-service",
+    label: "住宅メンテナンス",
+    before: "問い合わせフォームがなくて、電話が来ないと仕事が増えなくて。",
+    placeholder: "得意な作業（例：雨どい修理）",
+    defaultWord: "雨どい修理",
+    photo: "/assets/visual/demo-home.webp",
+    photoAlt: "戸建住宅の雨どいを点検する作業員の手元（制作イメージ）",
+    web: {
+      url: "oo-koumuten.jp",
+      navItems: ["対応地域", "施工事例", "お問い合わせ"],
+      tag: "無料見積り",
+      title: "◯◯工務店｜{word}も対応",
+      body: "見積り無料。地域密着ですばやく対応します。",
+      cta: "見積りを依頼する",
+    },
+    sns: { handle: "oo_koumuten", quote: "無料\n見積り", body: "{word}のご相談、無料でお見積りします。まずはお電話を🔧" },
+    flyer: { tag: "無料見積り", title: "{word}のことなら", body: "地域密着30年。まずはお気軽にご相談ください。", contact: "TEL 000-0000-0000", cta: "見積りを依頼する" },
+  },
+];
+---
+
+<div class="transform-demo" data-transform-demo data-demos={JSON.stringify(demos)} data-icons={JSON.stringify(industryIcons)}>
+  <div class="transform-picker" role="group" aria-label="業種を選ぶ">
+    {demos.map((demo, index) => (
+      <button type="button" aria-pressed={index === 0 ? "true" : "false"} data-demo-id={demo.id}>{demo.label}</button>
+    ))}
+  </div>
+
+  <div class="transform-input">
+    <label for="transform-word">あなたのお店のこだわりを一言（任意）</label>
+    <input type="text" id="transform-word" data-transform-word placeholder={demos[0].placeholder} maxlength="20" />
+    <p class="transform-input-hint">入力すると、下のWeb・SNS・チラシの3箇所に反映されます。</p>
+  </div>
+
+  <div class="transform-stage">
+    <div class="transform-before">
+      <span class="eyebrow">チャットでの相談例</span>
+      <p data-transform-before>{demos[0].before}</p>
+    </div>
+
+    <div class="transform-stitch" aria-hidden="true">
+      <svg viewBox="0 0 48 24" fill="none">
+        <path d="M2 12h6m6 0h6m6 0h6m6 0h6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 9" />
+        <path d="M36 6l8 6-8 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+      </svg>
+    </div>
+
+    <div class="transform-output">
+      <div class="transform-tabs" role="group" aria-label="試作の種類">
+        <button type="button" aria-pressed="true" aria-controls="transform-panel-web" data-transform-tab="web">Webページ</button>
+        <button type="button" aria-pressed="false" aria-controls="transform-panel-sns" data-transform-tab="sns">SNS投稿</button>
+        <button type="button" aria-pressed="false" aria-controls="transform-panel-flyer" data-transform-tab="flyer">チラシ見出し</button>
+      </div>
+
+      <div class="transform-panel" id="transform-panel-web" data-transform-panel="web">
+        <div class="deliv-web">
+          <div class="deliv-web-chrome" aria-hidden="true">
+            <span></span><span></span><span></span>
+            <span class="deliv-web-url" data-field="web-url">{demos[0].web.url}</span>
+          </div>
+          <nav class="deliv-web-nav" data-field-nav="web" aria-hidden="true">
+            {demos[0].web.navItems.map((item) => <span>{item}</span>)}
+          </nav>
+          <div class="deliv-web-photo">
+            <img data-field-photo="web" src={demos[0].photo} alt={demos[0].photoAlt} width="760" height="507" />
+          </div>
+          <div class="deliv-web-hero">
+            <div class="deliv-web-header">
+              <span class="deliv-web-art" aria-hidden="true" set:html={industryIcons[demos[0].id]} />
+              <p class="deliv-web-eyebrow" data-field="web-tag">{demos[0].web.tag}</p>
+            </div>
+            <h4 data-field="web-title">{demos[0].web.title.replace("{word}", demos[0].defaultWord)}</h4>
+            <p class="deliv-web-body" data-field="web-body">{demos[0].web.body}</p>
+            <span class="deliv-web-cta" data-field="web-cta">{demos[0].web.cta}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="transform-panel" id="transform-panel-sns" data-transform-panel="sns" hidden>
+        <div class="deliv-sns">
+          <div class="deliv-sns-head">
+            <span class="deliv-sns-avatar" aria-hidden="true" set:html={industryIcons[demos[0].id]} />
+            <span class="deliv-sns-handle" data-field="sns-handle">{demos[0].sns.handle}</span>
+          </div>
+          <div class="deliv-sns-photo">
+            <img class="deliv-sns-photo-img" data-field-photo="sns" src={demos[0].photo} alt={demos[0].photoAlt} width="760" height="507" />
+            <span class="deliv-sns-photo-scrim" aria-hidden="true"></span>
+            <span class="deliv-sns-quote" data-field="sns-quote" aria-hidden="true">
+              {demos[0].sns.quote.split("\n").map((line) => <>{line}<br /></>)}
+            </span>
+          </div>
+          <div class="deliv-sns-actions" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.2s-7.6-4.4-9.4-9A5 5 0 0 1 12 6.6 5 5 0 0 1 21.4 11.2c-1.8 4.6-9.4 9-9.4 9Z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 1 1-3.4-6.5L21 4l-1 3.8A7.96 7.96 0 0 1 21 12Z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 20 4l-4 16-5-6-6-2Z"/></svg>
+          </div>
+          <p class="deliv-sns-caption"><strong data-field="sns-handle-2">{demos[0].sns.handle}</strong> <span data-field="sns-body">{demos[0].sns.body.replace("{word}", demos[0].defaultWord)}</span></p>
+        </div>
+      </div>
+
+      <div class="transform-panel" id="transform-panel-flyer" data-transform-panel="flyer" hidden>
+        <div class="deliv-flyer">
+          <div class="deliv-flyer-frame">
+            <img class="deliv-flyer-photo" data-field-photo="flyer" src={demos[0].photo} alt={demos[0].photoAlt} width="760" height="507" />
+            <span class="deliv-flyer-scrim" aria-hidden="true"></span>
+            <div class="deliv-flyer-header">
+              <span class="deliv-flyer-icon" aria-hidden="true" set:html={industryIcons[demos[0].id]} />
+              <p class="deliv-flyer-eyebrow" data-field="flyer-tag">{demos[0].flyer.tag}</p>
+            </div>
+            <h4 data-field="flyer-title">{demos[0].flyer.title.replace("{word}", demos[0].defaultWord)}</h4>
+            <span class="deliv-flyer-rule" aria-hidden="true"></span>
+            <p class="deliv-flyer-body" data-field="flyer-body">{demos[0].flyer.body}</p>
+            <div class="deliv-flyer-footer">
+              <span class="deliv-flyer-contact" data-field="flyer-contact">{demos[0].flyer.contact}</span>
+              <span class="deliv-flyer-cta" data-field="flyer-cta">{demos[0].flyer.cta}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="transform-note">※ 試作イメージです。実際の内容は、チャットでの相談をもとにAIが作成し、公開前にご確認いただきます。</p>
+</div>
+
+<script>
+  interface IndustryDemo {
+    id: string;
+    label: string;
+    before: string;
+    placeholder: string;
+    defaultWord: string;
+    photo: string;
+    photoAlt: string;
+    web: { url: string; navItems: string[]; tag: string; title: string; body: string; cta: string };
+    sns: { handle: string; quote: string; body: string };
+    flyer: { tag: string; title: string; body: string; contact: string; cta: string };
+  }
+
+  const root = document.querySelector<HTMLElement>("[data-transform-demo]");
+  if (root) {
+    const demos: IndustryDemo[] = JSON.parse(root.dataset.demos || "[]");
+    const icons: Record<string, string> = JSON.parse(root.dataset.icons || "{}");
+    const wordInput = root.querySelector<HTMLInputElement>("[data-transform-word]");
+    const beforeText = root.querySelector<HTMLElement>("[data-transform-before]");
+    const pickerButtons = root.querySelectorAll<HTMLButtonElement>(".transform-picker button");
+    const tabButtons = root.querySelectorAll<HTMLButtonElement>("[data-transform-tab]");
+    const panels = root.querySelectorAll<HTMLElement>("[data-transform-panel]");
+    const iconTargets = root.querySelectorAll<HTMLElement>(".deliv-web-art, .deliv-sns-avatar, .deliv-flyer-icon");
+    const photoTargets = root.querySelectorAll<HTMLImageElement>("[data-field-photo]");
+
+    let currentDemo = demos[0];
+    let currentWord = currentDemo?.defaultWord || "";
+    let hasRendered = false;
+
+    // Sets plain (non-{word}) text fields.
+    const setField = (name: string, value: string) => {
+      const el = root!.querySelector<HTMLElement>(`[data-field="${name}"]`);
+      if (el) el.textContent = value;
+    };
+
+    const setMultilineField = (name: string, value: string) => {
+      const el = root!.querySelector<HTMLElement>(`[data-field="${name}"]`);
+      if (!el) return;
+      el.textContent = "";
+      value.split("\n").forEach((line, i) => {
+        if (i > 0) el.append(document.createElement("br"));
+        el.append(document.createTextNode(line));
+      });
+    };
+
+    // Sets a field containing "{word}", wrapping just the substituted word in a <mark> so a
+    // brief highlight animation shows exactly where the typed word landed across all three
+    // outputs — the point being to make the substitution visible, not just present.
+    const setFieldWithWord = (name: string, template: string, word: string) => {
+      const el = root!.querySelector<HTMLElement>(`[data-field="${name}"]`);
+      if (!el) return;
+      const idx = template.indexOf("{word}");
+      el.textContent = "";
+      if (idx === -1) {
+        el.textContent = template;
+        return;
+      }
+      el.append(document.createTextNode(template.slice(0, idx)));
+      const mark = document.createElement("mark");
+      mark.className = "transform-word";
+      if (!hasRendered) mark.style.animation = "none";
+      mark.textContent = word;
+      el.append(mark);
+      el.append(document.createTextNode(template.slice(idx + 6)));
+    };
+
+    const render = () => {
+      if (!currentDemo) return;
+      const word = currentWord.trim() || currentDemo.defaultWord;
+
+      if (beforeText) beforeText.textContent = currentDemo.before;
+
+      setField("web-url", currentDemo.web.url);
+      const nav = root!.querySelector<HTMLElement>('[data-field-nav="web"]');
+      if (nav) {
+        nav.innerHTML = "";
+        currentDemo.web.navItems.forEach((item) => {
+          const span = document.createElement("span");
+          span.textContent = item;
+          nav.append(span);
+        });
+      }
+      setField("web-tag", currentDemo.web.tag);
+      setFieldWithWord("web-title", currentDemo.web.title, word);
+      setField("web-body", currentDemo.web.body);
+      setField("web-cta", currentDemo.web.cta);
+
+      setField("sns-handle", currentDemo.sns.handle);
+      setField("sns-handle-2", currentDemo.sns.handle);
+      setFieldWithWord("sns-body", currentDemo.sns.body, word);
+      setMultilineField("sns-quote", currentDemo.sns.quote);
+
+      setField("flyer-tag", currentDemo.flyer.tag);
+      setFieldWithWord("flyer-title", currentDemo.flyer.title, word);
+      setField("flyer-body", currentDemo.flyer.body);
+      setField("flyer-contact", currentDemo.flyer.contact);
+      setField("flyer-cta", currentDemo.flyer.cta);
+
+      hasRendered = true;
+    };
+
+    pickerButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const demo = demos.find((item) => item.id === button.dataset.demoId);
+        if (!demo) return;
+        currentDemo = demo;
+        currentWord = "";
+        if (wordInput) {
+          wordInput.value = "";
+          wordInput.placeholder = demo.placeholder;
+        }
+        pickerButtons.forEach((btn) => btn.setAttribute("aria-pressed", String(btn === button)));
+
+        const iconMarkup = icons[demo.id];
+        if (iconMarkup) {
+          iconTargets.forEach((el) => {
+            el.innerHTML = iconMarkup;
+          });
+        }
+
+        photoTargets.forEach((img) => {
+          img.src = demo.photo;
+          img.alt = demo.photoAlt;
+        });
+
+        render();
+      });
+    });
+
+    wordInput?.addEventListener("input", () => {
+      currentWord = wordInput.value;
+      render();
+    });
+
+    tabButtons.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const target = tab.dataset.transformTab;
+        tabButtons.forEach((t) => t.setAttribute("aria-pressed", String(t === tab)));
+        panels.forEach((panel) => {
+          panel.hidden = panel.dataset.transformPanel !== target;
+        });
+      });
+    });
+
+    render();
+  }
+</script>

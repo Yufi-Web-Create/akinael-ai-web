@@ -18,7 +18,82 @@ const coreOrigin = (import.meta.env.PUBLIC_CORE_ORIGIN || "https://akinael-ai.co
     </nav>
     <div class="header-actions">
       <a class="text-link" href={`${coreOrigin}/portal/`}>Customer Portalへログイン</a>
+      <a class="button button-primary" href={siteConfig.primaryCta.href} aria-label={siteConfig.primaryCta.label}>
+        <span class="header-cta-short" aria-hidden="true">無料相談</span>
+        <span class="header-cta-full" aria-hidden="true">{siteConfig.primaryCta.label}</span>
+      </a>
+      <button
+        type="button"
+        class="menu-toggle"
+        aria-expanded="false"
+        aria-controls="mobile-nav-panel"
+        aria-label="メニュー"
+        data-menu-toggle
+      >
+        <span class="menu-toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-nav-overlay" data-menu-overlay hidden></div>
+  <div class="mobile-nav-panel" id="mobile-nav-panel" data-menu-panel hidden>
+    <nav aria-label="モバイルナビゲーション">
+      <ul>
+        {siteConfig.nav.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <div class="mobile-nav-actions">
+      <a class="text-link" href={`${coreOrigin}/portal/`}>Customer Portalへログイン</a>
       <a class="button button-primary" href={siteConfig.primaryCta.href}>{siteConfig.primaryCta.label}</a>
     </div>
   </div>
 </header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const overlay = document.querySelector<HTMLElement>("[data-menu-overlay]");
+  const panel = document.querySelector<HTMLElement>("[data-menu-panel]");
+
+  if (toggle && overlay && panel) {
+    const isOpen = () => toggle.getAttribute("aria-expanded") === "true";
+
+    const open = () => {
+      toggle.setAttribute("aria-expanded", "true");
+      overlay.hidden = false;
+      panel.hidden = false;
+      document.body.style.overflow = "hidden";
+    };
+
+    const close = (returnFocus = false) => {
+      toggle.setAttribute("aria-expanded", "false");
+      overlay.hidden = true;
+      panel.hidden = true;
+      document.body.style.overflow = "";
+      if (returnFocus) toggle.focus();
+    };
+
+    toggle.addEventListener("click", () => {
+      if (isOpen()) close();
+      else open();
+    });
+
+    overlay.addEventListener("click", () => close());
+
+    panel.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => close());
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && isOpen()) close(true);
+    });
+
+    // Desktop breakpoint change (e.g. rotating a tablet, or resizing a browser window)
+    // shouldn't leave the panel open and scroll-locked behind the now-visible desktop nav.
+    const desktopQuery = window.matchMedia("(min-width: 1024px)");
+    desktopQuery.addEventListener("change", (event) => {
+      if (event.matches && isOpen()) close();
+    });
+  }
+</script>

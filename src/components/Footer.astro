@@ -18,11 +18,17 @@ const industries = [
       <p class="footer-meta" style="margin-top:0.6rem;">© {year} アキナエルAI</p>
     </div>
     <ul class="footer-nav">
-      <li><a href="/#service">できること</a></li>
+      <li><a href="/#try">できること</a></li>
       <li><a href="/#pricing">料金</a></li>
       <li><a href="/#faq">よくある質問</a></li>
       {industries.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
       <li><a href={`${coreOrigin}/portal/`}>Customer Portalへログイン</a></li>
+    </ul>
+    <ul class="footer-nav footer-legal">
+      <li><a href={`${coreOrigin}/legal.html`}>運営・法務情報</a></li>
+      <li><a href={`${coreOrigin}/legal.html#terms`}>利用規約</a></li>
+      <li><a href={`${coreOrigin}/legal.html#privacy`}>プライバシーポリシー</a></li>
+      <li><a href={`${coreOrigin}/legal.html#contact`}>お問い合わせ</a></li>
     </ul>
   </div>
 </footer>

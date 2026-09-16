@@ -1,16 +1,23 @@
 :root {
-  --color-paper: #faf9f5;
-  --color-ink: #20332e;
-  --color-green: #164e4a;
-  --color-green-deep: #0f3733;
-  --color-coral: #e8785f;
-  --color-line: #d9d3c2;
-  --color-muted: #5b6b64;
+  --paper: #f7f1e4;
+  --paper-raised: #fffcf5;
+  --ink: #1c2b26;
+  --noren: #164e4a;
+  --noren-deep: #0f332f;
+  --kaki: #dd6b45;
+  /* Nudged from #b8502f: the original was 4.41:1 on --paper, just under the 4.5:1 AA
+     text threshold. */
+  --kaki-deep: #b04e2f;
+  /* --kaki lightened toward --paper for text-on-dark-green contexts (e.g. an eyebrow
+     label on the flyer's noren-deep card) — --kaki itself only reaches 2.8-4.1:1 there. */
+  --kaki-on-dark: #e9a78d;
+  --line: #e4dac4;
+  --muted: #5f6f66;
 
-  --font-display: "Hiragino Mincho ProN", "Yu Mincho", YuMincho, "Noto Serif JP", serif;
+  --font-display: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", YuMincho, serif;
   --font-body: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", YuGothic, "Noto Sans JP", sans-serif;
 
-  --content-max: 72rem;
+  --content-max: 74rem;
   --measure: 34rem;
   --gutter: 20px;
 
@@ -21,6 +28,9 @@
   --space-5: 4.5rem;
   --space-6: 7rem;
 
+  --radius-card: 14px;
+  --shadow-paper: 0 18px 40px -22px rgba(28, 43, 38, 0.35);
+
   color-scheme: light;
 }
 
@@ -30,16 +40,24 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
   margin: 0;
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: var(--paper);
+  color: var(--ink);
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.8;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 img,
@@ -69,57 +87,69 @@ h2,
 h3 {
   font-family: var(--font-display);
   font-weight: 700;
-  line-height: 1.35;
+  line-height: 1.4;
   letter-spacing: 0.01em;
   margin: 0;
+  overflow-wrap: break-word;
 }
 
 h1 {
-  font-size: clamp(1.9rem, 4.4vw, 3.1rem);
+  font-size: clamp(2rem, 4.6vw, 3.4rem);
+  line-height: 1.45;
 }
 
 h2 {
-  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+  line-height: 1.5;
 }
 
 h3 {
   font-size: clamp(1.1rem, 2vw, 1.4rem);
+  line-height: 1.5;
 }
 
 p {
   margin: 0;
 }
 
+.ink-underline {
+  position: relative;
+  white-space: nowrap;
+}
+
+.ink-underline::after {
+  content: "";
+  position: absolute;
+  left: -0.1em;
+  right: -0.1em;
+  bottom: -0.06em;
+  height: 0.22em;
+  background: var(--kaki);
+  opacity: 0.55;
+  border-radius: 2px 6px 3px 8px / 4px 2px 6px 2px;
+  z-index: -1;
+}
+
 .eyebrow {
-  display: block;
-  font-size: 0.8rem;
-  letter-spacing: 0.14em;
-  color: var(--color-muted);
+  display: inline-block;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
   margin-bottom: var(--space-2);
 }
 
 .eyebrow.on-dark {
-  color: rgba(250, 249, 245, 0.72);
+  color: rgba(247, 241, 228, 0.72);
 }
 
 .lede {
   max-width: var(--measure);
-  color: var(--color-muted);
-}
-
-.rule {
-  border: none;
-  border-top: 1px solid var(--color-line);
-  margin: 0;
+  color: var(--muted);
 }
 
 .section {
   padding-block: var(--space-5);
-  border-top: 1px solid var(--color-line);
-}
-
-.section:first-of-type {
-  border-top: none;
+  position: relative;
 }
 
 .section-head {
@@ -129,12 +159,67 @@ p {
 
 .section-head p {
   margin-top: var(--space-2);
-  color: var(--color-muted);
+  color: var(--muted);
+}
+
+/* Awning-scallop divider: the shop-canopy valance edge, used where a page (paper)
+   section meets a colored band below it. This sits as a sibling right before the
+   band, painted the paper color, then pulled down over the band's top edge with a
+   negative margin; a mask (not background-image, which can't reveal a sibling's
+   color) punches true transparent scallops so the band color shows through. */
+.awning-edge {
+  position: relative;
+  z-index: 1;
+  height: 24px;
+  margin-bottom: -24px;
+  background: var(--paper);
+  -webkit-mask-image: radial-gradient(circle at 14px 24px, transparent 13px, black 13.5px);
+  mask-image: radial-gradient(circle at 14px 24px, transparent 13px, black 13.5px);
+  -webkit-mask-size: 28px 24px;
+  mask-size: 28px 24px;
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+}
+
+/* Hero entrance: the one orchestrated page-load moment, pure CSS (no JS dependency,
+   nothing is ever hidden waiting on a script or a scroll position). */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero-primary {
+  animation: hero-rise 640ms ease both;
+  /* A grid item's default min-width is auto, which sizes it to fit its content's widest
+     unbreakable run (the h1's nowrap .line-unit spans) even though that content visually
+     wraps just fine at the intended width — the classic grid min-content overflow trap. */
+  min-width: 0;
+}
+
+.hero-visual {
+  animation: hero-rise 640ms ease both;
+  animation-delay: 140ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-primary,
+  .hero-visual {
+    animation: none;
+  }
 }
 
 /* Header */
 .site-header {
-  border-bottom: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+  position: relative;
+  z-index: 20;
 }
 
 .header-inner {
@@ -173,7 +258,7 @@ p {
 
 .main-nav a {
   text-decoration: none;
-  color: var(--color-ink);
+  color: var(--ink);
   font-size: 0.94rem;
   border-bottom: 1px solid transparent;
   transition: border-color 150ms ease;
@@ -181,7 +266,7 @@ p {
 
 .main-nav a:hover,
 .main-nav a:focus-visible {
-  border-color: var(--color-ink);
+  border-color: var(--kaki);
 }
 
 @media (min-width: 1024px) {
@@ -196,44 +281,216 @@ p {
   gap: 0.75rem;
 }
 
+/* Below 1024px, the Customer Portal link lives in the mobile nav panel instead (see
+   below) — showing it twice would clutter a header that already has to fit the primary
+   CTA and the menu toggle in the same row. */
+.header-actions .text-link {
+  display: none;
+}
+
+.header-cta-full {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .header-cta-short {
+    display: none;
+  }
+
+  .header-cta-full {
+    display: inline;
+  }
+}
+
+@media (min-width: 1024px) {
+  .header-actions .text-link {
+    display: inline;
+  }
+}
+
+/* Menu toggle: hamburger <-> X via three bars, no second icon asset needed. Hidden at
+   desktop widths, where the full horizontal nav is already visible. */
+.menu-toggle {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.menu-toggle:focus-visible {
+  outline: 2px solid var(--noren);
+  outline-offset: 2px;
+}
+
+.menu-toggle-bars {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 13px;
+}
+
+.menu-toggle-bars span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+  transition: transform 180ms ease, opacity 180ms ease, top 180ms ease;
+}
+
+.menu-toggle-bars span:nth-child(1) {
+  top: 0;
+}
+
+.menu-toggle-bars span:nth-child(2) {
+  top: 5.5px;
+}
+
+.menu-toggle-bars span:nth-child(3) {
+  top: 11px;
+}
+
+.menu-toggle[aria-expanded="true"] .menu-toggle-bars span:nth-child(1) {
+  top: 5.5px;
+  transform: rotate(45deg);
+}
+
+.menu-toggle[aria-expanded="true"] .menu-toggle-bars span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle[aria-expanded="true"] .menu-toggle-bars span:nth-child(3) {
+  top: 5.5px;
+  transform: rotate(-45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-toggle-bars span {
+    transition: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .menu-toggle {
+    display: none;
+  }
+}
+
+.mobile-nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 43, 38, 0.4);
+  z-index: 19;
+}
+
+.mobile-nav-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 21;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 16px 32px -18px rgba(28, 43, 38, 0.4);
+  padding: var(--space-3) var(--gutter) var(--space-4);
+}
+
+.mobile-nav-panel nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+
+.mobile-nav-panel nav a {
+  display: block;
+  padding: 0.9rem 0.2rem;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 1.05rem;
+}
+
+.mobile-nav-panel nav a:focus-visible {
+  outline: 2px solid var(--noren);
+  outline-offset: -2px;
+}
+
+.mobile-nav-actions {
+  margin-top: var(--space-3);
+  display: grid;
+  gap: 0.9rem;
+  justify-items: start;
+}
+
+@media (min-width: 1024px) {
+  .mobile-nav-overlay,
+  .mobile-nav-panel {
+    display: none;
+  }
+}
+
 /* Buttons / links */
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.7rem 1.4rem;
-  border-radius: 3px;
+  gap: 0.4rem;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
   font-size: 0.95rem;
+  font-weight: 600;
   text-decoration: none;
   border: 1px solid transparent;
-  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
   cursor: pointer;
 }
 
 .button-primary {
-  background: var(--color-green);
-  color: var(--color-paper);
+  background: var(--kaki);
+  color: var(--paper-raised);
+  box-shadow: 0 10px 24px -12px rgba(221, 107, 69, 0.65);
 }
 
 .button-primary:hover,
 .button-primary:focus-visible {
-  background: var(--color-green-deep);
+  background: var(--kaki-deep);
+  transform: translateY(-1px);
+}
+
+.button-primary:active {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button-primary:hover,
+  .button-primary:focus-visible {
+    transform: none;
+  }
 }
 
 .button-quiet {
   background: transparent;
-  color: var(--color-ink);
-  border-color: var(--color-line);
+  color: var(--ink);
+  border-color: var(--line);
 }
 
 .button-quiet:hover,
 .button-quiet:focus-visible {
-  border-color: var(--color-ink);
+  border-color: var(--noren);
 }
 
 .button-on-dark {
-  background: var(--color-paper);
-  color: var(--color-green-deep);
+  background: var(--paper-raised);
+  color: var(--noren-deep);
 }
 
 .button-on-dark:hover,
@@ -244,7 +501,7 @@ p {
 .text-link {
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: var(--color-line);
+  text-decoration-color: var(--line);
 }
 
 .text-link:hover,
@@ -253,17 +510,23 @@ p {
 }
 
 /* Hero */
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
 .hero .container {
   display: grid;
   gap: var(--space-4);
-  padding-block: var(--space-5);
+  padding-block: var(--space-5) var(--space-4);
+  position: relative;
 }
 
 @media (min-width: 900px) {
   .hero .container {
-    grid-template-columns: 1.2fr 1fr;
-    align-items: start;
-    padding-block: var(--space-6);
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: center;
+    padding-block: var(--space-6) var(--space-5);
   }
 }
 
@@ -271,10 +534,30 @@ p {
   margin-top: var(--space-1);
 }
 
+/* Below 640px, force phrase-unit line breaks so the headline never leaves a lone
+   particle or a mid-word split on its own line — the same "unnatural break" risk
+   the wider auto-wrap already avoids at desktop widths. */
+.hero-primary h1 br.mobile-break {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  .hero-primary h1 br.mobile-break {
+    display: inline;
+  }
+}
+
+/* Keep the closing clause together so the auto-wrap that's otherwise welcome at wide
+   desktop widths can't strand a bare particle + period ("に。") on its own line — the
+   whole clause wraps to the next line as one unit instead. */
+.hero-primary h1 .line-unit {
+  white-space: nowrap;
+}
+
 .hero-lede {
   margin-top: var(--space-3);
   max-width: var(--measure);
-  color: var(--color-muted);
+  color: var(--muted);
 }
 
 .hero-actions {
@@ -285,220 +568,1397 @@ p {
   align-items: center;
 }
 
-.hero-note {
-  margin-top: var(--space-2);
-  font-size: 0.85rem;
-  color: var(--color-muted);
+/* Hero visual: the real shop photograph, framed like a print, with a single proof
+   cluster (Web/SNS/flyer) tucked into its corner — one anchored composition rather
+   than a set of unrelated floating cards. */
+.hero-visual {
+  position: relative;
+  max-width: 26rem;
+  margin-inline: auto;
+  /* Reserves room for .hero-proof's overlap below, which is taken out of normal flow
+     (position: absolute) and would otherwise collide with the next section. */
+  margin-bottom: 2.75rem;
 }
 
-.hero-example {
-  border-left: 1px solid var(--color-line);
-  padding-left: var(--space-3);
+@media (min-width: 900px) {
+  .hero-visual {
+    margin-inline: 0;
+    max-width: none;
+  }
 }
 
-.hero-example .eyebrow {
-  margin-bottom: var(--space-2);
+/* Industry pages reuse the same photo frame but have no overlapping .hero-proof card,
+   so the reserved bottom margin above would just be unwanted empty space. */
+.industry-hero-visual {
+  margin-bottom: 0;
 }
 
-.hero-example dl {
+.hero-photo {
+  position: relative;
   margin: 0;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-paper);
+}
+
+.hero-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  object-position: 32% 45%;
+}
+
+.hero-photo-tag {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  background: rgba(28, 43, 38, 0.55);
+  color: var(--paper);
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+}
+
+.hero-proof {
+  position: absolute;
+  left: var(--space-3);
+  bottom: -1.4rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 0.7rem 0.9rem;
+  box-shadow: var(--shadow-paper);
+  transform: rotate(-2deg);
+  max-width: calc(100% - 2 * var(--space-3));
+}
+
+.hero-proof-label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.72rem;
+  margin-bottom: 0.4rem;
+}
+
+/* Two miniature deliverable previews standing in for "this same shop's Web page" and
+   "this same shop's SNS post" — deliberately shaped like small screenshots (browser
+   chrome dots, a photo-card quote square), not pill buttons, so nothing here reads as
+   an interactive control that does nothing when pressed. */
+.hero-proof-previews {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.hero-preview-web {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  width: 7.6rem;
+  padding: 0.4rem 0.5rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.hero-preview-chrome {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 0.2rem;
+}
+
+.hero-preview-chrome i {
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+.hero-preview-web strong {
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.hero-preview-web-sub {
+  font-size: 0.56rem;
+  color: var(--muted);
+}
+
+.hero-preview-sns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.4rem;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+  border-radius: 6px;
+  background: linear-gradient(150deg, var(--noren) 0%, var(--noren-deep) 100%);
+}
+
+.hero-preview-sns-quote {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  line-height: 1.3;
+  color: var(--paper);
+  text-align: center;
+}
+
+/* Reassurance strip: single row, hairline-divided, not cards */
+.reassure-strip {
+  list-style: none;
+  margin: 0;
+  padding-inline: 0;
   display: grid;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  padding-block: var(--space-3);
 }
 
-.hero-example dt {
-  font-size: 0.82rem;
-  color: var(--color-muted);
+@media (min-width: 768px) {
+  .reassure-strip {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+
+  .reassure-strip li {
+    padding-inline: var(--space-3);
+    border-left: 1px solid var(--line);
+  }
+
+  .reassure-strip li:first-child {
+    padding-left: 0;
+    border-left: none;
+  }
 }
 
-.hero-example dd {
-  margin: 0;
-  font-size: 1rem;
+.reassure-strip strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  margin-bottom: 0.35rem;
+  /* Redistributes lines evenly instead of leaving a short trailing fragment (e.g. a bare
+     verb ending) alone on its own line at narrow tablet column widths. */
+  text-wrap: balance;
+}
+
+.reassure-strip span {
+  color: var(--muted);
+  font-size: 0.92rem;
 }
 
 /* Highlight band (deep green) */
 .band {
-  background: var(--color-green);
-  color: var(--color-paper);
-  border-top: none;
+  background: var(--noren);
+  color: var(--paper);
 }
 
 .band .section-head p {
-  color: rgba(250, 249, 245, 0.78);
+  color: rgba(247, 241, 228, 0.78);
 }
 
 .band .lede {
-  color: rgba(250, 249, 245, 0.78);
+  color: rgba(247, 241, 228, 0.78);
 }
 
-/* Definition-style lists instead of icon cards */
-.deflist {
-  display: grid;
-  gap: var(--space-4);
+/* Transform demo: consultation memo -> tabbed output, the interactive centerpiece */
+.transform {
+  background: var(--paper-raised);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
 
-@media (min-width: 768px) {
-  .deflist.cols-2 {
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: var(--space-4);
-  }
+.transform-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: var(--space-4);
 }
 
-.deflist-item {
-  border-top: 1px solid var(--color-line);
-  padding-top: var(--space-2);
+.transform-picker button {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
 }
 
-.band .deflist-item {
-  border-top-color: rgba(250, 249, 245, 0.28);
+.transform-picker button:hover,
+.transform-picker button:focus-visible {
+  border-color: var(--noren);
 }
 
-.deflist-item .num {
+.transform-picker button[aria-pressed="true"] {
+  background: var(--noren);
+  border-color: var(--noren);
+  color: var(--paper);
+}
+
+.transform-input {
+  margin-bottom: var(--space-4);
+  max-width: 28rem;
+}
+
+.transform-input label {
   display: block;
-  font-family: var(--font-display);
   font-size: 0.85rem;
-  color: var(--color-muted);
+  color: var(--muted);
   margin-bottom: 0.4rem;
 }
 
-.band .deflist-item .num {
-  color: rgba(250, 249, 245, 0.6);
+.transform-input input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+  background: var(--paper);
+  color: var(--ink);
 }
 
-.deflist-item h3 {
-  margin-bottom: 0.5rem;
+.transform-input input:focus-visible {
+  outline: 2px solid var(--noren);
+  outline-offset: 1px;
 }
 
-.deflist-item p {
-  color: var(--color-muted);
+.transform-input-hint {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--muted);
 }
 
-.band .deflist-item p {
-  color: rgba(250, 249, 245, 0.82);
+/* Marks exactly where the typed word landed in each output, so the connection between
+   the input and the three previews is visible rather than assumed. New <mark> elements
+   (recreated on every render) replay the animation from the start automatically. */
+.transform-word {
+  background: transparent;
+  color: inherit;
+  font-weight: 700;
+  border-radius: 3px;
+  animation: word-flash 1100ms ease;
 }
 
-/* Flow (ordered) */
-.flow-list {
+@keyframes word-flash {
+  0% {
+    background: var(--kaki);
+    color: var(--paper);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .transform-word {
+    animation: none;
+  }
+}
+
+.transform-stage {
+  display: grid;
+  gap: var(--space-3);
+  align-items: stretch;
+}
+
+@media (min-width: 860px) {
+  .transform-stage {
+    grid-template-columns: 1fr auto 1.3fr;
+  }
+}
+
+.transform-before {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: var(--space-3);
+  transform: rotate(-1deg);
+  align-self: center;
+}
+
+.transform-before p {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.transform-stitch {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: var(--kaki-deep);
+}
+
+@media (min-width: 860px) {
+  .transform-stitch {
+    display: flex;
+  }
+}
+
+.transform-stitch svg {
+  width: 3rem;
+  height: 1.5rem;
+}
+
+.transform-output {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.transform-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+}
+
+.transform-tabs button {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 0.8rem 0.5rem;
+  font: inherit;
+  font-size: 0.86rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.transform-tabs button[aria-pressed="true"] {
+  color: var(--noren-deep);
+  border-bottom-color: var(--kaki);
+  font-weight: 600;
+}
+
+.transform-tabs button:focus-visible {
+  outline: 2px solid var(--noren);
+  outline-offset: -2px;
+}
+
+.transform-panel {
+  padding: var(--space-3);
+  min-height: 12rem;
+}
+
+.transform-panel[hidden] {
+  display: none;
+}
+
+.mock-browser {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mock-browser-bar {
+  display: flex;
+  gap: 5px;
+  padding: 0.5rem 0.6rem;
+  background: var(--line);
+}
+
+.mock-browser-bar span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(28, 43, 38, 0.35);
+  display: block;
+}
+
+.mock-browser-body {
+  padding: var(--space-2);
+  background: var(--paper-raised);
+}
+
+.mock-browser-body h4 {
+  font-family: var(--font-display);
+  margin: 0 0 0.3rem;
+  font-size: 1.15rem;
+}
+
+.mock-browser-body p {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.mock-sns {
+  max-width: 20rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: var(--space-2);
+  background: var(--paper-raised);
+}
+
+.mock-sns-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.mock-sns-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--kaki);
+  flex-shrink: 0;
+}
+
+.mock-sns-head span {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.mock-sns p {
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+
+.mock-flyer {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: var(--space-3);
+  background: var(--noren);
+  color: var(--paper);
+  text-align: center;
+}
+
+.mock-flyer .eyebrow.on-dark {
+  display: block;
+}
+
+.mock-flyer h4 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  margin: 0.4rem 0;
+}
+
+.mock-flyer p {
+  color: rgba(247, 241, 228, 0.82);
+  font-size: 0.88rem;
+}
+
+.transform-note {
+  margin-top: var(--space-3);
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* Showcase: horizontal scroll-snap gallery of ticket-stub mockup cards */
+.showcase-scroller {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding-bottom: var(--space-2);
+  margin: 0 calc(var(--gutter) * -1);
+  padding-inline: var(--gutter);
+  scrollbar-width: thin;
+}
+
+@media (min-width: 768px) {
+  .showcase-scroller {
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+}
+
+.showcase-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+/* Swipe affordance: a mobile-only hint that the card row scrolls horizontally. Desktop
+   gets explicit arrow buttons instead (below) — the showcase reliably overflows even at
+   1440px, so a "peek of the next card" alone isn't a strong enough cue for mouse users. */
+.showcase-swipe-hint {
+  display: none;
+  font-size: 0.8rem;
+  color: rgba(247, 241, 228, 0.68);
+}
+
+.showcase-arrows {
+  display: none;
+  gap: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .showcase-arrows {
+    display: flex;
+  }
+}
+
+.showcase-arrow {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(247, 241, 228, 0.35);
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.showcase-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+.showcase-arrow:hover:not(:disabled) {
+  border-color: var(--paper);
+  background: rgba(247, 241, 228, 0.12);
+}
+
+.showcase-arrow:focus-visible {
+  outline: 2px solid var(--kaki);
+  outline-offset: 2px;
+}
+
+.showcase-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.showcase-affordance {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+@media (max-width: 767px) {
+  .showcase-swipe-hint,
+  .showcase-affordance {
+    display: flex;
+  }
+}
+
+.showcase-dots {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.showcase-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(247, 241, 228, 0.35);
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.showcase-dot.active {
+  background: var(--kaki);
+  transform: scale(1.3);
+}
+
+.showcase-counter {
+  font-size: 0.78rem;
+  color: rgba(247, 241, 228, 0.68);
+}
+
+.showcase-card {
+  flex: 0 0 auto;
+  width: min(19rem, 84vw);
+  scroll-snap-align: start;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: var(--space-3);
+  box-shadow: var(--shadow-paper);
+  /* Reset text color at the card boundary: this card is an opaque light surface even
+     when its parent section is a dark .band, so descendants without their own color
+     must not inherit the band's light-on-dark default. */
+  color: var(--ink);
+}
+
+.showcase-card .eyebrow {
+  color: var(--kaki-deep);
+}
+
+.showcase-before {
+  color: var(--muted);
+  font-size: 0.88rem;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px dashed var(--line);
+  margin-bottom: var(--space-2);
+}
+
+/* Deliverable-quality mockups: higher-fidelity Web/SNS/Flyer previews for the
+   Before/After showcase, built to read as something that could ship as real client
+   work rather than an explanatory diagram. */
+.deliv-web {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--paper-raised);
+}
+
+.deliv-web-chrome {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0.5rem 0.6rem;
+  background: var(--line);
+}
+
+.deliv-web-chrome span:not(.deliv-web-url) {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(28, 43, 38, 0.32);
+  display: block;
+}
+
+.deliv-web-url {
+  margin-left: 0.4rem;
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+.deliv-web-nav {
+  display: flex;
+  gap: 0.7rem;
+  padding: 0.45rem 0.7rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.deliv-web-nav span {
+  font-size: 0.62rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+.deliv-web-photo {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.deliv-web-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.deliv-web-hero {
+  padding: var(--space-3) var(--space-2) var(--space-2);
+}
+
+/* The icon badge used to float in the card's top-right corner — a position and shape
+   (small circle) that reads as a close/dismiss control in common UI conventions,
+   especially where the icon itself is an X-like shape (e.g. scissors). Placed inline
+   with the eyebrow instead, matching the flyer's header treatment. */
+.deliv-web-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.deliv-web-art {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--noren);
+  color: var(--paper);
+  flex-shrink: 0;
+}
+
+.deliv-web-art svg {
+  width: 12px;
+  height: 12px;
+}
+
+.deliv-web-eyebrow {
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--kaki-deep);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.deliv-web-hero h4 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.35;
+  margin: 0 0 0.35rem;
+}
+
+.deliv-web-body {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.7rem;
+}
+
+.deliv-web-cta {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--paper);
+  background: var(--kaki);
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+}
+
+.deliv-sns {
+  max-width: 20rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--paper-raised);
+}
+
+.deliv-sns-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: var(--space-2) var(--space-2) 0.5rem;
+}
+
+.deliv-sns-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--kaki);
+  color: var(--paper);
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+}
+
+.deliv-sns-avatar svg {
+  width: 14px;
+  height: 14px;
+}
+
+.deliv-sns-handle {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.deliv-sns-photo {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(150deg, var(--noren) 0%, var(--noren-deep) 100%);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.deliv-sns-photo-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.deliv-sns-photo-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 51, 47, 0.15) 0%, rgba(15, 51, 47, 0.55) 100%);
+}
+
+.deliv-sns-quote {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1.3;
+  color: var(--paper);
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.deliv-sns-actions {
+  display: flex;
+  gap: 0.7rem;
+  padding: 0.6rem var(--space-2) 0.2rem;
+  color: var(--ink);
+}
+
+.deliv-sns-actions svg {
+  width: 18px;
+  height: 18px;
+}
+
+.deliv-sns-caption {
+  padding: 0.3rem var(--space-2) var(--space-2);
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+
+/* Outer paper "mat" the dark card sits on, like a postcard mounted with a print margin —
+   distinguishes this from a flat color block filling the whole slot. */
+.deliv-flyer {
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  padding: 0.5rem;
+}
+
+.deliv-flyer-frame {
+  position: relative;
+  overflow: hidden;
+  background: var(--noren-deep);
+  color: var(--paper);
+  padding: var(--space-3) var(--space-3) var(--space-2);
+  border-radius: 7px;
+  border: 1px solid rgba(247, 241, 228, 0.18);
+  outline: 1px solid rgba(247, 241, 228, 0.18);
+  outline-offset: -6px;
+}
+
+.deliv-flyer-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.deliv-flyer-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(165deg, rgba(15, 51, 47, 0.55) 0%, rgba(15, 51, 47, 0.88) 100%);
+}
+
+.deliv-flyer-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.deliv-flyer-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(247, 241, 228, 0.5);
+}
+
+.deliv-flyer-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.deliv-flyer-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--kaki-on-dark);
+  margin: 0;
+}
+
+.deliv-flyer-frame h4 {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.deliv-flyer-rule {
+  position: relative;
+  display: block;
+  width: 2.2rem;
+  height: 2px;
+  background: var(--kaki);
+  margin: 0.6rem 0;
+}
+
+.deliv-flyer-body {
+  position: relative;
+  color: rgba(247, 241, 228, 0.82);
+  font-size: 0.85rem;
+  margin: 0 0 0.8rem;
+}
+
+.deliv-flyer-footer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-top: 0.2rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(247, 241, 228, 0.3);
+}
+
+.deliv-flyer-contact {
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  color: var(--paper);
+}
+
+.deliv-flyer-cta {
+  display: inline-block;
+  font-size: 0.66rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--kaki);
+  color: var(--paper);
+  white-space: nowrap;
+}
+
+/* Before/After: a literal service-outcome proof (home maintenance) rather than a
+   Web/SNS/flyer marketing deliverable — a deliberately different proof shape so the
+   showcase doesn't read as one template repeated four times. */
+.deliv-before-after {
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+}
+
+.deliv-before-after-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.deliv-before-after-images figure {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.deliv-before-after-images img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.deliv-before-after-images figcaption {
+  position: absolute;
+  bottom: 0.4rem;
+  left: 0.5rem;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: rgba(28, 43, 38, 0.6);
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+}
+
+.deliv-before-after-body {
+  padding: var(--space-3) var(--space-2) var(--space-2);
+}
+
+.deliv-before-after-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.deliv-before-after-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--noren);
+  color: var(--paper);
+}
+
+.deliv-before-after-icon svg {
+  width: 12px;
+  height: 12px;
+}
+
+.deliv-before-after-eyebrow {
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--kaki-deep);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.deliv-before-after-body h4 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.35;
+  margin: 0 0 0.35rem;
+}
+
+.deliv-before-after-body p {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.7rem;
+}
+
+.deliv-before-after-cta {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--paper);
+  background: var(--kaki);
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+}
+
+.showcase-disclaimer {
+  margin-top: var(--space-3);
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.band .showcase-disclaimer {
+  color: rgba(247, 241, 228, 0.75);
+}
+
+/* Industry navigation: honest commercial cards pointing to each industry page — not a
+   second Showcase. A real photo per industry (not a recolored template) plus real copy
+   keeps this a compact doorway rather than a duplicate explanation. */
+.industry-nav-grid {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.industry-nav-card {
+  display: block;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--ink);
+  transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.industry-nav-card:hover,
+.industry-nav-card:focus-visible {
+  border-color: var(--noren);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .industry-nav-card:hover,
+  .industry-nav-card:focus-visible {
+    transform: none;
+  }
+}
+
+.industry-nav-photo {
+  position: relative;
+  aspect-ratio: 3 / 2;
+}
+
+.industry-nav-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.industry-nav-icon {
+  position: absolute;
+  left: var(--space-2);
+  bottom: -18px;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--noren);
+  color: var(--paper);
+  border: 2px solid var(--paper-raised);
+}
+
+.industry-nav-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.industry-nav-body {
+  padding: var(--space-3);
+  padding-top: calc(var(--space-2) + 18px);
+}
+
+.industry-nav-card h3 {
+  margin-bottom: 0.4rem;
+}
+
+.industry-nav-card p {
+  color: var(--muted);
+  margin-bottom: 0.7rem;
+}
+
+.industry-nav-card .text-link {
+  display: inline-block;
+}
+
+
+/* Flow: horizontal stepper */
+.flow-stepper {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
   gap: var(--space-3);
+  counter-reset: step;
 }
 
-.flow-list li {
-  display: grid;
-  grid-template-columns: 2.4rem 1fr;
-  gap: var(--space-2);
-  border-top: 1px solid var(--color-line);
-  padding-top: var(--space-2);
-}
-
-.flow-list .num {
-  font-family: var(--font-display);
-  color: var(--color-muted);
-}
-
-.flow-list p {
-  color: var(--color-muted);
-  margin-top: 0.3rem;
-}
-
-/* Industries teaser grid */
-.industry-links {
-  display: grid;
-  gap: 1px;
-  background: var(--color-line);
-  border: 1px solid var(--color-line);
-}
-
-@media (min-width: 768px) {
-  .industry-links {
-    grid-template-columns: repeat(2, 1fr);
+@media (min-width: 900px) {
+  .flow-stepper {
+    /* auto-fit rather than a hardcoded column count: the number of steps in `flow`
+       (currently 4) drives the layout directly, so a future change to that array
+       can't silently reintroduce a step-count/column-count mismatch. */
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
   }
 }
 
-.industry-link {
-  background: var(--color-paper);
-  padding: var(--space-3);
-  text-decoration: none;
-  color: var(--color-ink);
-  display: block;
-  transition: background-color 150ms ease;
+.flow-stepper li {
+  position: relative;
+  padding-top: var(--space-3);
 }
 
-.industry-link:hover,
-.industry-link:focus-visible {
-  background: #f2efe6;
+.flow-stepper li::before {
+  counter-increment: step;
+  content: counter(step);
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  background: var(--noren);
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  margin-bottom: var(--space-2);
 }
 
-.industry-link .eyebrow {
-  margin-bottom: 0.6rem;
+.flow-stepper h3 {
+  font-size: 1.05rem;
 }
 
-.industry-link p {
-  color: var(--color-muted);
-  margin-top: 0.5rem;
+.flow-stepper p {
+  color: var(--muted);
+  margin-top: 0.4rem;
+  font-size: 0.92rem;
 }
 
-/* Pricing */
+/* Pricing: name / price / who it's for / main value as one legible unit per card,
+   instead of a separate "who it's for" list a reader had to cross-reference against
+   the price cards below it. */
 .pricing-grid {
   display: grid;
   gap: var(--space-3);
 }
 
+/* A 4-column grid starting at 768px leaves each card too narrow for its own price:
+   "17,800円 / 月" was wrapping across three lines at exactly 768-1023px — the one
+   section whose entire job is "readable at a glance." A 2-column step first gives
+   each card roughly double the width in that range. */
 @media (min-width: 768px) {
+  .pricing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
   .pricing-grid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
 .pricing-item {
-  border-top: 1px solid var(--color-line);
-  padding-top: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  background: rgba(247, 241, 228, 0.06);
+  border: 1px solid rgba(247, 241, 228, 0.22);
+  border-radius: var(--radius-card);
+  padding: var(--space-3);
+}
+
+.band .pricing-item.recommended {
+  border-color: var(--kaki);
+  background: rgba(221, 107, 69, 0.12);
 }
 
 .pricing-item .plan {
   font-size: 0.8rem;
-  color: var(--color-muted);
-  letter-spacing: 0.08em;
+  color: rgba(247, 241, 228, 0.65);
+  letter-spacing: 0.06em;
 }
 
-.pricing-item strong {
+.pricing-item-name {
   display: block;
   font-family: var(--font-display);
-  font-size: 1.6rem;
+  font-size: 1.05rem;
+  margin-top: 0.5rem;
+}
+
+.pricing-item-amount {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
   margin-top: 0.3rem;
 }
 
-.pricing-item small {
-  font-size: 0.85rem;
+.pricing-item-amount small {
+  font-size: 0.82rem;
   font-weight: 400;
-  color: var(--color-muted);
+  color: rgba(247, 241, 228, 0.75);
 }
 
-.pricing-item p {
-  margin-top: 0.6rem;
-  color: var(--color-muted);
-  font-size: 0.92rem;
+.pricing-item-audience {
+  margin-top: 0.7rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed rgba(247, 241, 228, 0.25);
+  color: var(--kaki-on-dark);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.pricing-item-note {
+  margin-top: 0.5rem;
+  color: rgba(247, 241, 228, 0.82);
+  font-size: 0.88rem;
+  flex-grow: 1;
+}
+
+/* Two visually separate groups — monthly plans vs. the one-time production fee — at the
+   same visual weight, so neither reads as a footnote of the other. */
+.pricing-group + .pricing-divider {
+  margin-top: var(--space-4);
+}
+
+.pricing-divider + .pricing-group {
+  margin-top: var(--space-3);
+}
+
+.pricing-group-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: rgba(247, 241, 228, 0.65);
+  margin: 0 0 var(--space-2);
+}
+
+.pricing-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: rgba(247, 241, 228, 0.55);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.pricing-divider::before,
+.pricing-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(247, 241, 228, 0.22);
+}
+
+.pricing-standalone {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  background: rgba(247, 241, 228, 0.06);
+  border: 1px solid rgba(247, 241, 228, 0.22);
+  border-radius: var(--radius-card);
+  padding: var(--space-3);
+}
+
+.pricing-standalone-info strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+
+.pricing-standalone-info p {
+  margin-top: 0.4rem;
+  color: rgba(247, 241, 228, 0.82);
+  font-size: 0.88rem;
+  max-width: 34rem;
+}
+
+.pricing-standalone-amount {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  white-space: nowrap;
+}
+
+.pricing-standalone-amount small {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(247, 241, 228, 0.75);
 }
 
 .pricing-note {
   margin-top: var(--space-3);
-  color: var(--color-muted);
+  color: rgba(247, 241, 228, 0.75);
   font-size: 0.88rem;
   max-width: var(--measure);
+}
+
+/* Why-trust: plain list */
+.trust-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+  max-width: 42rem;
+}
+
+.trust-list li {
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--kaki);
+}
+
+.trust-list h3 {
+  font-size: 1.05rem;
+}
+
+.trust-list p {
+  color: var(--muted);
+  margin-top: 0.35rem;
 }
 
 /* FAQ */
 .faq-list {
   display: grid;
   gap: 0;
-  border-top: 1px solid var(--color-line);
+  border-top: 1px solid var(--line);
 }
 
 .faq-list details {
-  border-bottom: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--line);
   padding-block: var(--space-2);
 }
 
@@ -517,7 +1977,7 @@ p {
 
 .faq-list summary::after {
   content: "+";
-  color: var(--color-muted);
+  color: var(--kaki-deep);
   flex-shrink: 0;
 }
 
@@ -527,7 +1987,7 @@ p {
 
 .faq-list p {
   margin-top: var(--space-2);
-  color: var(--color-muted);
+  color: var(--muted);
   max-width: var(--measure);
 }
 
@@ -536,10 +1996,40 @@ p {
   text-align: left;
 }
 
-.final-cta .container {
+.final-cta-grid {
+  display: grid;
+  gap: var(--space-4);
+  padding-block: var(--space-5);
+}
+
+.final-cta-copy {
   display: grid;
   gap: var(--space-3);
   max-width: var(--measure);
+}
+
+.final-cta-photo {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .final-cta-grid {
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+  }
+
+  .final-cta-photo {
+    display: block;
+  }
+}
+
+.final-cta-photo img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: var(--radius-card);
+  opacity: 0.94;
 }
 
 .final-cta-actions {
@@ -551,7 +2041,7 @@ p {
 
 /* Footer */
 .site-footer {
-  border-top: 1px solid var(--color-line);
+  border-top: 1px solid var(--line);
   padding-block: var(--space-4);
 }
 
@@ -580,17 +2070,21 @@ p {
 
 .footer-nav a {
   text-decoration: none;
-  color: var(--color-muted);
+  color: var(--muted);
   font-size: 0.9rem;
 }
 
 .footer-nav a:hover,
 .footer-nav a:focus-visible {
-  color: var(--color-ink);
+  color: var(--ink);
 }
 
 .footer-meta {
-  color: var(--color-muted);
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.footer-legal a {
   font-size: 0.82rem;
 }
 
@@ -603,12 +2097,12 @@ p {
 
 .register-widget input {
   width: 100%;
-  padding: 0.6rem 0.75rem;
-  border: 1px solid var(--color-line);
-  border-radius: 3px;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
   font: inherit;
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: var(--paper-raised);
+  color: var(--ink);
 }
 
 .register-consent {
@@ -616,9 +2110,16 @@ p {
   align-items: flex-start;
   gap: 0.55rem;
   margin-block: 0.8rem;
-  color: var(--color-muted);
+  color: var(--muted);
   font-size: 0.84rem;
   line-height: 1.55;
+}
+
+/* --muted (#5f6f66) is a light-background color — on the homepage's final-cta band
+   (dark green) it dropped to ~1.8:1, an AA failure for exactly the consent text a user
+   must read before submitting personal data. */
+.band .register-consent {
+  color: rgba(247, 241, 228, 0.75);
 }
 
 .register-consent input {
@@ -626,7 +2127,7 @@ p {
   width: 1.15rem;
   height: 1.15rem;
   margin-top: 0.12rem;
-  accent-color: var(--color-green);
+  accent-color: var(--noren);
 }
 
 .register-consent a {
@@ -634,13 +2135,13 @@ p {
 }
 
 .register-widget input:focus-visible {
-  outline: 2px solid var(--color-green);
+  outline: 2px solid var(--noren);
   outline-offset: 1px;
 }
 
 .register-widget [data-register-status] {
   font-size: 0.85rem;
-  color: var(--color-muted);
+  color: var(--muted);
   min-height: 1.2em;
 }
 
@@ -653,8 +2154,8 @@ p {
   position: absolute;
   left: -999px;
   top: auto;
-  background: var(--color-ink);
-  color: var(--color-paper);
+  background: var(--ink);
+  color: var(--paper);
   padding: 0.6rem 1rem;
   z-index: 100;
 }

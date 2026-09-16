@@ -14,7 +14,7 @@ const coreOrigin = (import.meta.env.PUBLIC_CORE_ORIGIN || "https://akinael-ai.co
     <input id={`${id}-password`} name="password" type="password" autocomplete="new-password" placeholder="パスワード（12文字以上）" required />
     <label class="register-consent" for={`${id}-consent`}>
       <input id={`${id}-consent`} name="consent" type="checkbox" required />
-      <span><a href={`${coreOrigin}/legal#terms`} target="_blank" rel="noopener">利用条件の現行案内</a>と<a href={`${coreOrigin}/legal#privacy`} target="_blank" rel="noopener">個人情報の取扱いに関する現行案内</a>を確認しました</span>
+      <span><a href={`${coreOrigin}/legal.html#terms`} target="_blank" rel="noopener">利用条件の現行案内</a>と<a href={`${coreOrigin}/legal.html#privacy`} target="_blank" rel="noopener">個人情報の取扱いに関する現行案内</a>を確認しました</span>
     </label>
     <button class="button button-primary" type="submit">無料でAIに相談する</button>
     <p data-register-status role="status"></p>

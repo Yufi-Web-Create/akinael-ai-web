@@ -28,6 +28,14 @@ const toSafeJsonLd = (value: Record<string, unknown>) => JSON.stringify(value).r
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    {/* display=optional (not swap): the fallback renders and stays if Shippori Mincho
+       isn't ready almost immediately, instead of swapping in later and reflowing the
+       page — that swap-triggered reflow was shifting an already-scrolled-to anchor
+       target out of view (a real, if intermittent, issue for real visitors, not just
+       a test artifact). */}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@700;800&display=optional" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="アキナエルAI" />
     <meta property="og:title" content={title} />
@@ -50,5 +58,27 @@ const toSafeJsonLd = (value: Record<string, unknown>) => JSON.stringify(value).r
       <slot />
     </main>
     <Footer />
+    <script is:inline>
+      // A direct load of a URL with a #fragment relies on the browser's own one-time
+      // "scroll to the fragment" step during navigation. Under real-world conditions
+      // (slow connection, CPU contention, a stylesheet still applying) that step can
+      // simply not fire, leaving the visitor at the top of the page with no obvious
+      // link between the URL they opened and what they're looking at. This is a
+      // deterministic fallback, not a cosmetic nicety: on load, if the hash target
+      // isn't actually in view, scroll to it explicitly.
+      window.addEventListener("load", () => {
+        if (!window.location.hash) return;
+        let target;
+        try {
+          target = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+        } catch {
+          return;
+        }
+        if (!target) return;
+        const rect = target.getBoundingClientRect();
+        const alreadyInView = rect.top >= -1 && rect.top <= window.innerHeight;
+        if (!alreadyInView) target.scrollIntoView();
+      });
+    </script>
   </body>
 </html>

@@ -1,0 +1,5 @@
+# Keep Work-generated design assets local by default.
+# The README stays tracked so this handoff directory exists in Git.
+*
+!.gitignore
+!README.md
